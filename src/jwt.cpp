@@ -4,7 +4,9 @@
 #include "hmackey.h"
 #include "rsakey.h"
 #include "eckey.h"
+#include "base64url.h"
 #include "utils.h"
+#include "json.h"
 
 using JWTXX::Algorithm;
 using JWTXX::Key;
@@ -41,10 +43,47 @@ Key::Impl* createKey(Algorithm alg, const std::string& keyData)
 
 }
 
+std::string JWTXX::algToString(Algorithm alg)
+{
+    switch (alg)
+    {
+        case Algorithm::none: return "none";
+        case Algorithm::HS256: return "HS256";
+        case Algorithm::HS384: return "HS384";
+        case Algorithm::HS512: return "HS512";
+        case Algorithm::RS256: return "RS256";
+        case Algorithm::RS384: return "RS384";
+        case Algorithm::RS512: return "RS512";
+        case Algorithm::ES256: return "ES256";
+        case Algorithm::ES384: return "ES384";
+        case Algorithm::ES512: return "ES512";
+    }
+    return ""; // Just in case.
+}
+
+Algorithm JWTXX::stringToAlg(const std::string& value)
+{
+    if (value == "none") return Algorithm::none;
+    else if (value == "HS256") return Algorithm::HS256;
+    else if (value == "HS384") return Algorithm::HS384;
+    else if (value == "HS512") return Algorithm::HS512;
+    else if (value == "RS256") return Algorithm::RS256;
+    else if (value == "RS384") return Algorithm::RS384;
+    else if (value == "RS512") return Algorithm::RS512;
+    else if (value == "ES256") return Algorithm::ES256;
+    else if (value == "ES384") return Algorithm::ES384;
+    else if (value == "ES512") return Algorithm::ES512;
+    else throw std::runtime_error("Invalid algorithm name: '" + value + "'.");
+}
+
 Key::Key(Algorithm alg, const std::string& keyData)
     : m_impl(createKey(alg, keyData))
 {
 }
+
+Key::~Key() = default;
+Key::Key(Key&&) = default;
+Key& Key::operator=(Key&&) = default;
 
 std::string Key::sign(const void* data, size_t size) const
 {
@@ -54,4 +93,34 @@ std::string Key::sign(const void* data, size_t size) const
 bool Key::verify(const void* data, size_t size, const std::string& signature) const
 {
     return m_impl->verify(data, size, signature);
+}
+
+JWT::JWT(Algorithm alg, Pairs claims, Pairs header)
+    : m_alg(alg), m_header(header), m_claims(claims)
+{
+    m_header["typ"] = "JWT";
+    m_header["alg"] = algToString(m_alg);
+}
+
+JWT::JWT(const std::string& token, Key key)
+{
+    throw std::runtime_error("Not implemented."); // TODO: implement
+}
+
+std::string JWT::claim(const std::string& name) const
+{
+    auto it = m_claims.find(name);
+    if (it == std::end(m_claims))
+        return {};
+    return it->second;
+}
+
+std::string JWT::token(const std::string& keyData) const
+{
+    auto data = Base64URL::encode(toJSON(m_header)) + "." + Base64URL::encode(toJSON(m_claims));
+    Key key(m_alg, keyData);
+    auto signature = key.sign(data.c_str(), data.size());
+    if (signature.empty())
+        return data;
+    return data + "." + signature;
 }

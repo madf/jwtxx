@@ -6,6 +6,8 @@
 #include <openssl/crypto.h>
 #include <openssl/bio.h>
 
+#include <cstring>
+
 namespace JWTXX
 {
 namespace Base64URL
@@ -104,6 +106,13 @@ std::string encode(const Block& block)
     BIO_free_all(bio);
 
     return URLEncode(res);
+}
+
+std::string encode(const std::string& data)
+{
+    Block block(data.size());
+    memcpy(block.data(), data.c_str(), data.size());
+    return encode(block);
 }
 
 Block decode(std::string data)

@@ -4,4 +4,4 @@ find_package(OpenSSL)
 
 include_directories(${OPENSSL_INCLUDE_DIR})
 
-add_library(jwtxx STATIC jwt.cpp utils.cpp)
+add_library(jwtxx STATIC jwt.cpp utils.cpp json.cpp)

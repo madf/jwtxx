@@ -15,6 +15,9 @@ enum class Algorithm {
     none
 };
 
+std::string algToString(Algorithm alg);
+Algorithm stringToAlg(const std::string& value);
+
 class Key
 {
     public:
@@ -24,6 +27,10 @@ class Key
         };
 
         Key(Algorithm alg, const std::string& keyData);
+        ~Key();
+
+        Key(Key&&);
+        Key& operator=(Key&&);
 
         std::string sign(const void* data, size_t size) const;
         bool verify(const void* data, size_t size, const std::string& signature) const;
