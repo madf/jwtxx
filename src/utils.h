@@ -2,9 +2,10 @@
 
 #include <memory>
 
-#include <cstdio>
+#include <cstdio> // fopen, fclose
 
 #include <openssl/evp.h>
+#include <openssl/ec.h>
 
 namespace JWTXX
 {
@@ -35,10 +36,12 @@ struct EVPMDCTXDeleter
 };
 typedef std::unique_ptr<EVP_MD_CTX, EVPMDCTXDeleter> EVPMDCTXPtr;
 
-EVPKeyPtr readRSAPrivateKey(const std::string& fileName);
-EVPKeyPtr readRSAPublicKey(const std::string& fileName);
-EVPKeyPtr readECPrivateKey(const std::string& fileName);
-EVPKeyPtr readECPublicKey(const std::string& fileName);
+EVPKeyPtr readPEMPrivateKey(const std::string& fileName);
+EVPKeyPtr readPEMPublicKey(const std::string& fileName);
+ECKeyPtr readECPrivateKey(const std::string& fileName);
+ECKeyPtr readECPublicKey(const std::string& fileName);
+
+std::string OPENSSLError();
 
 }
 }

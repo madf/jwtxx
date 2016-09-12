@@ -2,31 +2,47 @@
 
 #include "jwtxx/jwt.h" // Key::Error
 
-using namespace JWTXX;
+#include <openssl/pem.h>
+#include <openssl/err.h>
 
-EVPKeyPtr Utils::readPEMPrivateKey(const std::string& fileName)
+#include <cstring> // strerror
+#include <cerrno> // errno
+
+namespace Utils = JWTXX::Utils;
+
+namespace
 {
-    FilePtr fp(fopen(m_data.c_str(), "rb"));
+
+std::string sysError()
+{
+    return strerror(errno);
+}
+
+}
+
+Utils::EVPKeyPtr Utils::readPEMPrivateKey(const std::string& fileName)
+{
+    FilePtr fp(fopen(fileName.c_str(), "rb"));
     if (!fp)
-        throw Key::Error("Can't open key file '" + m_data + "'. " + sysError());
-    EVPKeyPtr key(PEM_read_Private(fp, nullptr, nullptr, nullptr));
+        throw Key::Error("Can't open key file '" + fileName + "'. " + sysError());
+    EVPKeyPtr key(PEM_read_PrivateKey(fp.get(), nullptr, nullptr, nullptr));
     if (!key)
-        throw Key::Error("Can't read public key '" + m_data + "'. " + OPENSSLError());
+        throw Key::Error("Can't read public key '" + fileName + "'. " + OPENSSLError());
     return key;
 }
 
-EVPKeyPtr Utils::readPEMPublicKey(const std::string& fileName)
+Utils::EVPKeyPtr Utils::readPEMPublicKey(const std::string& fileName)
 {
-    FilePtr fp(fopen(m_data.c_str(), "rb"));
+    FilePtr fp(fopen(fileName.c_str(), "rb"));
     if (!fp)
-        throw Key::Error("Can't open key file '" + m_data + "'. " + sysError());
-    EVPKeyPtr key(PEM_read_PUBKEY(fp, nullptr, nullptr, nullptr));
+        throw Key::Error("Can't open key file '" + fileName + "'. " + sysError());
+    EVPKeyPtr key(PEM_read_PUBKEY(fp.get(), nullptr, nullptr, nullptr));
     if (!key)
-        throw Key::Error("Can't read public key '" + m_data + "'. " + OPENSSLError());
+        throw Key::Error("Can't read public key '" + fileName + "'. " + OPENSSLError());
     return key;
 }
 
-ECKeyPtr Utils::readECPrivateKey(const std::string& fileName)
+Utils::ECKeyPtr Utils::readECPrivateKey(const std::string& fileName)
 {
     auto pem = readPEMPrivateKey(fileName);
     ECKeyPtr key(EVP_PKEY_get1_EC_KEY(pem.get()));
@@ -35,11 +51,18 @@ ECKeyPtr Utils::readECPrivateKey(const std::string& fileName)
     return key;
 }
 
-ECKeyPtr Utils::readECPublicKey(const std::string& fileName)
+Utils::ECKeyPtr Utils::readECPublicKey(const std::string& fileName)
 {
     auto pem = readPEMPublicKey(fileName);
     ECKeyPtr key(EVP_PKEY_get1_EC_KEY(pem.get()));
     if (!key)
         throw Key::Error("Public key '" + fileName + "' is not an Elliptic Curve key.");
     return key;
+}
+
+std::string Utils::OPENSSLError()
+{
+    char buf[256];
+    ERR_error_string_n(ERR_get_error(), buf, sizeof(buf));
+    return buf;
 }
