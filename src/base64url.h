@@ -14,7 +14,7 @@ namespace Base64URL
 class Block
 {
     public:
-        Block(size_t size) : m_buffer(OPENSSL_malloc(size)), m_size(size) {}
+        explicit Block(size_t size) : m_buffer(OPENSSL_malloc(size)), m_size(size) {}
         ~Block() { OPENSSL_free(m_buffer); }
         Block(Block&& rhs) : m_buffer(rhs.m_buffer), m_size(rhs.m_size) { rhs.m_buffer = nullptr; rhs.m_size = 0; }
         Block& operator=(Block&& rhs) { m_buffer = rhs.m_buffer; m_size = rhs.m_size; rhs.m_buffer = nullptr; rhs.m_size = 0; return *this; }

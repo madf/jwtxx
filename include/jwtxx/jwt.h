@@ -20,7 +20,7 @@ class Key
     public:
         struct Error : std::runtime_error
         {
-            Error(const std::string& message) : runtime_error(message) {}
+            explicit Error(const std::string& message) : runtime_error(message) {}
         };
 
         Key(Algorithm alg, const std::string& keyData);
