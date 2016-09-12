@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
 #include <memory>
 #include <stdexcept>
 
@@ -19,7 +20,7 @@ class Key
     public:
         struct Error : std::runtime_error
         {
-            Error(const std::string& message) : runtime_error(error) {}
+            Error(const std::string& message) : runtime_error(message) {}
         };
 
         Key(Algorithm alg, const std::string& keyData);
