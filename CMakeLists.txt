@@ -10,4 +10,7 @@ set(VERSION_PATCH 0)
 
 set(CMAKE_CXX_FLAGS "-W -Wall -Wextra -pedantic -std=c++0x")
 
+enable_testing()
+
 add_subdirectory(src)
+add_subdirectory(tests)
