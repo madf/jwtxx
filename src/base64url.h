@@ -27,6 +27,8 @@ class Block
         template <typename T = void*>
         T data() { return static_cast<T>(m_buffer); }
 
+        std::string toString() const { return std::string(static_cast<const char*>(m_buffer), m_size); }
+
         Block shrink(size_t size) { Block block(m_buffer, size); m_buffer = nullptr; m_size = 0; return block; }
 
         Block(const Block&) = delete;
@@ -57,6 +59,8 @@ std::string URLEncode(const std::string& data)
 
         res += data[i];
     }
+    if (data.back() != '=')
+        res += data.back();
     return res;
 }
 
@@ -77,6 +81,7 @@ std::string URLDecode(const std::string& data)
 
         res += data[i];
     }
+    res += data.back();
 
     if (res.size() % 4 == 2)
         return res + "==";
