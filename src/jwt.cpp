@@ -8,6 +8,11 @@
 #include "utils.h"
 #include "json.h"
 
+#include <boost/algorithm/string/split.hpp>
+
+#include <openssl/evp.h>
+#include <openssl/err.h>
+
 using JWTXX::Algorithm;
 using JWTXX::Key;
 using JWTXX::JWT;
@@ -41,6 +46,11 @@ Key::Impl* createKey(Algorithm alg, const std::string& keyData)
     return new NoneKey; // Just in case.
 }
 
+}
+
+void JWTXX::enableOpenSSLErrors()
+{
+    static bool enabled = [](){ OpenSSL_add_all_algorithms(); ERR_load_crypto_strings(); return true; }();
 }
 
 std::string JWTXX::algToString(Algorithm alg)
@@ -77,7 +87,7 @@ Algorithm JWTXX::stringToAlg(const std::string& value)
 }
 
 Key::Key(Algorithm alg, const std::string& keyData)
-    : m_impl(createKey(alg, keyData))
+    : m_alg(alg), m_impl(createKey(alg, keyData))
 {
 }
 
@@ -104,7 +114,19 @@ JWT::JWT(Algorithm alg, Pairs claims, Pairs header)
 
 JWT::JWT(const std::string& token, Key key)
 {
-    throw std::runtime_error("Not implemented."); // TODO: implement
+    std::vector<std::string> parts;
+    boost::split(parts, token, [](char ch){ return ch == '.'; });
+    if (parts.size() < 2 || parts.size() > 3)
+        throw Error("JWT should contain only 2 or 3 parts. The supplied token contains " + std::to_string(parts.size()) + " parts.");
+    auto data = parts[0] + "." + parts[1];
+    std::string signature;
+    if (parts.size() == 3)
+        signature = parts[2];
+    if (!key.verify(data.c_str(), data.size(), signature))
+        throw Error("Signature is invalid.");
+    m_alg = key.alg();
+    m_header = fromJSON(Base64URL::decode(parts[0]).toString());
+    m_claims = fromJSON(Base64URL::decode(parts[1]).toString());
 }
 
 std::string JWT::claim(const std::string& name) const
