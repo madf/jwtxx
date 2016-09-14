@@ -1,0 +1,27 @@
+if(JANSSON_LIBRARIES AND JANSSON_INCLUDE_DIR)
+    set(JANSSON_FOUND TRUE)
+else(JANSSON_LIBRARIES AND JANSSON_INCLUDE_DIR)
+    set(LIBRARY_PATHS ${JANSSON_ROOT} /usr/lib /usr/local/lib)
+    set(INCLUDE_PATHS ${JANSSON_ROOT} /usr/include /usr/local/include)
+
+    find_path(JANSSON_INCLUDE_DIR NAMES jansson.h PATHS ${INCLUDE_PATHS})
+    find_library(JANSSON_LIBRARIES NAMES jansson libjansson PATHS ${LIBRARY_PATHS})
+
+    if(JANSSON_INCLUDE_DIR AND JANSSON_LIBRARIES)
+        set(JANSSON_FOUND TRUE)
+        set(JANSSON_INCLUDE_DIR ${JANSSON_INCLUDE_DIR} CACHE STRING "The include paths needed to use jansson.")
+        set(JANSSON_LIBRARIES ${JANSSON_LIBRARIES} CACHE STRING "The libraries needed to use jansson.")
+
+        mark_as_advanced(JANSSON_INCLUDE_DIR JANSSON_LIBRARIES)
+    endif(JANSSON_INCLUDE_DIR AND JANSSON_LIBRARIES)
+endif(JANSSON_LIBRARIES AND JANSSON_INCLUDE_DIR)
+
+if(JANSSON_FOUND)
+    if(NOT JANSSON_FIND_QUIETLY)
+        message(STATUS "Found jansson: ${JANSSON_LIBRARIES}")
+    endif(NOT JANSSON_FIND_QUIETLY)
+else(JANSSON_FOUND)
+    if(JANSSON_FIND_REQUIRED)
+        message(FATAL_ERROR "Could not find jansson library.")
+    endif(JANSSON_FIND_REQUIRED)
+endif(JANSSON_FOUND)
