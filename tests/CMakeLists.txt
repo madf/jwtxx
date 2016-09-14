@@ -1,11 +1,20 @@
 enable_language(CXX)
 
-find_package(Boost 1.55.0 REQUIRED)
-
-include_directories(${jwtxx_SOURCE_DIR}/include)
-include_directories(${Boost_INCLUDE_DIRS})
-
 add_executable(nonetest nonetest.cpp)
-target_link_libraries(nonetest jwtxx crypto)
+target_link_libraries(nonetest jwtxx ${OPENSSL_LIBRARIES} ${JANSSON_LIBRARIES})
+add_executable(hmactest hmactest.cpp)
+target_link_libraries(hmactest jwtxx ${OPENSSL_LIBRARIES} ${JANSSON_LIBRARIES})
+add_executable(rsatest rsatest.cpp)
+target_link_libraries(rsatest jwtxx ${OPENSSL_LIBRARIES} ${JANSSON_LIBRARIES})
+add_executable(ecdsatest ecdsatest.cpp)
+target_link_libraries(ecdsatest jwtxx ${OPENSSL_LIBRARIES} ${JANSSON_LIBRARIES})
 
 add_test(none nonetest)
+add_test(hmac hmactest)
+add_test(rsa rsatest)
+add_test(ecdsa ecdsatest)
+
+configure_file(rsa-2048-key-pair.pem rsa-2048-key-pair.pem COPYONLY)
+configure_file(public-rsa-2048-key.pem public-rsa-2048-key.pem COPYONLY)
+configure_file(ecdsa-256-key-pair.pem ecdsa-256-key-pair.pem COPYONLY)
+configure_file(public-ecdsa-256-key.pem public-ecdsa-256-key.pem COPYONLY)
