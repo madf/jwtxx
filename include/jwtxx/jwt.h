@@ -8,6 +8,8 @@
 namespace JWTXX
 {
 
+void enableOpenSSLErrors();
+
 enum class Algorithm {
     HS256, HS384, HS512,
     RS256, RS384, RS512,
@@ -32,11 +34,14 @@ class Key
         Key(Key&&);
         Key& operator=(Key&&);
 
+        Algorithm alg() const { return m_alg; }
+
         std::string sign(const void* data, size_t size) const;
         bool verify(const void* data, size_t size, const std::string& signature) const;
 
         struct Impl;
     private:
+        Algorithm m_alg;
         std::unique_ptr<Impl> m_impl;
 };
 
@@ -44,6 +49,11 @@ class JWT
 {
     public:
         typedef std::unordered_map<std::string, std::string> Pairs;
+
+        struct Error : std::runtime_error
+        {
+            explicit Error(const std::string& message) : runtime_error(message) {}
+        };
 
         JWT(const std::string& token, Key key);
         JWT(Algorithm alg, Pairs claims, Pairs header = Pairs());
