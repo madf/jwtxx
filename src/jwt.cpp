@@ -8,6 +8,8 @@
 #include "utils.h"
 #include "json.h"
 
+#include <vector>
+
 #include <boost/algorithm/string/split.hpp>
 
 #include <openssl/evp.h>
