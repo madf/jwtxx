@@ -20,15 +20,9 @@ typedef std::unique_ptr<FILE, FileCloser> FilePtr;
 
 struct EVPKeyDeleter
 {
-    void operator()(EVP_PKEY* keyp) { EVP_PKEY_free(keyp); }
+    void operator()(EVP_PKEY* key) { EVP_PKEY_free(key); }
 };
 typedef std::unique_ptr<EVP_PKEY, EVPKeyDeleter> EVPKeyPtr;
-
-struct ECKeyDeleter
-{
-    void operator()(EC_KEY* keyp) { EC_KEY_free(keyp); }
-};
-typedef std::unique_ptr<EC_KEY, ECKeyDeleter> ECKeyPtr;
 
 struct EVPMDCTXDeleter
 {
@@ -38,8 +32,6 @@ typedef std::unique_ptr<EVP_MD_CTX, EVPMDCTXDeleter> EVPMDCTXPtr;
 
 EVPKeyPtr readPEMPrivateKey(const std::string& fileName);
 EVPKeyPtr readPEMPublicKey(const std::string& fileName);
-ECKeyPtr readECPrivateKey(const std::string& fileName);
-ECKeyPtr readECPublicKey(const std::string& fileName);
 
 std::string OPENSSLError();
 

@@ -42,24 +42,6 @@ Utils::EVPKeyPtr Utils::readPEMPublicKey(const std::string& fileName)
     return key;
 }
 
-Utils::ECKeyPtr Utils::readECPrivateKey(const std::string& fileName)
-{
-    auto pem = readPEMPrivateKey(fileName);
-    ECKeyPtr key(EVP_PKEY_get1_EC_KEY(pem.get()));
-    if (!key)
-        throw Key::Error("Private key '" + fileName + "' is not an Elliptic Curve key.");
-    return key;
-}
-
-Utils::ECKeyPtr Utils::readECPublicKey(const std::string& fileName)
-{
-    auto pem = readPEMPublicKey(fileName);
-    ECKeyPtr key(EVP_PKEY_get1_EC_KEY(pem.get()));
-    if (!key)
-        throw Key::Error("Public key '" + fileName + "' is not an Elliptic Curve key.");
-    return key;
-}
-
 std::string Utils::OPENSSLError()
 {
     char buf[256];
