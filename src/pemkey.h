@@ -11,21 +11,17 @@ namespace JWTXX
 namespace Keys
 {
 
-class RSA : public Key::Impl
+class PEM : public Key::Impl
 {
     public:
-        RSA(const EVP_MD* digest, const std::string& keyData)
+        PEM(const EVP_MD* digest, const std::string& keyData)
             : m_digest(digest), m_data(keyData)
         {
         }
 
         std::string sign(const void* data, size_t size) const override
         {
-            Utils::EVPMDCTXPtr ctx(EVP_MD_CTX_create());
-            if (!ctx)
-                throw Key::Error("Can't create sign context. " + Utils::OPENSSLError());
-            if (EVP_DigestInit_ex(ctx.get(), m_digest, nullptr) != 1)
-                throw Key::Error("Can't init sign context. " + Utils::OPENSSLError());
+            auto ctx = initCTX();
             auto key = Utils::readPEMPrivateKey(m_data);
             if (EVP_DigestSignInit(ctx.get(), nullptr, m_digest, nullptr, key.get()) != 1)
                 throw Key::Error("Can't init sign context. " + Utils::OPENSSLError());
@@ -39,15 +35,11 @@ class RSA : public Key::Impl
             Base64URL::Block block(res);
             if (EVP_DigestSignFinal(ctx.get(), block.data<unsigned char*>(), &res) != 1)
                 throw Key::Error("Can't sign data. " + Utils::OPENSSLError());
-            return Base64URL::encode(block);
+            return Base64URL::encode(block.shrink(res));
         }
         bool verify(const void* data, size_t size, const std::string& signature) const override
         {
-            Utils::EVPMDCTXPtr ctx(EVP_MD_CTX_create());
-            if (!ctx)
-                throw Key::Error("Can't create verification context. " + Utils::OPENSSLError());
-            if (EVP_DigestInit_ex(ctx.get(), m_digest, nullptr) != 1)
-                throw Key::Error("Can't init verification context. " + Utils::OPENSSLError());
+            auto ctx = initCTX();
             auto key = Utils::readPEMPublicKey(m_data);
             if (EVP_DigestVerifyInit(ctx.get(), nullptr, m_digest, nullptr, key.get()) != 1)
                 throw Key::Error("Can't init verification context. " + Utils::OPENSSLError());
@@ -59,6 +51,16 @@ class RSA : public Key::Impl
     private:
         const EVP_MD* m_digest;
         std::string m_data;
+
+        Utils::EVPMDCTXPtr initCTX() const
+        {
+            Utils::EVPMDCTXPtr ctx(EVP_MD_CTX_create());
+            if (!ctx)
+                throw Key::Error("Can't create context. " + Utils::OPENSSLError());
+            if (EVP_DigestInit_ex(ctx.get(), m_digest, nullptr) != 1)
+                throw Key::Error("Can't initialize context. " + Utils::OPENSSLError());
+            return ctx;
+        }
 };
 
 }
