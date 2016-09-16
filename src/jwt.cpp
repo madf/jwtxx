@@ -8,9 +8,9 @@
 #include "utils.h"
 #include "json.h"
 
-#include <vector>
-
 #include <boost/algorithm/string/split.hpp>
+
+#include <vector>
 
 #include <openssl/evp.h>
 #include <openssl/err.h>
