@@ -47,15 +47,16 @@ std::string URLEncode(const std::string& data)
         return {};
 
     std::string res;
-    for (size_t i = 0; i < data.size(); ++i)
+    for (const auto& ch : data)
     {
-        if (data[i] == '=') continue;
-        else if (data[i] == '/')
-            res += "_";
-        else if (data[i] == '+')
-            res += "-";
+        if (ch == '=')
+            continue;
+        else if (ch == '/')
+            res += '_';
+        else if (ch == '+')
+            res += '-';
         else
-            res += data[i];
+            res += ch;
     }
     return res;
 }
@@ -66,14 +67,14 @@ std::string URLDecode(const std::string& data)
         return {};
 
     std::string res;
-    for (size_t i = 0; i < data.size(); ++i)
+    for (const auto& ch : data)
     {
-        if (data[i] == '_')
-            res += "/";
-        else if (data[i] == '-')
-            res += "+";
+        if (ch == '_')
+            res += '/';
+        else if (ch == '-')
+            res += '+';
         else
-            res += data[i];
+            res += ch;
     }
 
     if (res.size() % 4 == 2)
