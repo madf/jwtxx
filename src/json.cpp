@@ -19,7 +19,7 @@ std::string JWTXX::toJSON(const JWT::Pairs& data)
 {
     JSON root(json_object());
     for (const auto& item : data)
-        json_object_set_new(root.get(), item.first.c_str(), json_stringn(item.second.c_str(), item.second.size()));
+        json_object_set_new(root.get(), item.first.c_str(), json_string(item.second.c_str()));
     char* dump = json_dumps(root.get(), JSON_COMPACT);
     std::string res(dump);
     free(dump);
