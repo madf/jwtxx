@@ -9,3 +9,6 @@ script:
   - mkdir build
   - cd build
   - cmake .. && make
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libjansson-dev
