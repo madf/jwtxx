@@ -1,3 +1,5 @@
+# Enable Trusty dist, Standard is ancient.
+dist: trusty
 # Enable C++ support
 language: cpp
 # # Compiler selection
