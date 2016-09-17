@@ -42,7 +42,7 @@ class HMAC : public Key::Impl
             Base64URL::Block block(res);
             if (EVP_DigestSignFinal(ctx.get(), block.data<unsigned char*>(), &res) != 1)
                 throw Key::Error("Can't sign data. " + Utils::OPENSSLError());
-            return Base64URL::encode(block);
+            return Base64URL::encode(block.shrink(res));
         }
         bool verify(const void* data, size_t size, const std::string& signature) const override
         {
