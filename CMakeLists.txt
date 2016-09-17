@@ -18,6 +18,11 @@ find_package(Jansson)
 find_package(Boost 1.46.0 REQUIRED)
 find_package(OpenSSL 0.9.8 REQUIRED)
 
+try_compile(HAS_OVERRIDE_FEATURE ${CMAKE_CURRENT_BINARY_DIR} "${CMAKE_SOURCE_DIR}/checks/checkoverride.cpp")
+if(NOT HAS_OVERRIDE_FEATURE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Doverride=")
+endif(NOT HAS_OVERRIDE_FEATURE)
+
 include_directories(${jwtxx_SOURCE_DIR}/include)
 include_directories(${Boost_INCLUDE_DIRS})
 
