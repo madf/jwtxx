@@ -15,7 +15,7 @@ set(CMAKE_CXX_FLAGS "-W -Wall -Wextra -pedantic -std=c++0x -Wno-unused-local-typ
 set(JANSSON_FIND_REQUIRED 1)
 find_package(Jansson)
 
-find_package(Boost 1.55.0 REQUIRED)
+find_package(Boost 1.46.0 REQUIRED)
 find_package(OpenSSL 0.9.8 REQUIRED)
 
 include_directories(${jwtxx_SOURCE_DIR}/include)
