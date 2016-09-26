@@ -12,12 +12,6 @@ namespace JWTXX
 namespace Utils
 {
 
-struct FileCloser
-{
-    void operator()(FILE* fp) { fclose(fp); }
-};
-typedef std::unique_ptr<FILE, FileCloser> FilePtr;
-
 struct EVPKeyDeleter
 {
     void operator()(EVP_PKEY* key) { EVP_PKEY_free(key); }
