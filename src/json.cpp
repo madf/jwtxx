@@ -13,6 +13,21 @@ struct JSONDeleter
 };
 typedef std::unique_ptr<json_t, JSONDeleter> JSON;
 
+std::string toString(const json_t* node)
+{
+    switch (json_typeof(node))
+    {
+        case JSON_NULL: return "NULL";
+        case JSON_TRUE: return "true";
+        case JSON_FALSE: return "false";
+        case JSON_STRING: return json_string_value(node);
+        case JSON_INTEGER: return std::to_string(json_integer_value(node));
+        case JSON_REAL: return std::to_string(json_real_value(node));
+        default: return json_dumps(node, JSON_COMPACT);
+    }
+    return {}; // Just in case.
+}
+
 }
 
 std::string JWTXX::toJSON(const JWT::Pairs& data)
@@ -41,9 +56,7 @@ JWT::Pairs JWTXX::fromJSON(const std::string& data)
     JWT::Pairs res;
     json_object_foreach(root.get(), key, value)
     {
-        if (!json_is_string(value))
-            throw std::runtime_error("Claim value is not a string.");
-        res[key] = json_string_value(value);
+        res[key] = toString(value);
     }
 
     return res;
