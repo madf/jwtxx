@@ -130,6 +130,32 @@ JWT::JWT(const std::string& token, Key key)
     m_claims = fromJSON(Base64URL::decode(parts[1]).toString());
 }
 
+JWT JWT::parse(const std::string& token)
+{
+    std::vector<std::string> parts;
+    boost::split(parts, token, [](char ch){ return ch == '.'; });
+    if (parts.size() < 2 || parts.size() > 3)
+        throw Error("JWT should contain only 2 or 3 parts. The supplied token contains " + std::to_string(parts.size()) + " parts.");
+    Pairs header = fromJSON(Base64URL::decode(parts[0]).toString());
+    Pairs claims = fromJSON(Base64URL::decode(parts[1]).toString());
+    Algorithm alg = Algorithm::none;
+    if (!header["alg"].empty())
+        alg = stringToAlg(header["alg"]);
+    return JWT(alg, claims, header);
+}
+
+bool JWT::verify(const std::string& token, Key key)
+{
+    std::vector<std::string> parts;
+    boost::split(parts, token, [](char ch){ return ch == '.'; });
+    if (parts.size() < 2 || parts.size() > 3)
+        throw Error("JWT should contain only 2 or 3 parts. The supplied token contains " + std::to_string(parts.size()) + " parts.");
+    if (parts.size() == 2)
+        return true;
+    auto data = parts[0] + "." + parts[1];
+    return key.verify(data.c_str(), data.size(), parts[2]);
+}
+
 std::string JWT::claim(const std::string& name) const
 {
     auto it = m_claims.find(name);

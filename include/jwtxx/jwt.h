@@ -58,6 +58,9 @@ class JWT
         JWT(const std::string& token, Key key);
         JWT(Algorithm alg, Pairs claims, Pairs header = Pairs());
 
+        static JWT parse(const std::string& token);
+        static bool verify(const std::string& token, Key key);
+
         Algorithm alg() const { return m_alg; }
         const Pairs& claims() const { return m_claims; }
         const Pairs& header() const { return m_header; }
