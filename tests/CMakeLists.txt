@@ -1,5 +1,11 @@
 enable_language(CXX)
 
+find_package(Boost 1.46.0 REQUIRED)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs")
+
+include_directories(${Boost_INCLUDE_DIRS})
+
 add_executable(nonetest nonetest.cpp)
 target_link_libraries(nonetest jwtxx ${OPENSSL_LIBRARIES} ${JANSSON_LIBRARIES})
 add_executable(hmactest hmactest.cpp)

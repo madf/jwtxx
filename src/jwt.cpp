@@ -7,8 +7,6 @@
 #include "utils.h"
 #include "json.h"
 
-#include <boost/algorithm/string/split.hpp>
-
 #include <vector>
 
 #include <openssl/evp.h>
@@ -45,6 +43,59 @@ Key::Impl* createKey(Algorithm alg, const std::string& keyData)
         case Algorithm::ES512: return new Keys::PEM(EVP_sha512(), keyData);
     }
     return new NoneKey; // Just in case.
+}
+
+std::tuple<std::string, std::string, std::string> split(const std::string& token)
+{
+    auto pos = token.find_first_of('.');
+    if (pos == std::string::npos)
+        throw JWT::Error("JWT should have at least 2 parts separated by a dot.");
+    auto spos = token.find_first_of('.', pos + 1);
+    if (spos == std::string::npos)
+        return std::make_tuple(token.substr(0, pos), token.substr(pos + 1, token.length() - pos - 1), "");
+    return std::make_tuple(token.substr(0, pos),
+                           token.substr(pos + 1, spos - pos - 1),
+                           token.substr(spos + 1, token.length() - spos - 1));
+}
+
+template <typename F>
+bool validTime(const std::string& value, F&& next)
+{
+    try
+    {
+        size_t pos = 0;
+        auto t = std::stoull(value, &pos);
+        if (pos != value.length())
+            return false;
+        return next(t);
+    }
+    catch (const std::logic_error&)
+    {
+        return false;
+    }
+}
+
+template <typename F>
+bool validClaim(const JWT::Pairs& claims, const std::string& claim, F&& next)
+{
+    auto it = claims.find(claim);
+    if (it == std::end(claims))
+        return true;
+    return next(it->second);
+}
+
+template <typename F>
+bool validTimeClaim(const JWT::Pairs& claims, const std::string& claim, F&& next)
+{
+    return validClaim(claims, claim, [=](const std::string& value) { return validTime(value, next); });
+}
+
+JWT::Validator stringValidator(const std::string& name, const std::string& validValue)
+{
+    return [=](const JWT::Pairs& claims)
+           {
+               return validClaim(claims, name, [&](const std::string& value){ return value == validValue; });
+           };
 }
 
 }
@@ -115,29 +166,20 @@ JWT::JWT(Algorithm alg, Pairs claims, Pairs header)
 
 JWT::JWT(const std::string& token, Key key)
 {
-    std::vector<std::string> parts;
-    boost::split(parts, token, [](char ch){ return ch == '.'; });
-    if (parts.size() < 2 || parts.size() > 3)
-        throw Error("JWT should contain only 2 or 3 parts. The supplied token contains " + std::to_string(parts.size()) + " parts.");
-    auto data = parts[0] + "." + parts[1];
-    std::string signature;
-    if (parts.size() == 3)
-        signature = parts[2];
-    if (!key.verify(data.c_str(), data.size(), signature))
+    auto parts = split(token);
+    auto data = std::get<0>(parts) + "." + std::get<1>(parts);
+    if (!key.verify(data.c_str(), data.size(), std::get<2>(parts)))
         throw Error("Signature is invalid.");
     m_alg = key.alg();
-    m_header = fromJSON(Base64URL::decode(parts[0]).toString());
-    m_claims = fromJSON(Base64URL::decode(parts[1]).toString());
+    m_header = fromJSON(Base64URL::decode(std::get<0>(parts)).toString());
+    m_claims = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
 }
 
 JWT JWT::parse(const std::string& token)
 {
-    std::vector<std::string> parts;
-    boost::split(parts, token, [](char ch){ return ch == '.'; });
-    if (parts.size() < 2 || parts.size() > 3)
-        throw Error("JWT should contain only 2 or 3 parts. The supplied token contains " + std::to_string(parts.size()) + " parts.");
-    Pairs header = fromJSON(Base64URL::decode(parts[0]).toString());
-    Pairs claims = fromJSON(Base64URL::decode(parts[1]).toString());
+    auto parts = split(token);
+    Pairs header = fromJSON(Base64URL::decode(std::get<0>(parts)).toString());
+    Pairs claims = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
     Algorithm alg = Algorithm::none;
     if (!header["alg"].empty())
         alg = stringToAlg(header["alg"]);
@@ -146,14 +188,9 @@ JWT JWT::parse(const std::string& token)
 
 bool JWT::verify(const std::string& token, Key key)
 {
-    std::vector<std::string> parts;
-    boost::split(parts, token, [](char ch){ return ch == '.'; });
-    if (parts.size() < 2 || parts.size() > 3)
-        throw Error("JWT should contain only 2 or 3 parts. The supplied token contains " + std::to_string(parts.size()) + " parts.");
-    if (parts.size() == 2)
-        return true;
-    auto data = parts[0] + "." + parts[1];
-    return key.verify(data.c_str(), data.size(), parts[2]);
+    auto parts = split(token);
+    auto data = std::get<0>(parts) + "." + std::get<1>(parts);
+    return key.verify(data.c_str(), data.size(), std::get<2>(parts));
 }
 
 std::string JWT::claim(const std::string& name) const
@@ -172,4 +209,43 @@ std::string JWT::token(const std::string& keyData) const
     if (signature.empty())
         return data;
     return data + "." + signature;
+}
+
+JWT::Validator JWTXX::Validate::exp(std::time_t now)
+{
+    return [=](const JWT::Pairs& claims)
+           {
+               return validTimeClaim(claims, "exp", [=](std::time_t value){ return value > now; });
+           };
+}
+
+JWT::Validator JWTXX::Validate::nbf(std::time_t now)
+{
+    return [=](const JWT::Pairs& claims)
+           {
+               return validTimeClaim(claims, "nbf", [=](std::time_t value){ return value < now; });
+           };
+}
+
+JWT::Validator JWTXX::Validate::iat(std::time_t now)
+{
+    return [=](const JWT::Pairs& claims)
+           {
+               return validTimeClaim(claims, "iat", [=](std::time_t value){ return value < now; });
+           };
+}
+
+JWT::Validator JWTXX::Validate::iss(const std::string& issuer)
+{
+    return stringValidator("iss", issuer);
+}
+
+JWT::Validator JWTXX::Validate::aud(const std::string& audience)
+{
+    return stringValidator("aud", audience);
+}
+
+JWT::Validator JWTXX::Validate::sub(const std::string& subject)
+{
+    return stringValidator("sub", subject);
 }

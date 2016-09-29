@@ -10,12 +10,11 @@ set(VERSION_MAJOR 1)
 set(VERSION_MINOR 0)
 set(VERSION_PATCH 0)
 
-set(CMAKE_CXX_FLAGS "-W -Wall -Wextra -pedantic -std=c++0x -Wno-unused-local-typedefs")
+set(CMAKE_CXX_FLAGS "-W -Wall -Wextra -pedantic -std=c++0x")
 
 set(JANSSON_FIND_REQUIRED 1)
 find_package(Jansson)
 
-find_package(Boost 1.46.0 REQUIRED)
 find_package(OpenSSL 0.9.8 REQUIRED)
 
 try_compile(HAS_OVERRIDE_FEATURE ${CMAKE_CURRENT_BINARY_DIR} "${CMAKE_SOURCE_DIR}/checks/checkoverride.cpp")
@@ -24,7 +23,6 @@ if(NOT HAS_OVERRIDE_FEATURE)
 endif(NOT HAS_OVERRIDE_FEATURE)
 
 include_directories(${jwtxx_SOURCE_DIR}/include)
-include_directories(${Boost_INCLUDE_DIRS})
 
 enable_testing()
 

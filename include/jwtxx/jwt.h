@@ -1,9 +1,12 @@
 #pragma once
 
+#include <functional>
 #include <string>
 #include <unordered_map>
 #include <memory>
 #include <stdexcept>
+
+#include <ctime>
 
 namespace JWTXX
 {
@@ -49,6 +52,7 @@ class JWT
 {
     public:
         typedef std::unordered_map<std::string, std::string> Pairs;
+        typedef std::function<bool (const Pairs&)> Validator;
 
         struct Error : std::runtime_error
         {
@@ -74,5 +78,17 @@ class JWT
         Pairs m_header;
         Pairs m_claims;
 };
+
+namespace Validate
+{
+
+JWT::Validator exp(std::time_t now = std::time(nullptr));
+JWT::Validator nbf(std::time_t now = std::time(nullptr));
+JWT::Validator iat(std::time_t now = std::time(nullptr));
+JWT::Validator iss(const std::string& issuer);
+JWT::Validator aud(const std::string& audience);
+JWT::Validator sub(const std::string& subject);
+
+}
 
 }
