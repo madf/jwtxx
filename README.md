@@ -30,7 +30,7 @@ $ make
 * none - no signature.
 * HS256, HS384, HS512 - HMAC-based algorithms with SHA-256, SHA-384 and SHA-512 hash functions respectively. Use shared secret.
 * RS256, RS384, RS512 - RSA-based algorithms with SHA-256, SHA-384 and SHA-512 hash functions respectively. Use PKI.
-* ES256, ES384, ES512 - Algorithms based on alliptic curves digital signature with SHA-256, SHA-384 and SHA-512 hash functions respectively. Use PKI.
+* ES256, ES384, ES512 - Algorithms based on elliptic curves digital signature with SHA-256, SHA-384 and SHA-512 hash functions respectively. Use PKI.
 
 RSA and ECDSA keys should be in PEM format. Public keys can be in form of certificates.
 
