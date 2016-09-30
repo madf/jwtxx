@@ -3,6 +3,7 @@
 #include <jansson.h>
 
 using JWTXX::JWT;
+using JWTXX::Pairs;
 
 namespace
 {
@@ -30,7 +31,7 @@ std::string toString(const json_t* node)
 
 }
 
-std::string JWTXX::toJSON(const JWT::Pairs& data)
+std::string JWTXX::toJSON(const Pairs& data)
 {
     JSON root(json_object());
     for (const auto& item : data)
@@ -41,7 +42,7 @@ std::string JWTXX::toJSON(const JWT::Pairs& data)
     return res;
 }
 
-JWT::Pairs JWTXX::fromJSON(const std::string& data)
+Pairs JWTXX::fromJSON(const std::string& data)
 {
     json_error_t error;
     JSON root(json_loads(data.c_str(), 0, &error));
@@ -53,7 +54,7 @@ JWT::Pairs JWTXX::fromJSON(const std::string& data)
 
     const char* key = nullptr;
     json_t* value = nullptr;
-    JWT::Pairs res;
+    Pairs res;
     json_object_foreach(root.get(), key, value)
     {
         res[key] = toString(value);

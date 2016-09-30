@@ -13,10 +13,13 @@
 #include <openssl/err.h>
 
 using JWTXX::Algorithm;
+using JWTXX::Validator;
+using JWTXX::Pairs;
 using JWTXX::Key;
 using JWTXX::JWT;
 
 namespace Keys = JWTXX::Keys;
+namespace Validate = JWTXX::Validate;
 
 namespace
 {
@@ -76,7 +79,7 @@ bool validTime(const std::string& value, F&& next)
 }
 
 template <typename F>
-bool validClaim(const JWT::Pairs& claims, const std::string& claim, F&& next)
+bool validClaim(const Pairs& claims, const std::string& claim, F&& next)
 {
     auto it = claims.find(claim);
     if (it == std::end(claims))
@@ -85,14 +88,14 @@ bool validClaim(const JWT::Pairs& claims, const std::string& claim, F&& next)
 }
 
 template <typename F>
-bool validTimeClaim(const JWT::Pairs& claims, const std::string& claim, F&& next)
+bool validTimeClaim(const Pairs& claims, const std::string& claim, F&& next)
 {
     return validClaim(claims, claim, [=](const std::string& value) { return validTime(value, next); });
 }
 
-JWT::Validator stringValidator(const std::string& name, const std::string& validValue)
+Validator stringValidator(const std::string& name, const std::string& validValue)
 {
-    return [=](const JWT::Pairs& claims)
+    return [=](const Pairs& claims)
            {
                return validClaim(claims, name, [&](const std::string& value){ return value == validValue; });
            };
@@ -164,7 +167,7 @@ JWT::JWT(Algorithm alg, Pairs claims, Pairs header)
     m_header["alg"] = algToString(m_alg);
 }
 
-JWT::JWT(const std::string& token, Key key)
+JWT::JWT(const std::string& token, Key key, Validators&& validators)
 {
     auto parts = split(token);
     auto data = std::get<0>(parts) + "." + std::get<1>(parts);
@@ -173,6 +176,9 @@ JWT::JWT(const std::string& token, Key key)
     m_alg = key.alg();
     m_header = fromJSON(Base64URL::decode(std::get<0>(parts)).toString());
     m_claims = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
+    for (const auto& validator : validators)
+        if (!validator(m_claims))
+            throw Error("Invalid token.");
 }
 
 JWT JWT::parse(const std::string& token)
@@ -186,11 +192,17 @@ JWT JWT::parse(const std::string& token)
     return JWT(alg, claims, header);
 }
 
-bool JWT::verify(const std::string& token, Key key)
+bool JWT::verify(const std::string& token, Key key, Validators&& validators)
 {
     auto parts = split(token);
     auto data = std::get<0>(parts) + "." + std::get<1>(parts);
-    return key.verify(data.c_str(), data.size(), std::get<2>(parts));
+    if (!key.verify(data.c_str(), data.size(), std::get<2>(parts)))
+        return false;
+    Pairs claims = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
+    for (const auto& validator : validators)
+        if (!validator(claims))
+            return false;
+    return true;
 }
 
 std::string JWT::claim(const std::string& name) const
@@ -211,41 +223,41 @@ std::string JWT::token(const std::string& keyData) const
     return data + "." + signature;
 }
 
-JWT::Validator JWTXX::Validate::exp(std::time_t now)
+Validator Validate::exp(std::time_t now)
 {
-    return [=](const JWT::Pairs& claims)
+    return [=](const Pairs& claims)
            {
                return validTimeClaim(claims, "exp", [=](std::time_t value){ return value > now; });
            };
 }
 
-JWT::Validator JWTXX::Validate::nbf(std::time_t now)
+Validator Validate::nbf(std::time_t now)
 {
-    return [=](const JWT::Pairs& claims)
+    return [=](const Pairs& claims)
            {
                return validTimeClaim(claims, "nbf", [=](std::time_t value){ return value < now; });
            };
 }
 
-JWT::Validator JWTXX::Validate::iat(std::time_t now)
+Validator Validate::iat(std::time_t now)
 {
-    return [=](const JWT::Pairs& claims)
+    return [=](const Pairs& claims)
            {
                return validTimeClaim(claims, "iat", [=](std::time_t value){ return value < now; });
            };
 }
 
-JWT::Validator JWTXX::Validate::iss(const std::string& issuer)
+Validator Validate::iss(const std::string& issuer)
 {
     return stringValidator("iss", issuer);
 }
 
-JWT::Validator JWTXX::Validate::aud(const std::string& audience)
+Validator Validate::aud(const std::string& audience)
 {
     return stringValidator("aud", audience);
 }
 
-JWT::Validator JWTXX::Validate::sub(const std::string& subject)
+Validator Validate::sub(const std::string& subject)
 {
     return stringValidator("sub", subject);
 }

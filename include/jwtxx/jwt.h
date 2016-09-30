@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <string>
+#include <vector>
 #include <unordered_map>
 #include <memory>
 #include <stdexcept>
@@ -48,22 +49,35 @@ class Key
         std::unique_ptr<Impl> m_impl;
 };
 
+typedef std::unordered_map<std::string, std::string> Pairs;
+typedef std::function<bool (const Pairs&)> Validator;
+typedef std::vector<Validator> Validators;
+
+namespace Validate
+{
+
+Validator exp(std::time_t now = std::time(nullptr));
+Validator nbf(std::time_t now = std::time(nullptr));
+Validator iat(std::time_t now = std::time(nullptr));
+Validator iss(const std::string& issuer);
+Validator aud(const std::string& audience);
+Validator sub(const std::string& subject);
+
+}
+
 class JWT
 {
     public:
-        typedef std::unordered_map<std::string, std::string> Pairs;
-        typedef std::function<bool (const Pairs&)> Validator;
-
         struct Error : std::runtime_error
         {
             explicit Error(const std::string& message) : runtime_error(message) {}
         };
 
-        JWT(const std::string& token, Key key);
+        JWT(const std::string& token, Key key, Validators&& validators = {Validate::exp()});
         JWT(Algorithm alg, Pairs claims, Pairs header = Pairs());
 
         static JWT parse(const std::string& token);
-        static bool verify(const std::string& token, Key key);
+        static bool verify(const std::string& token, Key key, Validators&& validators = {Validate::exp()});
 
         Algorithm alg() const { return m_alg; }
         const Pairs& claims() const { return m_claims; }
@@ -78,17 +92,5 @@ class JWT
         Pairs m_header;
         Pairs m_claims;
 };
-
-namespace Validate
-{
-
-JWT::Validator exp(std::time_t now = std::time(nullptr));
-JWT::Validator nbf(std::time_t now = std::time(nullptr));
-JWT::Validator iat(std::time_t now = std::time(nullptr));
-JWT::Validator iss(const std::string& issuer);
-JWT::Validator aud(const std::string& audience);
-JWT::Validator sub(const std::string& subject);
-
-}
 
 }
