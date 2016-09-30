@@ -34,7 +34,11 @@ $ make
 
 RSA and ECDSA keys should be in PEM format. Public keys can be in form of certificates.
 
-### HS256
+[Library reference](https://madf.github.io/jwtxx/index.html)
+
+### Examples
+
+###### HS256
 
 Key argument is a shared secret.
 
@@ -68,7 +72,7 @@ int main()
 }
 ```
 
-### RS256
+###### RS256
 
 Key argument is either a private key (when you create a token) or a public key (when you parse it).
 
@@ -102,10 +106,10 @@ int main()
 }
 ```
 
-### ES256
+###### ES256
 
 Essentially the same as RS256, but you need elliptic curve keys.
 
-### none
+###### none
 
 Key argument is not used. Token has no signature part.
