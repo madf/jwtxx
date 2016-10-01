@@ -39,6 +39,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -64,6 +65,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
       <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
 <!-- window showing the filter options -->
@@ -82,7 +84,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>JWTXX</b></li><li class="navelem"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html">JWT</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespace_j_w_t_x_x.html">JWTXX</a></li><li class="navelem"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html">JWT</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -95,45 +97,274 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">JWTXX::JWT Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Main class to work with <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html" title="Main class to work with JWT. ">JWT</a>.  
+ <a href="class_j_w_t_x_x_1_1_j_w_t.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="jwt_8h_source.html">jwt.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_j_w_t_x_x_1_1_j_w_t_1_1_error.html">Error</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_j_w_t_x_x_1_1_j_w_t_1_1_error.html">Error</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">JWT-specific exception.  <a href="struct_j_w_t_x_x_1_1_j_w_t_1_1_error.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aca34641bee989281a9c5bb2c26778ebe"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aca34641bee989281a9c5bb2c26778ebe"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>JWT</b> (const std::string &amp;token, <a class="el" href="class_j_w_t_x_x_1_1_key.html">Key</a> key, Validators &amp;&amp;validators={Validate::exp()})</td></tr>
+<tr class="memitem:aca34641bee989281a9c5bb2c26778ebe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#aca34641bee989281a9c5bb2c26778ebe">JWT</a> (const std::string &amp;<a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a5393a18acaf077fd97ef903994ca3358">token</a>, <a class="el" href="class_j_w_t_x_x_1_1_key.html">Key</a> key, <a class="el" href="namespace_j_w_t_x_x.html#a9dcb6d12bc2c9c9fed78414603834541">Validators</a> &amp;&amp;validators={<a class="el" href="namespace_j_w_t_x_x_1_1_validate.html#aeb69bfddc41197dffab457e10a36ce56">Validate::exp</a>()})</td></tr>
+<tr class="memdesc:aca34641bee989281a9c5bb2c26778ebe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html" title="Main class to work with JWT. ">JWT</a> from a token.  <a href="#aca34641bee989281a9c5bb2c26778ebe">More...</a><br /></td></tr>
 <tr class="separator:aca34641bee989281a9c5bb2c26778ebe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5d5bb6aa8c2eb09dfa88169ea8c110a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae5d5bb6aa8c2eb09dfa88169ea8c110a"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>JWT</b> (Algorithm alg, Pairs claims, Pairs header=Pairs())</td></tr>
+<tr class="memitem:ae5d5bb6aa8c2eb09dfa88169ea8c110a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#ae5d5bb6aa8c2eb09dfa88169ea8c110a">JWT</a> (<a class="el" href="namespace_j_w_t_x_x.html#a325397f3096fba5caea97be98f251bf3">Algorithm</a> <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#ab75b5a06624ddc002e8378ca4277e09f">alg</a>, <a class="el" href="namespace_j_w_t_x_x.html#af80f958fd0fe35ef9d98a91554a0769b">Pairs</a> <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a38fdcd9dd554f7e63b50fa022d12f5d6">claims</a>, <a class="el" href="namespace_j_w_t_x_x.html#af80f958fd0fe35ef9d98a91554a0769b">Pairs</a> <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a2edb69e9f299e74ab748e74b4288a67c">header</a>=<a class="el" href="namespace_j_w_t_x_x.html#af80f958fd0fe35ef9d98a91554a0769b">Pairs</a>())</td></tr>
+<tr class="memdesc:ae5d5bb6aa8c2eb09dfa88169ea8c110a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html" title="Main class to work with JWT. ">JWT</a> from scratch.  <a href="#ae5d5bb6aa8c2eb09dfa88169ea8c110a">More...</a><br /></td></tr>
 <tr class="separator:ae5d5bb6aa8c2eb09dfa88169ea8c110a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab75b5a06624ddc002e8378ca4277e09f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab75b5a06624ddc002e8378ca4277e09f"></a>
-Algorithm&#160;</td><td class="memItemRight" valign="bottom"><b>alg</b> () const </td></tr>
+<a class="el" href="namespace_j_w_t_x_x.html#a325397f3096fba5caea97be98f251bf3">Algorithm</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#ab75b5a06624ddc002e8378ca4277e09f">alg</a> () const </td></tr>
+<tr class="memdesc:ab75b5a06624ddc002e8378ca4277e09f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an algorithm. <br /></td></tr>
 <tr class="separator:ab75b5a06624ddc002e8378ca4277e09f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38fdcd9dd554f7e63b50fa022d12f5d6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a38fdcd9dd554f7e63b50fa022d12f5d6"></a>
-const Pairs &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>claims</b> () const </td></tr>
+const <a class="el" href="namespace_j_w_t_x_x.html#af80f958fd0fe35ef9d98a91554a0769b">Pairs</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a38fdcd9dd554f7e63b50fa022d12f5d6">claims</a> () const </td></tr>
+<tr class="memdesc:a38fdcd9dd554f7e63b50fa022d12f5d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a list of claims. <br /></td></tr>
 <tr class="separator:a38fdcd9dd554f7e63b50fa022d12f5d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2edb69e9f299e74ab748e74b4288a67c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2edb69e9f299e74ab748e74b4288a67c"></a>
-const Pairs &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>header</b> () const </td></tr>
+const <a class="el" href="namespace_j_w_t_x_x.html#af80f958fd0fe35ef9d98a91554a0769b">Pairs</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a2edb69e9f299e74ab748e74b4288a67c">header</a> () const </td></tr>
+<tr class="memdesc:a2edb69e9f299e74ab748e74b4288a67c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a list of header fields. <br /></td></tr>
 <tr class="separator:a2edb69e9f299e74ab748e74b4288a67c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7174b8c39b574eb174488b1a35357b03"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7174b8c39b574eb174488b1a35357b03"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>claim</b> (const std::string &amp;name) const </td></tr>
+<tr class="memitem:a7174b8c39b574eb174488b1a35357b03"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a7174b8c39b574eb174488b1a35357b03">claim</a> (const std::string &amp;name) const </td></tr>
+<tr class="memdesc:a7174b8c39b574eb174488b1a35357b03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a value of a specific claim.  <a href="#a7174b8c39b574eb174488b1a35357b03">More...</a><br /></td></tr>
 <tr class="separator:a7174b8c39b574eb174488b1a35357b03"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5393a18acaf077fd97ef903994ca3358"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5393a18acaf077fd97ef903994ca3358"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>token</b> (const std::string &amp;keyData) const </td></tr>
+<tr class="memitem:a5393a18acaf077fd97ef903994ca3358"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a5393a18acaf077fd97ef903994ca3358">token</a> (const std::string &amp;keyData) const </td></tr>
+<tr class="memdesc:a5393a18acaf077fd97ef903994ca3358"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a signed token.  <a href="#a5393a18acaf077fd97ef903994ca3358">More...</a><br /></td></tr>
 <tr class="separator:a5393a18acaf077fd97ef903994ca3358"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a8a7c89d98e0f65dc0536209ae6122763"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8a7c89d98e0f65dc0536209ae6122763"></a>
-static <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html">JWT</a>&#160;</td><td class="memItemRight" valign="bottom"><b>parse</b> (const std::string &amp;token)</td></tr>
+<tr class="memitem:a8a7c89d98e0f65dc0536209ae6122763"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html">JWT</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a8a7c89d98e0f65dc0536209ae6122763">parse</a> (const std::string &amp;<a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a5393a18acaf077fd97ef903994ca3358">token</a>)</td></tr>
+<tr class="memdesc:a8a7c89d98e0f65dc0536209ae6122763"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html" title="Main class to work with JWT. ">JWT</a> for a token without validation.  <a href="#a8a7c89d98e0f65dc0536209ae6122763">More...</a><br /></td></tr>
 <tr class="separator:a8a7c89d98e0f65dc0536209ae6122763"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e35748f731841bd6cb05090ffe40ef4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3e35748f731841bd6cb05090ffe40ef4"></a>
-static bool&#160;</td><td class="memItemRight" valign="bottom"><b>verify</b> (const std::string &amp;token, <a class="el" href="class_j_w_t_x_x_1_1_key.html">Key</a> key, Validators &amp;&amp;validators={Validate::exp()})</td></tr>
+<tr class="memitem:a3e35748f731841bd6cb05090ffe40ef4"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a3e35748f731841bd6cb05090ffe40ef4">verify</a> (const std::string &amp;<a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a5393a18acaf077fd97ef903994ca3358">token</a>, <a class="el" href="class_j_w_t_x_x_1_1_key.html">Key</a> key, <a class="el" href="namespace_j_w_t_x_x.html#a9dcb6d12bc2c9c9fed78414603834541">Validators</a> &amp;&amp;validators={<a class="el" href="namespace_j_w_t_x_x_1_1_validate.html#aeb69bfddc41197dffab457e10a36ce56">Validate::exp</a>()})</td></tr>
+<tr class="memdesc:a3e35748f731841bd6cb05090ffe40ef4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validates a token without constructing a <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html" title="Main class to work with JWT. ">JWT</a>.  <a href="#a3e35748f731841bd6cb05090ffe40ef4">More...</a><br /></td></tr>
 <tr class="separator:a3e35748f731841bd6cb05090ffe40ef4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Main class to work with <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html" title="Main class to work with JWT. ">JWT</a>. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="aca34641bee989281a9c5bb2c26778ebe"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">JWTXX::JWT::JWT </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>token</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_j_w_t_x_x_1_1_key.html">Key</a>&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_j_w_t_x_x.html#a9dcb6d12bc2c9c9fed78414603834541">Validators</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>validators</em> = <code>{<a class="el" href="namespace_j_w_t_x_x_1_1_validate.html#aeb69bfddc41197dffab457e10a36ce56">Validate::exp</a>()}</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructs a <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html" title="Main class to work with JWT. ">JWT</a> from a token. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">token</td><td>the token; </td></tr>
+    <tr><td class="paramname">key</td><td>key to use for signatire verification; </td></tr>
+    <tr><td class="paramname">validators</td><td>an optional list of validators; validates 'exp' by default. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ae5d5bb6aa8c2eb09dfa88169ea8c110a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">JWTXX::JWT::JWT </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_j_w_t_x_x.html#a325397f3096fba5caea97be98f251bf3">Algorithm</a>&#160;</td>
+          <td class="paramname"><em>alg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_j_w_t_x_x.html#af80f958fd0fe35ef9d98a91554a0769b">Pairs</a>&#160;</td>
+          <td class="paramname"><em>claims</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_j_w_t_x_x.html#af80f958fd0fe35ef9d98a91554a0769b">Pairs</a>&#160;</td>
+          <td class="paramname"><em>header</em> = <code><a class="el" href="namespace_j_w_t_x_x.html#af80f958fd0fe35ef9d98a91554a0769b">Pairs</a>()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructs a <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html" title="Main class to work with JWT. ">JWT</a> from scratch. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">alg</td><td>signature algorithm; </td></tr>
+    <tr><td class="paramname">claims</td><td>a list of claims; </td></tr>
+    <tr><td class="paramname">header</td><td>an optional list of header records; 'alg' and 'typ' can't be specified manually. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a7174b8c39b574eb174488b1a35357b03"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string JWTXX::JWT::claim </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns a value of a specific claim. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>claim name. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>Returns an empty string if the claim is missing. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a8a7c89d98e0f65dc0536209ae6122763"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html">JWT</a> JWTXX::JWT::parse </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>token</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html" title="Main class to work with JWT. ">JWT</a> for a token without validation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">token</td><td>the token. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a5393a18acaf077fd97ef903994ca3358"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string JWTXX::JWT::token </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>keyData</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns a signed token. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">keyData</td><td>key-specific data. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>Automatically constructs key using the algorithm specified in this <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html" title="Main class to work with JWT. ">JWT</a>. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a3e35748f731841bd6cb05090ffe40ef4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool JWTXX::JWT::verify </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>token</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_j_w_t_x_x_1_1_key.html">Key</a>&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespace_j_w_t_x_x.html#a9dcb6d12bc2c9c9fed78414603834541">Validators</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>validators</em> = <code>{<a class="el" href="namespace_j_w_t_x_x_1_1_validate.html#aeb69bfddc41197dffab457e10a36ce56">Validate::exp</a>()}</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Validates a token without constructing a <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html" title="Main class to work with JWT. ">JWT</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">token</td><td>the token; </td></tr>
+    <tr><td class="paramname">key</td><td>key to use for signatire verification; </td></tr>
+    <tr><td class="paramname">validators</td><td>an optional list of validators; validates 'exp' by default. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/jwtxx/<a class="el" href="jwt_8h_source.html">jwt.h</a></li>
 </ul>
