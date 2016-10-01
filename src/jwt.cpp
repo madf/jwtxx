@@ -8,6 +8,7 @@
 #include "json.h"
 
 #include <vector>
+#include <mutex> // std::once_flag/std::call_once
 
 #include <openssl/evp.h>
 #include <openssl/err.h>
@@ -105,7 +106,8 @@ Validator stringValidator(const std::string& name, const std::string& validValue
 
 void JWTXX::enableOpenSSLErrors()
 {
-    static bool enabled = [](){ OpenSSL_add_all_algorithms(); ERR_load_crypto_strings(); return true; }();
+    static std::once_flag flag;
+    std::call_once(flag, [](){ OpenSSL_add_all_algorithms(); ERR_load_crypto_strings(); });
 }
 
 std::string JWTXX::algToString(Algorithm alg)
@@ -138,7 +140,7 @@ Algorithm JWTXX::stringToAlg(const std::string& value)
     else if (value == "ES256") return Algorithm::ES256;
     else if (value == "ES384") return Algorithm::ES384;
     else if (value == "ES512") return Algorithm::ES512;
-    else throw std::runtime_error("Invalid algorithm name: '" + value + "'.");
+    else throw Error("Invalid algorithm name: '" + value + "'.");
 }
 
 Key::Key(Algorithm alg, const std::string& keyData)
