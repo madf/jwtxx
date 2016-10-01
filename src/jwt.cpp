@@ -8,7 +8,6 @@
 #include "json.h"
 
 #include <vector>
-#include <mutex> // std::once_flag/std::call_once
 
 #include <openssl/evp.h>
 #include <openssl/err.h>
@@ -106,8 +105,7 @@ Validator stringValidator(const std::string& name, const std::string& validValue
 
 void JWTXX::enableOpenSSLErrors()
 {
-    static std::once_flag flag;
-    std::call_once(flag, [](){ OpenSSL_add_all_algorithms(); ERR_load_crypto_strings(); });
+    static const bool enabled __attribute__((used)) = [](){ OpenSSL_add_all_algorithms(); ERR_load_crypto_strings(); return true; }();
 }
 
 std::string JWTXX::algToString(Algorithm alg)
