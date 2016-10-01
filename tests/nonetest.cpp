@@ -7,7 +7,7 @@
 
 #include <boost/test/included/unit_test.hpp>
 
-BOOST_GLOBAL_FIXTURE(InitOpenSSL)
+BOOST_GLOBAL_FIXTURE(InitOpenSSL);
 
 BOOST_AUTO_TEST_CASE(TestCtor)
 {
