@@ -2,7 +2,7 @@ enable_language(CXX)
 
 find_package(Boost 1.46.0 REQUIRED)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs -Wno-unused-parameter")
 
 include_directories(${Boost_INCLUDE_DIRS})
 
