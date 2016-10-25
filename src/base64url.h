@@ -87,9 +87,8 @@ std::string URLDecode(const std::string& data)
 
 std::string encode(const Block& block)
 {
-    BIO* bio = BIO_new(BIO_f_base64());
+    BIO* bio = BIO_push(BIO_new(BIO_f_base64()), BIO_new(BIO_s_mem()));
     BIO_set_flags(bio, BIO_FLAGS_BASE64_NO_NL);
-    BIO_push(bio, BIO_new(BIO_s_mem()));
     BIO_write(bio, block.data(), block.size());
 
     std::string res;
@@ -118,9 +117,8 @@ Block decode(std::string data)
 {
     data = URLDecode(data);
 
-    BIO* bio = BIO_new(BIO_f_base64());
+    BIO* bio = BIO_push(BIO_new(BIO_f_base64()), BIO_new_mem_buf(const_cast<char*>(data.c_str()), data.size()));
     BIO_set_flags(bio, BIO_FLAGS_BASE64_NO_NL);
-    BIO_push(bio, BIO_new_mem_buf(const_cast<char*>(data.c_str()), data.size()));
     Block block(data.size());
     int res = BIO_read(bio, block.data(), block.size());
     BIO_free_all(bio);
