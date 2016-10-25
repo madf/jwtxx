@@ -105,7 +105,12 @@ Validator stringValidator(const std::string& name, const std::string& validValue
 
 void JWTXX::enableOpenSSLErrors()
 {
-    static const bool enabled __attribute__((used)) = [](){ OpenSSL_add_all_algorithms(); ERR_load_crypto_strings(); return true; }();
+    struct OpenSSLErrors
+    {
+        OpenSSLErrors() { ERR_load_crypto_strings(); }
+        ~OpenSSLErrors() { ERR_free_strings(); CRYPTO_cleanup_all_ex_data(); }
+    };
+    static const OpenSSLErrors enabled __attribute__((used));
 }
 
 std::string JWTXX::algToString(Algorithm alg)
