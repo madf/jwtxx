@@ -59,7 +59,7 @@ Utils::EVPKeyPtr Utils::readPEMPrivateKey(const std::string& fileName)
         throw Key::Error("Can't open key file '" + fileName + "'. " + sysError());
     EVPKeyPtr key(PEM_read_PrivateKey(fp.get(), nullptr, nullptr, nullptr));
     if (!key)
-        throw Key::Error("Can't read public key '" + fileName + "'. " + OPENSSLError());
+        throw Key::Error("Can't read private key '" + fileName + "'. " + OPENSSLError());
     return key;
 }
 
