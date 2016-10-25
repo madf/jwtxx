@@ -1,0 +1,8 @@
+#pragma once
+
+namespace JWTXX
+{
+
+constexpr const char version[] = "@PROJECT_VERSION@";
+
+}

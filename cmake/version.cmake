@@ -1,0 +1,1 @@
+configure_file ( ${SOURCE_FILE} ${DEST_FILE} ESCAPE_QUOTES @ONLY )
