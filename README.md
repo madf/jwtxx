@@ -21,6 +21,37 @@ $ mkdir build
 $ cd build
 $ cmake ..
 $ make
+$ make install
+```
+
+It will install everything in /usr/local by default. If you want to install with a different destdir:
+
+```
+$ make DESTDIR=/path/to/your/destdir install
+```
+
+It will automatically append usr/local to your destdir. So if you specify DESTDIR=foo you will result in the following directory structure:
+
+```
+foo/usr/local/bin
+foo/usr/local/include
+foo/usr/local/lib
+```
+
+If you want a custom install dir prefix use CMAKE_INSTALL_PREFIX at compile time:
+
+```
+$ cmake -DCMAKE_INSTALL_PREFIX=/your/prefix ..
+$ make
+$ make install
+```
+
+If you specify -DCMAKE_INSTALL_PREFIX=foo you will result in the following directory structure:
+
+```
+foo/bin
+foo/include
+foo/lib
 ```
 
 ## Documentation
