@@ -26,4 +26,4 @@ add_subdirectory(src)
 add_subdirectory(tools)
 add_subdirectory(tests)
 
-add_custom_target(cppcheck COMMAND /usr/bin/cppcheck --enable=all --std=c++11 -I ${jwtxx_SOURCE_DIR}/include ${jwtxx_SOURCE_DIR}/src)
+add_custom_target(cppcheck COMMAND /usr/bin/cppcheck --enable=all --std=c++11 -I ${jwtxx_SOURCE_DIR}/include ${jwtxx_SOURCE_DIR}/src ${jwtxx_SOURCE_DIR}/tools)
