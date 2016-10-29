@@ -63,7 +63,7 @@ Triple split(const std::string& token)
 {
     auto pos = token.find_first_of('.');
     if (pos == std::string::npos)
-        throw JWT::Error("JWT should have at least 2 parts separated by a dot.");
+        throw JWT::ParseError("JWT should have at least 2 parts separated by a dot.");
     auto spos = token.find_first_of('.', pos + 1);
     if (spos == std::string::npos)
         return std::make_tuple(token.substr(0, pos),
@@ -200,13 +200,13 @@ JWT::JWT(const std::string& token, Key key, Validators&& validators)
     auto parts = split(token);
     auto data = std::get<0>(parts) + "." + std::get<1>(parts);
     if (!key.verify(data.c_str(), data.size(), std::get<2>(parts)))
-        throw Error("Signature is invalid.");
+        throw ValidationError("Signature is invalid.");
     m_alg = key.alg();
     m_header = fromJSON(Base64URL::decode(std::get<0>(parts)).toString());
     m_claims = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
     for (const auto& validator : validators)
         if (!validator(m_claims))
-            throw Error("Invalid token.");
+            throw ValidationError("Invalid token.");
 }
 
 JWT JWT::parse(const std::string& token)

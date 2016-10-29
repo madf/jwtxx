@@ -186,6 +186,24 @@ class JWT
             explicit Error(const std::string& message) : JWTXX::Error(message) {}
         };
 
+        /** @class ParseError
+         *  @brief Indicates problems with JWT structure.
+         */
+        struct ParseError : Error
+        {
+            /** @brief Constructor. */
+            explicit ParseError(const std::string& message) : Error(message) {}
+        };
+
+        /** @class ValidationError
+         *  @brief Indicates problems with JWT validation (signature and claims).
+         */
+        struct ValidationError : Error
+        {
+            /** @brief Constructor. */
+            explicit ValidationError(const std::string& message) : Error(message) {}
+        };
+
         /** @brief Constructs a JWT from a token.
          *  @param token the token;
          *  @param key key to use for signatire verification;

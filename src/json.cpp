@@ -47,10 +47,10 @@ Pairs JWTXX::fromJSON(const std::string& data)
     json_error_t error;
     JSON root(json_loads(data.c_str(), 0, &error));
     if (!root)
-        throw JWTXX::Error("Error parsing json at position " + std::to_string(error.position) + " in '" + data + "', reason: " + error.text);
+        throw JWT::ParseError("Error parsing json at position " + std::to_string(error.position) + " in '" + data + "', reason: " + error.text);
 
     if (!json_is_object(root.get()))
-        throw JWTXX::Error("Not a JSON object.");
+        throw JWT::ParseError("Not a JSON object.");
 
     const char* key = nullptr;
     json_t* value = nullptr;
