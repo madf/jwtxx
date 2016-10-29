@@ -11,6 +11,9 @@ add_custom_target(generate_lib_version COMMAND ${CMAKE_COMMAND} -D SOURCE_FILE="
 add_library(${PROJECT_NAME} STATIC jwt.cpp utils.cpp json.cpp)
 add_dependencies(${PROJECT_NAME} generate_lib_version)
 
+set(INCLUDE_PREFIX "${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}")
+
 install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib ARCHIVE DESTINATION lib RUNTIME DESTINATION bin)
-install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}" DESTINATION include)
+install(FILES "${INCLUDE_PREFIX}/jwt.h" DESTINATION "include/${PROJECT_NAME}")
+install(FILES "${INCLUDE_PREFIX}/ios.h" DESTINATION "include/${PROJECT_NAME}")
 install(FILES "${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/version.h" DESTINATION "include/${PROJECT_NAME}")
