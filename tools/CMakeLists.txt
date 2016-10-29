@@ -2,8 +2,6 @@ project(jwttool VERSION 1.0.0)
 
 enable_language(CXX)
 
-find_package(Boost 1.46.0 REQUIRED)
-
 include_directories(${PROJECT_BINARY_DIR}) # toolversion.h
 include_directories(${jwtxx_BINARY_DIR}/include) # jwtxx/version.h
 include_directories(${Boost_INCLUDE_DIRS})
