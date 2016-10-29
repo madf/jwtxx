@@ -18,6 +18,10 @@ constexpr const char token512Order1[] = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.ey
 constexpr const char token512Order2[] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJtYWRmIn0._iBZ2gZQsv5v2f8mZHKf45zUYYdCurzCyCf6UvRHGaOJTFUqJBMpL4UzZafnWQ9p27oAXgEgzlHyc0fWDydwKw";
 constexpr const char tokenWithExp[] = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtYWRmIiwic3ViIjoidXNlciIsIm5iZiI6MTQ3NTI0MjkyMywiZXhwIjoxNDc1MjQ2NTIzLCJpYXQiOjE0NzUyNDI5MjN9.C2ifmz5X6Z_8HsPM-d_5pSFG03IUAB_6c1CTTrsPQtc";
 constexpr const char tokenCorruptedSign[] = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtYWRmIiwic3ViIjoidXNlciIsIm5iZiI6MTQ3NTI0MjkyMywiZXhwIjoxNDc1MjQ2NTIzLCJpYXQiOjE0NzUyNDI5MjN9.C2ifmz5X6Z_8HsPM-d_5pSFG03IUAB_";
+constexpr const char brokenTokenWithExp1[] = "bGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtYWRmIiwic3ViIjoidXNlciIsIm5iZiI6MTQ3NTI0MjkyMywiZXhwIjoxNDc1MjQ2NTIzLCJpYXQiOjE0NzUyNDI5MjN9.C2ifmz5X6Z_8HsPM-d_5pSFG03IUAB_6c1CTTrsPQtc";
+constexpr const char brokenTokenWithExp2[] = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.c3MiOiJtYWRmIiwic3ViIjoidXNlciIsIm5iZiI6MTQ3NTI0MjkyMywiZXhwIjoxNDc1MjQ2NTIzLCJpYXQiOjE0NzUyNDI5MjN9.C2ifmz5X6Z_8HsPM-d_5pSFG03IUAB_6c1CTTrsPQtc";
+constexpr const char notAToken1[] = "";
+constexpr const char notAToken2[] = "Hello, World!";
 
 }
 
@@ -218,7 +222,15 @@ BOOST_AUTO_TEST_CASE(TestParserExtraVerification)
     BOOST_CHECK_EQUAL(jwt.claim("exp"), "1475246523");
     BOOST_CHECK_EQUAL(jwt.claim("iat"), "1475242923");
     BOOST_CHECK_EQUAL(jwt.claim("nbf"), "1475242923");
-    BOOST_CHECK_THROW(JWTXX::JWT(tokenCorruptedSign, JWTXX::Key(JWTXX::Algorithm::HS256, "secret-key")), JWTXX::JWT::Error);
-    BOOST_CHECK_THROW(JWTXX::JWT(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::HS256, "secret-key"), {JWTXX::Validate::exp(1475242922), JWTXX::Validate::iat(1475242922), JWTXX::Validate::nbf(1475242922)}), JWTXX::JWT::Error);
-    BOOST_CHECK_THROW(JWTXX::JWT(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::HS256, "secret-key"), {JWTXX::Validate::exp(1475246524), JWTXX::Validate::iat(1475246524), JWTXX::Validate::nbf(1475246524)}), JWTXX::JWT::Error);
+    BOOST_CHECK_THROW(JWTXX::JWT(tokenCorruptedSign, JWTXX::Key(JWTXX::Algorithm::HS256, "secret-key")), JWTXX::JWT::ValidationError);
+    BOOST_CHECK_THROW(JWTXX::JWT(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::HS256, "secret-key"), {JWTXX::Validate::exp(1475242922), JWTXX::Validate::iat(1475242922), JWTXX::Validate::nbf(1475242922)}), JWTXX::JWT::ValidationError);
+    BOOST_CHECK_THROW(JWTXX::JWT(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::HS256, "secret-key"), {JWTXX::Validate::exp(1475246524), JWTXX::Validate::iat(1475246524), JWTXX::Validate::nbf(1475246524)}), JWTXX::JWT::ValidationError);
+}
+
+BOOST_AUTO_TEST_CASE(TestParserErrors)
+{
+    BOOST_CHECK_THROW(JWTXX::JWT(brokenTokenWithExp1, JWTXX::Key(JWTXX::Algorithm::HS256, "secret-key"), {JWTXX::Validate::exp(1475242922), JWTXX::Validate::iat(1475242922), JWTXX::Validate::nbf(1475242922)}), JWTXX::JWT::ParseError);
+    BOOST_CHECK_THROW(JWTXX::JWT(brokenTokenWithExp2, JWTXX::Key(JWTXX::Algorithm::HS256, "secret-key"), {JWTXX::Validate::exp(1475246524), JWTXX::Validate::iat(1475246524), JWTXX::Validate::nbf(1475246524)}), JWTXX::JWT::ParseError);
+    BOOST_CHECK_THROW(JWTXX::JWT(notAToken1, JWTXX::Key(JWTXX::Algorithm::HS256, "secret-key"), {JWTXX::Validate::exp(1475242922), JWTXX::Validate::iat(1475242922), JWTXX::Validate::nbf(1475242922)}), JWTXX::JWT::ParseError);
+    BOOST_CHECK_THROW(JWTXX::JWT(notAToken2, JWTXX::Key(JWTXX::Algorithm::HS256, "secret-key"), {JWTXX::Validate::exp(1475246524), JWTXX::Validate::iat(1475246524), JWTXX::Validate::nbf(1475246524)}), JWTXX::JWT::ParseError);
 }

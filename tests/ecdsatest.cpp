@@ -22,6 +22,11 @@ constexpr const char token512PartOrder1[] = "eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ
 constexpr const char token512PartOrder2[] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJpc3MiOiJtYWRmIn0";
 constexpr const char token512Order1[] = "eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtYWRmIn0.MEUCIQCVS5EcXIIYk8BJVTphGS_gIkMDkHS-K5rlTVoi3fTnKAIgfSMsTcnjXQjoi_43hdRWQhiNKKu7D090RjJbYC1w-eg";
 constexpr const char token512Order2[] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJpc3MiOiJtYWRmIn0.MEYCIQCSn5y1q5hQm4kOfP-39rWVNY_61iukR9GUjhn2Y8DuyQIhAMLF77oGoNtNO_buqxZIAwMTPs_TO3FrjbRVua34W-jk";
+constexpr const char token512CorruptedSignature[] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJpc3MiOiJtYWRmIn0.MEYCIQCSn5y1q5hQm4kOfP-39rWVNY_61iukR9GUjhn2Y8DuyQIhAMLF77oGoNtNO_buqxZIAwMTPs_TO3FrjbRVua";
+constexpr const char brokenToken1[] = "eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJpc3MiOiJtYWRmIn0.MEYCIQCSn5y1q5hQm4kOfP-39rWVNY_61iukR9GUjhn2Y8DuyQIhAMLF77oGoNtNO_buqxZIAwMTPs_TO3FrjbRVua34W-jk";
+constexpr const char brokenToken2[] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.3MiOiJtYWRmIn0.MEYCIQCSn5y1q5hQm4kOfP-39rWVNY_61iukR9GUjhn2Y8DuyQIhAMLF77oGoNtNO_buqxZIAwMTPs_TO3FrjbRVua34W-jk";
+constexpr const char notAToken1[] = "";
+constexpr const char notAToken2[] = "Hello, World!";
 
 }
 
@@ -295,4 +300,32 @@ BOOST_AUTO_TEST_CASE(TestParserWithCert512Sig2)
     auto token = jwt.token("ecdsa-256-key-pair.pem");
     auto part = token.substr(0, 56);
     BOOST_CHECK(part == token512PartOrder1 || part == token512PartOrder2);
+}
+
+BOOST_AUTO_TEST_CASE(TestParserNoVerify)
+{
+    auto jwt1 = JWTXX::JWT::parse(token512Order1);
+    BOOST_CHECK_EQUAL(jwt1.alg(), JWTXX::Algorithm::ES512);
+    auto jwt2 = JWTXX::JWT::parse(token512Order1);
+    BOOST_CHECK_EQUAL(jwt2.alg(), JWTXX::Algorithm::ES512);
+}
+
+BOOST_AUTO_TEST_CASE(TestParserNoVerifyCorruptedSignature)
+{
+    auto jwt = JWTXX::JWT::parse(token512CorruptedSignature);
+    BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::ES512);
+}
+
+BOOST_AUTO_TEST_CASE(TestParserExtraVerification)
+{
+    // TODO: add tests for claim verification
+    BOOST_CHECK_THROW(JWTXX::JWT(token512CorruptedSignature, JWTXX::Key(JWTXX::Algorithm::ES512, "ecdsa-cert.pem")), JWTXX::JWT::ValidationError);
+}
+
+BOOST_AUTO_TEST_CASE(TestParserErrors)
+{
+    BOOST_CHECK_THROW(JWTXX::JWT(brokenToken1, JWTXX::Key(JWTXX::Algorithm::ES512, "ecdsa-cert.pem")), JWTXX::JWT::ParseError);
+    BOOST_CHECK_THROW(JWTXX::JWT(brokenToken2, JWTXX::Key(JWTXX::Algorithm::ES512, "ecdsa-cert.pem")), JWTXX::JWT::ParseError);
+    BOOST_CHECK_THROW(JWTXX::JWT(notAToken1, JWTXX::Key(JWTXX::Algorithm::ES512, "ecdsa-cert.pem")), JWTXX::JWT::ParseError);
+    BOOST_CHECK_THROW(JWTXX::JWT(notAToken2, JWTXX::Key(JWTXX::Algorithm::ES512, "ecdsa-cert.pem")), JWTXX::JWT::ParseError);
 }

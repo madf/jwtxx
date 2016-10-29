@@ -197,13 +197,17 @@ JWT::JWT(Algorithm alg, Pairs claims, Pairs header)
 
 JWT::JWT(const std::string& token, Key key, Validators&& validators)
 {
+    // Check structure in general - split parts.
     auto parts = split(token);
+
+    // Check internal structure. fromJSON will throw on non-JSON or non-object.
+    m_header = fromJSON(Base64URL::decode(std::get<0>(parts)).toString());
+    m_claims = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
+
     auto data = std::get<0>(parts) + "." + std::get<1>(parts);
     if (!key.verify(data.c_str(), data.size(), std::get<2>(parts)))
         throw ValidationError("Signature is invalid.");
     m_alg = key.alg();
-    m_header = fromJSON(Base64URL::decode(std::get<0>(parts)).toString());
-    m_claims = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
     for (const auto& validator : validators)
         if (!validator(m_claims))
             throw ValidationError("Invalid token.");

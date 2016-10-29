@@ -18,6 +18,10 @@ constexpr const char token512Order1[] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzUxMiJ9.ey
 constexpr const char token512Order2[] = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtYWRmIn0.fyDpJVopst2qpHzs63NRWZ9zY04KrxfQmiF0zt3i-ACB38hnBo90r_PlrhMiMU8HU52_JxcBUAi5lSQHakX16EQyR0pEwZZfoCbeI0lOzpt0yrXAYyGvJC8WlE1Mm9Ehd8iUgcvvc9nL0_gRT-4RSU7kVOHOlwIRiN6fE28si22Jjtb5hf0KjebLj7BTeNnVB17SK9qMMn7VuYtRKj767FDpnZuOwNkDvb2qeL3IzbJnTYgpOVMoinHWAvR_innn9BjzCOEkFqgj6KKzQiEbVI6tbHfD-qOHHVDF1a0eERtCUuu92LesUyWJj3etgnmmNFI5EVjDtQkldQuuFgARUw";
 constexpr const char tokenCorruptedSign[] = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyIiwiaXNzIjoibWFkZiIsImlhdCI6MTQ3NTI0MjkyMywibmJmIjoxNDc1MjQyOTIzLCJleHAiOjE0NzUyNDY1MjN9.r8mj1m0XYra8hRg2e-E85N75gEGAWbcqIMjQunFleW9XmbqAdC9YYKbfLQRe0MTXTYjP4lsfZdo7fWW93dTOpA5IpcPKAZe53GPozs1bz7GvscElUrXusVR345v4TiCk_CTAvr6DqX5o44i6OP9og5lgguXja-u_UvormjeUTA1ASM3vsQ1mTmUx8iUExnmrXrAtgtSZe_a1ebOYmZd0-cpA82zT8BlrJes_Po35Qwe3wmtvY5EZBwpT6bgEss9QOuUtqXIVZYp0HhkfD5dkpzbS9j60bxlYfb7iVDPLRx1_1iLa7ehja-kkGOvcmJcFL-";
 constexpr const char tokenWithExp[] = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyIiwiaXNzIjoibWFkZiIsImlhdCI6MTQ3NTI0MjkyMywibmJmIjoxNDc1MjQyOTIzLCJleHAiOjE0NzUyNDY1MjN9.r8mj1m0XYra8hRg2e-E85N75gEGAWbcqIMjQunFleW9XmbqAdC9YYKbfLQRe0MTXTYjP4lsfZdo7fWW93dTOpA5IpcPKAZe53GPozs1bz7GvscElUrXusVR345v4TiCk_CTAvr6DqX5o44i6OP9og5lgguXja-u_UvormjeUTA1ASM3vsQ1mTmUx8iUExnmrXrAtgtSZe_a1ebOYmZd0-cpA82zT8BlrJes_Po35Qwe3wmtvY5EZBwpT6bgEss9QOuUtqXIVZYp0HhkfD5dkpzbS9j60bxlYfb7iVDPLRx1_1iLa7ehja-kkGOvcmJcFL-KxbZ9EjHAnVsB7jtDt3A";
+constexpr const char brokenTokenWithExp1[] = "bGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyIiwiaXNzIjoibWFkZiIsImlhdCI6MTQ3NTI0MjkyMywibmJmIjoxNDc1MjQyOTIzLCJleHAiOjE0NzUyNDY1MjN9.r8mj1m0XYra8hRg2e-E85N75gEGAWbcqIMjQunFleW9XmbqAdC9YYKbfLQRe0MTXTYjP4lsfZdo7fWW93dTOpA5IpcPKAZe53GPozs1bz7GvscElUrXusVR345v4TiCk_CTAvr6DqX5o44i6OP9og5lgguXja-u_UvormjeUTA1ASM3vsQ1mTmUx8iUExnmrXrAtgtSZe_a1ebOYmZd0-cpA82zT8BlrJes_Po35Qwe3wmtvY5EZBwpT6bgEss9QOuUtqXIVZYp0HhkfD5dkpzbS9j60bxlYfb7iVDPLRx1_1iLa7ehja-kkGOvcmJcFL-KxbZ9EjHAnVsB7jtDt3A";
+constexpr const char brokenTokenWithExp2[] = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.dWIiOiJ1c2VyIiwiaXNzIjoibWFkZiIsImlhdCI6MTQ3NTI0MjkyMywibmJmIjoxNDc1MjQyOTIzLCJleHAiOjE0NzUyNDY1MjN9.r8mj1m0XYra8hRg2e-E85N75gEGAWbcqIMjQunFleW9XmbqAdC9YYKbfLQRe0MTXTYjP4lsfZdo7fWW93dTOpA5IpcPKAZe53GPozs1bz7GvscElUrXusVR345v4TiCk_CTAvr6DqX5o44i6OP9og5lgguXja-u_UvormjeUTA1ASM3vsQ1mTmUx8iUExnmrXrAtgtSZe_a1ebOYmZd0-cpA82zT8BlrJes_Po35Qwe3wmtvY5EZBwpT6bgEss9QOuUtqXIVZYp0HhkfD5dkpzbS9j60bxlYfb7iVDPLRx1_1iLa7ehja-kkGOvcmJcFL-KxbZ9EjHAnVsB7jtDt3A";
+constexpr const char notAToken1[] = "";
+constexpr const char notAToken2[] = "Hello, World!";
 
 }
 
@@ -314,7 +318,15 @@ BOOST_AUTO_TEST_CASE(TestParserExtraVerification)
     BOOST_CHECK_EQUAL(jwt.claim("exp"), "1475246523");
     BOOST_CHECK_EQUAL(jwt.claim("iat"), "1475242923");
     BOOST_CHECK_EQUAL(jwt.claim("nbf"), "1475242923");
-    BOOST_CHECK_THROW(JWTXX::JWT(tokenCorruptedSign, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem")), JWTXX::JWT::Error);
-    BOOST_CHECK_THROW(JWTXX::JWT(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"), {JWTXX::Validate::exp(1475242922), JWTXX::Validate::iat(1475242922), JWTXX::Validate::nbf(1475242922)}), JWTXX::JWT::Error);
-    BOOST_CHECK_THROW(JWTXX::JWT(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"), {JWTXX::Validate::exp(1475246524), JWTXX::Validate::iat(1475246524), JWTXX::Validate::nbf(1475246524)}), JWTXX::JWT::Error);
+    BOOST_CHECK_THROW(JWTXX::JWT(tokenCorruptedSign, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem")), JWTXX::JWT::ValidationError);
+    BOOST_CHECK_THROW(JWTXX::JWT(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"), {JWTXX::Validate::exp(1475242922), JWTXX::Validate::iat(1475242922), JWTXX::Validate::nbf(1475242922)}), JWTXX::JWT::ValidationError);
+    BOOST_CHECK_THROW(JWTXX::JWT(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"), {JWTXX::Validate::exp(1475246524), JWTXX::Validate::iat(1475246524), JWTXX::Validate::nbf(1475246524)}), JWTXX::JWT::ValidationError);
+}
+
+BOOST_AUTO_TEST_CASE(TestParserErrors)
+{
+    BOOST_CHECK_THROW(JWTXX::JWT(brokenTokenWithExp1, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"), {JWTXX::Validate::exp(1475242922), JWTXX::Validate::iat(1475242922), JWTXX::Validate::nbf(1475242922)}), JWTXX::JWT::ParseError);
+    BOOST_CHECK_THROW(JWTXX::JWT(brokenTokenWithExp2, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"), {JWTXX::Validate::exp(1475246524), JWTXX::Validate::iat(1475246524), JWTXX::Validate::nbf(1475246524)}), JWTXX::JWT::ParseError);
+    BOOST_CHECK_THROW(JWTXX::JWT(notAToken1, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"), {JWTXX::Validate::exp(1475242922), JWTXX::Validate::iat(1475242922), JWTXX::Validate::nbf(1475242922)}), JWTXX::JWT::ParseError);
+    BOOST_CHECK_THROW(JWTXX::JWT(notAToken2, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"), {JWTXX::Validate::exp(1475246524), JWTXX::Validate::iat(1475246524), JWTXX::Validate::nbf(1475246524)}), JWTXX::JWT::ParseError);
 }
