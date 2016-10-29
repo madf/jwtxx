@@ -153,21 +153,21 @@ Validator nbf(std::time_t now = std::time(nullptr));
  *  @param now current time, may be overriden.
  */
 Validator iat(std::time_t now = std::time(nullptr));
-/** @fn Validator iss(const std::string& issuer)
+/** @fn Validator iss(std::string issuer)
  *  @brief Constructs validator for 'iss' claim.
  *  @param issuer valid issuer name.
  */
-Validator iss(const std::string& issuer);
-/** @fn Validator aud(const std::string& audience)
+Validator iss(std::string issuer);
+/** @fn Validator aud(std::string audience)
  *  @brief Constructs validator for 'aud' claim.
  *  @param audience valid audience.
  */
-Validator aud(const std::string& audience);
-/** @fn Validator sub(const std::string& subject)
+Validator aud(std::string audience);
+/** @fn Validator sub(std::string subject)
  *  @brief Constructs validator for 'sub' claim.
  *  @param subject valid subject name.
  */
-Validator sub(const std::string& subject);
+Validator sub(std::string subject);
 
 }
 

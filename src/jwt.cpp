@@ -8,6 +8,8 @@
 #include "json.h"
 
 #include <vector>
+#include <tuple>
+#include <utility> // std::move
 
 #include <openssl/evp.h>
 #include <openssl/err.h>
@@ -24,10 +26,19 @@ namespace Validate = JWTXX::Validate;
 namespace
 {
 
+typedef std::tuple<std::string, std::string, std::string> Triple;
+
 struct NoneKey : public Key::Impl
 {
-    std::string sign(const void* /*data*/, size_t /*size*/) const override { return {}; }
-    bool verify(const void* /*data*/, size_t /*size*/, const std::string& /*signature*/) const override { return true; }
+    std::string sign(const void* /*data*/, size_t /*size*/) const override
+    {
+        return {};
+    }
+    bool verify(const void* /*data*/, size_t /*size*/,
+                const std::string& /*signature*/) const override
+    {
+        return true;
+    }
 };
 
 Key::Impl* createKey(Algorithm alg, const std::string& keyData)
@@ -48,14 +59,16 @@ Key::Impl* createKey(Algorithm alg, const std::string& keyData)
     return new NoneKey; // Just in case.
 }
 
-std::tuple<std::string, std::string, std::string> split(const std::string& token)
+Triple split(const std::string& token)
 {
     auto pos = token.find_first_of('.');
     if (pos == std::string::npos)
         throw JWT::Error("JWT should have at least 2 parts separated by a dot.");
     auto spos = token.find_first_of('.', pos + 1);
     if (spos == std::string::npos)
-        return std::make_tuple(token.substr(0, pos), token.substr(pos + 1, token.length() - pos - 1), "");
+        return std::make_tuple(token.substr(0, pos),
+                               token.substr(pos + 1, token.length() - pos - 1),
+                               "");
     return std::make_tuple(token.substr(0, pos),
                            token.substr(pos + 1, spos - pos - 1),
                            token.substr(spos + 1, token.length() - spos - 1));
@@ -79,7 +92,7 @@ bool validTime(const std::string& value, F&& next)
 }
 
 template <typename F>
-bool validClaim(const Pairs& claims, const std::string& claim, F&& next)
+bool validClaim(const Pairs& claims, std::string claim, F&& next)
 {
     auto it = claims.find(claim);
     if (it == std::end(claims))
@@ -88,16 +101,25 @@ bool validClaim(const Pairs& claims, const std::string& claim, F&& next)
 }
 
 template <typename F>
-bool validTimeClaim(const Pairs& claims, const std::string& claim, F&& next)
+bool validTimeClaim(const Pairs& claims, std::string claim, F&& next)
 {
-    return validClaim(claims, claim, [=](const std::string& value) { return validTime(value, next); });
+    return validClaim(claims, std::move(claim),
+                      [&](const std::string& value)
+                      {
+                          return validTime(value, std::move(next));
+                      });
 }
 
-Validator stringValidator(const std::string& name, const std::string& validValue)
+Validator stringValidator(std::string&& name,
+                          std::string&& validValue)
 {
     return [=](const Pairs& claims)
            {
-               return validClaim(claims, name, [&](const std::string& value){ return value == validValue; });
+               return validClaim(claims, std::move(name),
+                                 [=](const std::string& value)
+                                 {
+                                     return value == validValue;
+                                 });
            };
 }
 
@@ -160,7 +182,8 @@ std::string Key::sign(const void* data, size_t size) const
     return m_impl->sign(data, size);
 }
 
-bool Key::verify(const void* data, size_t size, const std::string& signature) const
+bool Key::verify(const void* data, size_t size,
+                 const std::string& signature) const
 {
     return m_impl->verify(data, size, signature);
 }
@@ -220,7 +243,8 @@ std::string JWT::claim(const std::string& name) const
 
 std::string JWT::token(const std::string& keyData) const
 {
-    auto data = Base64URL::encode(toJSON(m_header)) + "." + Base64URL::encode(toJSON(m_claims));
+    auto data = Base64URL::encode(toJSON(m_header)) + "." +
+                Base64URL::encode(toJSON(m_claims));
     Key key(m_alg, keyData);
     auto signature = key.sign(data.c_str(), data.size());
     if (signature.empty())
@@ -232,7 +256,11 @@ Validator Validate::exp(std::time_t now)
 {
     return [=](const Pairs& claims)
            {
-               return validTimeClaim(claims, "exp", [=](std::time_t value){ return value > now; });
+               return validTimeClaim(claims, "exp",
+                                     [=](std::time_t value)
+                                     {
+                                         return value > now;
+                                     });
            };
 }
 
@@ -240,7 +268,11 @@ Validator Validate::nbf(std::time_t now)
 {
     return [=](const Pairs& claims)
            {
-               return validTimeClaim(claims, "nbf", [=](std::time_t value){ return value < now; });
+               return validTimeClaim(claims, "nbf",
+                                     [=](std::time_t value)
+                                     {
+                                         return value < now;
+                                     });
            };
 }
 
@@ -248,21 +280,25 @@ Validator Validate::iat(std::time_t now)
 {
     return [=](const Pairs& claims)
            {
-               return validTimeClaim(claims, "iat", [=](std::time_t value){ return value < now; });
+               return validTimeClaim(claims, "iat",
+                                     [=](std::time_t value)
+                                     {
+                                         return value < now;
+                                     });
            };
 }
 
-Validator Validate::iss(const std::string& issuer)
+Validator Validate::iss(std::string issuer)
 {
-    return stringValidator("iss", issuer);
+    return stringValidator("iss", std::move(issuer));
 }
 
-Validator Validate::aud(const std::string& audience)
+Validator Validate::aud(std::string audience)
 {
-    return stringValidator("aud", audience);
+    return stringValidator("aud", std::move(audience));
 }
 
-Validator Validate::sub(const std::string& subject)
+Validator Validate::sub(std::string subject)
 {
-    return stringValidator("sub", subject);
+    return stringValidator("sub", std::move(subject));
 }
