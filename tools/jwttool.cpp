@@ -85,12 +85,13 @@ int verify(JWTXX::Algorithm alg, const std::string& keyFile, const std::string& 
 {
     try
     {
-        if (JWTXX::JWT::verify(data, JWTXX::Key(alg, keyFile)))
+        auto res = JWTXX::JWT::verify(data, JWTXX::Key(alg, keyFile));
+        if (res)
         {
             std::cout << "The token is valid.\n";
             return 0;
         }
-        std::cout << "The token is invalid.\n";
+        std::cout << "The token is invalid. " << res.message() << "\n";
         return -1;
     }
     catch (const JWTXX::Error& ex)
