@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['jwt',['JWT',['../class_j_w_t_x_x_1_1_j_w_t.html#aca34641bee989281a9c5bb2c26778ebe',1,'JWTXX::JWT::JWT(const std::string &amp;token, Key key, Validators &amp;&amp;validators={Validate::exp()})'],['../class_j_w_t_x_x_1_1_j_w_t.html#ae5d5bb6aa8c2eb09dfa88169ea8c110a',1,'JWTXX::JWT::JWT(Algorithm alg, Pairs claims, Pairs header=Pairs())']]]
+  ['iat',['iat',['../namespace_j_w_t_x_x_1_1_validate.html#ad790b060a5b5fca2158f06ae7f602296',1,'JWTXX::Validate']]],
+  ['iss',['iss',['../namespace_j_w_t_x_x_1_1_validate.html#a9a1041133ccf6e9dd1c52f5c03fabe7f',1,'JWTXX::Validate']]]
 ];

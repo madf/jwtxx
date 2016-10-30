@@ -117,6 +117,33 @@ class Key
         std::unique_ptr<Impl> m_impl;
 };
 
+
+/** @class ValidationResult
+ *  @brief Represents the result of validation. If validation is successfull an object of this class is equivalent to 'true' boolean value. Otherwise it is equivalent ot 'false' and contains an error message.
+ */
+class ValidationResult
+{
+    public:
+        /** @brief 'Success' constructor. */
+        static ValidationResult ok() { return ValidationResult(); }
+        /** @brief 'Failure' constructor.
+         *  @param message error message.
+         */
+        static ValidationResult failure(const std::string& message) { return ValidationResult(message); }
+
+        /** @brief Cast operator to bool. */
+        explicit operator bool() const { return m_message.empty(); }
+
+        /** @brief Error message accessor. */
+        const std::string& message() const { return m_message; }
+
+    private:
+        std::string m_message;
+
+        ValidationResult() {}
+        explicit ValidationResult(const std::string& message) : m_message(message) {}
+};
+
 /** @typedef Pairs
  *  @brief Header and claim container.
  */
@@ -125,7 +152,7 @@ typedef std::unordered_map<std::string, std::string> Pairs;
 /** @typedef Validator
  *  @brief Validation function for claims.
  */
-typedef std::function<bool (const Pairs&)> Validator;
+typedef std::function<ValidationResult (const Pairs&)> Validator;
 
 /** @typedef Validators
  *  @brief A list of validators.
@@ -182,7 +209,9 @@ class JWT
          */
         struct Error : JWTXX::Error
         {
-            /** @brief Constructor. */
+            /** @brief Constructor.
+             *  @param message error message.
+             */
             explicit Error(const std::string& message) : JWTXX::Error(message) {}
         };
 
@@ -191,7 +220,9 @@ class JWT
          */
         struct ParseError : Error
         {
-            /** @brief Constructor. */
+            /** @brief Constructor.
+             *  @param message error message.
+             */
             explicit ParseError(const std::string& message) : Error(message) {}
         };
 
@@ -200,7 +231,9 @@ class JWT
          */
         struct ValidationError : Error
         {
-            /** @brief Constructor. */
+            /** @brief Constructor.
+             *  @param message error message.
+             */
             explicit ValidationError(const std::string& message) : Error(message) {}
         };
 
@@ -228,7 +261,7 @@ class JWT
          *  @param key key to use for signatire verification;
          *  @param validators an optional list of validators; validates 'exp' by default.
          */
-        static bool verify(const std::string& token, Key key, Validators&& validators = {Validate::exp()});
+        static ValidationResult verify(const std::string& token, Key key, Validators&& validators = {Validate::exp()});
 
         /** @brief Returns an algorithm. */
         Algorithm alg() const { return m_alg; }

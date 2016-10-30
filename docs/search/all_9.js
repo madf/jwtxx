@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['pairs',['Pairs',['../namespace_j_w_t_x_x.html#af80f958fd0fe35ef9d98a91554a0769b',1,'JWTXX']]],
-  ['parse',['parse',['../class_j_w_t_x_x_1_1_j_w_t.html#a8a7c89d98e0f65dc0536209ae6122763',1,'JWTXX::JWT']]],
-  ['parseerror',['ParseError',['../struct_j_w_t_x_x_1_1_j_w_t_1_1_parse_error.html#abf8d3120b8d37d5c99b6121e48827519',1,'JWTXX::JWT::ParseError']]],
-  ['parseerror',['ParseError',['../struct_j_w_t_x_x_1_1_j_w_t_1_1_parse_error.html',1,'JWTXX::JWT']]]
+  ['nbf',['nbf',['../namespace_j_w_t_x_x_1_1_validate.html#ac2c0a742ff547f4c11376bbf2e67d1ae',1,'JWTXX::Validate']]],
+  ['none',['none',['../namespace_j_w_t_x_x.html#a325397f3096fba5caea97be98f251bf3a334c4a4c42fdb79d7ebc3e73b517e6f8',1,'JWTXX']]]
 ];

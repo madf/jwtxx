@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['validationerror',['ValidationError',['../struct_j_w_t_x_x_1_1_j_w_t_1_1_validation_error.html',1,'JWTXX::JWT']]],
-  ['validationerror',['ValidationError',['../struct_j_w_t_x_x_1_1_j_w_t_1_1_validation_error.html#a573817cb46b4d924ef3f75ef5ba3fc32',1,'JWTXX::JWT::ValidationError']]],
-  ['validator',['Validator',['../namespace_j_w_t_x_x.html#a075cfd3ad1dc198ea47807ca7d840ad9',1,'JWTXX']]],
-  ['validators',['Validators',['../namespace_j_w_t_x_x.html#a9dcb6d12bc2c9c9fed78414603834541',1,'JWTXX']]],
-  ['verify',['verify',['../class_j_w_t_x_x_1_1_key.html#a4c1e3b2e31fc9370cf356008137a95e2',1,'JWTXX::Key::verify()'],['../class_j_w_t_x_x_1_1_j_w_t.html#a3e35748f731841bd6cb05090ffe40ef4',1,'JWTXX::JWT::verify()']]]
+  ['sign',['sign',['../class_j_w_t_x_x_1_1_key.html#adde71601017ace476be2be0e6e770fd4',1,'JWTXX::Key']]],
+  ['stringtoalg',['stringToAlg',['../namespace_j_w_t_x_x.html#a3cb38d12ea8a08b933281a6aa5ad7116',1,'JWTXX']]],
+  ['sub',['sub',['../namespace_j_w_t_x_x_1_1_validate.html#abe296573ce0573d5b38f85fed690595b',1,'JWTXX::Validate']]]
 ];

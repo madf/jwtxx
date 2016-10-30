@@ -11,6 +11,8 @@
 #include <tuple>
 #include <utility> // std::move
 
+#include <ctime>
+
 #include <openssl/evp.h>
 #include <openssl/err.h>
 
@@ -75,33 +77,33 @@ Triple split(const std::string& token)
 }
 
 template <typename F>
-bool validTime(const std::string& value, F&& next)
+JWTXX::ValidationResult validTime(const std::string& value, F&& next)
 {
     try
     {
         size_t pos = 0;
         auto t = std::stoull(value, &pos);
         if (pos != value.length())
-            return false;
+            return JWTXX::ValidationResult::failure("Invalid time value. Should be a positive integer value, got '" + value + "'.");
         return next(t);
     }
     catch (const std::logic_error&)
     {
-        return false;
+        return JWTXX::ValidationResult::failure("Invalid time value. Should be a positive integer value, got '" + value + "'.");
     }
 }
 
 template <typename F>
-bool validClaim(const Pairs& claims, std::string claim, F&& next)
+JWTXX::ValidationResult validClaim(const Pairs& claims, std::string claim, F&& next)
 {
     auto it = claims.find(claim);
     if (it == std::end(claims))
-        return true;
+        return JWTXX::ValidationResult::ok();
     return next(it->second);
 }
 
 template <typename F>
-bool validTimeClaim(const Pairs& claims, std::string claim, F&& next)
+JWTXX::ValidationResult validTimeClaim(const Pairs& claims, std::string claim, F&& next)
 {
     return validClaim(claims, std::move(claim),
                       [&](const std::string& value)
@@ -118,9 +120,20 @@ Validator stringValidator(std::string&& name,
                return validClaim(claims, std::move(name),
                                  [=](const std::string& value)
                                  {
-                                     return value == validValue;
+                                     return value == validValue ? JWTXX::ValidationResult::ok() : JWTXX::ValidationResult::failure("'" + name + "' claim should be '" + validValue + "'. Got: '" + value + "'.");
                                  });
            };
+}
+
+std::string formatTime(std::time_t value)
+{
+    std::tm tmb;
+    char buf[20];
+    gmtime_r(&value, &tmb);
+    auto res = std::strftime(buf, sizeof(buf), "%F %T", &tmb);
+    if (res == 0)
+        return "<" + std::to_string(value) + ">";
+    return std::string(buf, res);
 }
 
 }
@@ -224,17 +237,27 @@ JWT JWT::parse(const std::string& token)
     return JWT(alg, claims, header);
 }
 
-bool JWT::verify(const std::string& token, Key key, Validators&& validators)
+JWTXX::ValidationResult JWT::verify(const std::string& token, Key key, Validators&& validators)
 {
-    auto parts = split(token);
-    auto data = std::get<0>(parts) + "." + std::get<1>(parts);
-    if (!key.verify(data.c_str(), data.size(), std::get<2>(parts)))
-        return false;
-    Pairs claims = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
-    for (const auto& validator : validators)
-        if (!validator(claims))
-            return false;
-    return true;
+    try
+    {
+        auto parts = split(token);
+        auto data = std::get<0>(parts) + "." + std::get<1>(parts);
+        Pairs claims = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
+        if (!key.verify(data.c_str(), data.size(), std::get<2>(parts)))
+            return ValidationResult::failure("Signature is invalid.");
+        for (const auto& validator : validators)
+        {
+            auto res = validator(claims);
+            if (!res)
+                return res;
+        }
+        return ValidationResult::ok();
+    }
+    catch (const JWT::ParseError& error)
+    {
+        return ValidationResult::failure(error.what());
+    }
 }
 
 std::string JWT::claim(const std::string& name) const
@@ -263,7 +286,7 @@ Validator Validate::exp(std::time_t now)
                return validTimeClaim(claims, "exp",
                                      [=](std::time_t value)
                                      {
-                                         return value > now;
+                                         return value > now ? ValidationResult::ok() : ValidationResult::failure("Token expired. Current time: '" + formatTime(now) + "', expiration time: '" + formatTime(value) + "'.");
                                      });
            };
 }
@@ -275,7 +298,7 @@ Validator Validate::nbf(std::time_t now)
                return validTimeClaim(claims, "nbf",
                                      [=](std::time_t value)
                                      {
-                                         return value < now;
+                                         return value < now ? ValidationResult::ok() : ValidationResult::failure("Token is not valid yet. Current time: '" + formatTime(now) + "', valid after: '" + formatTime(value) + "'.");
                                      });
            };
 }
@@ -287,7 +310,7 @@ Validator Validate::iat(std::time_t now)
                return validTimeClaim(claims, "iat",
                                      [=](std::time_t value)
                                      {
-                                         return value < now;
+                                         return value < now ? ValidationResult::ok() : ValidationResult::failure("Token is not issued yet. Current time: '" + formatTime(now) + "', issued at: '" + formatTime(value) + "'.");
                                      });
            };
 }

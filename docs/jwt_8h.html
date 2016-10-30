@@ -119,6 +119,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_j_w_t_x_x_1_1_key_1_1_error.html">JWTXX::Key::Error</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Key-specific exception.  <a href="struct_j_w_t_x_x_1_1_key_1_1_error.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_validation_result.html">JWTXX::ValidationResult</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the result of validation. If validation is successfull an object of this class is equivalent to 'true' boolean value. Otherwise it is equivalent ot 'false' and contains an error message.  <a href="class_j_w_t_x_x_1_1_validation_result.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html">JWTXX::JWT</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main class to work with <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html" title="Main class to work with JWT. ">JWT</a>.  <a href="class_j_w_t_x_x_1_1_j_w_t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -148,7 +151,7 @@ typedef std::unordered_map&lt; std::string, std::string &gt;&#160;</td><td class
 <tr class="memdesc:af80f958fd0fe35ef9d98a91554a0769b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Header and claim container. <br /></td></tr>
 <tr class="separator:af80f958fd0fe35ef9d98a91554a0769b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a075cfd3ad1dc198ea47807ca7d840ad9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a075cfd3ad1dc198ea47807ca7d840ad9"></a>
-typedef std::function&lt; bool(const Pairs &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_j_w_t_x_x.html#a075cfd3ad1dc198ea47807ca7d840ad9">JWTXX::Validator</a></td></tr>
+typedef std::function&lt; ValidationResult(const Pairs &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_j_w_t_x_x.html#a075cfd3ad1dc198ea47807ca7d840ad9">JWTXX::Validator</a></td></tr>
 <tr class="memdesc:a075cfd3ad1dc198ea47807ca7d840ad9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validation function for claims. <br /></td></tr>
 <tr class="separator:a075cfd3ad1dc198ea47807ca7d840ad9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9dcb6d12bc2c9c9fed78414603834541"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9dcb6d12bc2c9c9fed78414603834541"></a>

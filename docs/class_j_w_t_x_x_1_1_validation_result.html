@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>JWTXX: JWTXX::JWT::Error Class Reference</title>
+<title>JWTXX: JWTXX::ValidationResult Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -84,49 +84,49 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="namespace_j_w_t_x_x.html">JWTXX</a></li><li class="navelem"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html">JWT</a></li><li class="navelem"><a class="el" href="struct_j_w_t_x_x_1_1_j_w_t_1_1_error.html">Error</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespace_j_w_t_x_x.html">JWTXX</a></li><li class="navelem"><a class="el" href="class_j_w_t_x_x_1_1_validation_result.html">ValidationResult</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="class_j_w_t_x_x_1_1_j_w_t_1_1_error-members.html">List of all members</a>  </div>
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="class_j_w_t_x_x_1_1_validation_result-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">JWTXX::JWT::Error Class Reference</div>  </div>
+<div class="title">JWTXX::ValidationResult Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>JWT-specific exception.  
- <a href="struct_j_w_t_x_x_1_1_j_w_t_1_1_error.html#details">More...</a></p>
+<p>Represents the result of validation. If validation is successfull an object of this class is equivalent to 'true' boolean value. Otherwise it is equivalent ot 'false' and contains an error message.  
+ <a href="class_j_w_t_x_x_1_1_validation_result.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="jwt_8h_source.html">jwt.h</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for JWTXX::JWT::Error:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="struct_j_w_t_x_x_1_1_j_w_t_1_1_error.png" usemap="#JWTXX::JWT::Error_map" alt=""/>
-  <map id="JWTXX::JWT::Error_map" name="JWTXX::JWT::Error_map">
-<area href="struct_j_w_t_x_x_1_1_error.html" title="Base class for all exceptions in the library. " alt="JWTXX::Error" shape="rect" coords="94,56,272,80"/>
-<area href="struct_j_w_t_x_x_1_1_j_w_t_1_1_parse_error.html" title="Indicates problems with JWT structure. " alt="JWTXX::JWT::ParseError" shape="rect" coords="0,168,178,192"/>
-<area href="struct_j_w_t_x_x_1_1_j_w_t_1_1_validation_error.html" title="Indicates problems with JWT validation (signature and claims). " alt="JWTXX::JWT::ValidationError" shape="rect" coords="188,168,366,192"/>
-</map>
- </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a57b3db787fcb9ad6562c4f5963c105f8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_j_w_t_x_x_1_1_j_w_t_1_1_error.html#a57b3db787fcb9ad6562c4f5963c105f8">Error</a> (const std::string &amp;message)</td></tr>
-<tr class="memdesc:a57b3db787fcb9ad6562c4f5963c105f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a57b3db787fcb9ad6562c4f5963c105f8">More...</a><br /></td></tr>
-<tr class="separator:a57b3db787fcb9ad6562c4f5963c105f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_struct_j_w_t_x_x_1_1_error"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_struct_j_w_t_x_x_1_1_error')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="struct_j_w_t_x_x_1_1_error.html">JWTXX::Error</a></td></tr>
-<tr class="memitem:aa50139a00b6d39484da4486d37ce0a1d inherit pub_methods_struct_j_w_t_x_x_1_1_error"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa50139a00b6d39484da4486d37ce0a1d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_j_w_t_x_x_1_1_error.html#aa50139a00b6d39484da4486d37ce0a1d">Error</a> (const std::string &amp;message)</td></tr>
-<tr class="memdesc:aa50139a00b6d39484da4486d37ce0a1d inherit pub_methods_struct_j_w_t_x_x_1_1_error"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. <br /></td></tr>
-<tr class="separator:aa50139a00b6d39484da4486d37ce0a1d inherit pub_methods_struct_j_w_t_x_x_1_1_error"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae99a59f0fe2fb6ae4cd51e73b5f92c3a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae99a59f0fe2fb6ae4cd51e73b5f92c3a"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_validation_result.html#ae99a59f0fe2fb6ae4cd51e73b5f92c3a">operator bool</a> () const </td></tr>
+<tr class="memdesc:ae99a59f0fe2fb6ae4cd51e73b5f92c3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cast operator to bool. <br /></td></tr>
+<tr class="separator:ae99a59f0fe2fb6ae4cd51e73b5f92c3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e7406530d5337de84bc40a761cb517c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4e7406530d5337de84bc40a761cb517c"></a>
+const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_validation_result.html#a4e7406530d5337de84bc40a761cb517c">message</a> () const </td></tr>
+<tr class="memdesc:a4e7406530d5337de84bc40a761cb517c"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="struct_j_w_t_x_x_1_1_error.html" title="Base class for all exceptions in the library. ">Error</a> message accessor. <br /></td></tr>
+<tr class="separator:a4e7406530d5337de84bc40a761cb517c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ae038f7f36d4521650cfe7d1c7531a0ca"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae038f7f36d4521650cfe7d1c7531a0ca"></a>
+static <a class="el" href="class_j_w_t_x_x_1_1_validation_result.html">ValidationResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_validation_result.html#ae038f7f36d4521650cfe7d1c7531a0ca">ok</a> ()</td></tr>
+<tr class="memdesc:ae038f7f36d4521650cfe7d1c7531a0ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">'Success' constructor. <br /></td></tr>
+<tr class="separator:ae038f7f36d4521650cfe7d1c7531a0ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06f7780c8c5f65a4f6d86b12d0bd9a4c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_j_w_t_x_x_1_1_validation_result.html">ValidationResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_validation_result.html#a06f7780c8c5f65a4f6d86b12d0bd9a4c">failure</a> (const std::string &amp;<a class="el" href="class_j_w_t_x_x_1_1_validation_result.html#a4e7406530d5337de84bc40a761cb517c">message</a>)</td></tr>
+<tr class="memdesc:a06f7780c8c5f65a4f6d86b12d0bd9a4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">'Failure' constructor.  <a href="#a06f7780c8c5f65a4f6d86b12d0bd9a4c">More...</a><br /></td></tr>
+<tr class="separator:a06f7780c8c5f65a4f6d86b12d0bd9a4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>JWT-specific exception. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a57b3db787fcb9ad6562c4f5963c105f8"></a>
+<div class="textblock"><p>Represents the result of validation. If validation is successfull an object of this class is equivalent to 'true' boolean value. Otherwise it is equivalent ot 'false' and contains an error message. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a06f7780c8c5f65a4f6d86b12d0bd9a4c"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -134,7 +134,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">JWTXX::JWT::Error::Error </td>
+          <td class="memname">static <a class="el" href="class_j_w_t_x_x_1_1_validation_result.html">ValidationResult</a> JWTXX::ValidationResult::failure </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>message</em></td><td>)</td>
@@ -143,12 +143,12 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Constructor. </p>
+<p>'Failure' constructor. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">message</td><td>error message. </td></tr>
