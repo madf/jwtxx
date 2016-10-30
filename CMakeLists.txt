@@ -24,7 +24,7 @@ include_directories(${jwtxx_SOURCE_DIR}/include)
 
 
 add_subdirectory(src)
-add_subdirectory(tools)
+add_subdirectory(tools EXCLUDE_FROM_ALL)
 
 if(Boost_FOUND)
     enable_testing()
