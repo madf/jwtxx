@@ -222,8 +222,11 @@ JWT::JWT(const std::string& token, Key key, Validators&& validators)
         throw ValidationError("Signature is invalid.");
     m_alg = key.alg();
     for (const auto& validator : validators)
-        if (!validator(m_claims))
-            throw ValidationError("Invalid token.");
+    {
+        auto res = validator(m_claims);
+        if (!res)
+            throw ValidationError(res.message());
+    }
 }
 
 JWT JWT::parse(const std::string& token)
