@@ -178,7 +178,7 @@ Algorithm JWTXX::stringToAlg(const std::string& value)
     else if (value == "ES256") return Algorithm::ES256;
     else if (value == "ES384") return Algorithm::ES384;
     else if (value == "ES512") return Algorithm::ES512;
-    else throw Error("Invalid algorithm name: '" + value + "'.");
+    else throw JWT::ParseError("Invalid algorithm name: '" + value + "'.");
 }
 
 Key::Key(Algorithm alg, const std::string& keyData)
@@ -222,8 +222,11 @@ JWT::JWT(const std::string& token, Key key, Validators&& validators)
         throw ValidationError("Signature is invalid.");
     m_alg = key.alg();
     for (const auto& validator : validators)
-        if (!validator(m_claims))
-            throw ValidationError("Invalid token.");
+    {
+        auto res = validator(m_claims);
+        if (!res)
+            throw ValidationError(res.message());
+    }
 }
 
 JWT JWT::parse(const std::string& token)
