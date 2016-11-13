@@ -22,7 +22,6 @@ endif(NOT HAS_OVERRIDE_FEATURE)
 
 include_directories(${jwtxx_SOURCE_DIR}/include)
 
-
 add_subdirectory(src)
 add_subdirectory(tools EXCLUDE_FROM_ALL)
 

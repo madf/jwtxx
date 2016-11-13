@@ -1,5 +1,7 @@
 #include "toolversion.h"
 
+#include "json.h"
+
 #include <iostream>
 #include <string>
 #include <functional>
@@ -35,7 +37,8 @@ void showHelp(const std::string& self)
               << "\t-a, --alg <algorithm> use the specified digital signature algorithm\n"
               << "\t-k, --key <filename>  use the specified file as a key for digital signature\n"
               << "\t-s, --sign <token>    sign data and produce a JWT\n"
-              << "\t-V, --verify <token>  verify the supplied JWT\n";
+              << "\t-V, --verify <token>  verify the supplied JWT\n"
+              << "\t-p, --print <token>   show token contents\n";
 }
 
 void showVersion(const std::string& self)
@@ -69,9 +72,9 @@ int sign(JWTXX::Algorithm alg, const std::string& keyFile, const std::string& da
 {
     try
     {
-        auto source = JWTXX::JWT::parse(data);
-        JWTXX::JWT jwt(alg, source.claims(), source.header());
-        std::cout << jwt.token(keyFile);
+        auto source = JWTXX::fromJSON(data);
+        JWTXX::JWT jwt(alg, source);
+        std::cout << jwt.token(keyFile) << "\n";
         return 0;
     }
     catch (const JWTXX::Error& ex)
@@ -93,6 +96,41 @@ int verify(JWTXX::Algorithm alg, const std::string& keyFile, const std::string& 
         }
         std::cout << "The token is invalid. " << res.message() << "\n";
         return -1;
+    }
+    catch (const JWTXX::Error& ex)
+    {
+        std::cerr << ex.what() << "\n";
+        return -1;
+    }
+}
+
+int print(JWTXX::Algorithm /*alg*/, const std::string& /*keyFile*/, const std::string& data)
+{
+    try
+    {
+        auto res = JWTXX::JWT::parse(data);
+        std::cout << "{\n";
+        bool first = true;
+        for (const auto& header : res.header())
+        {
+            if (first)
+                first = false;
+            else
+                std::cout << ",\n";
+            std::cout << "\t\"" << header.first << "\": \"" << header.second << "\"";
+        }
+        std::cout << "\n}\n.\n{\n";
+        first = true;
+        for (const auto& claim : res.claims())
+        {
+            if (first)
+                first = false;
+            else
+                std::cout << ",\n";
+            std::cout << "\t\"" << claim.first << "\": \"" << claim.second << "\"";
+        }
+        std::cout << "\n}\n";
+        return 0;
     }
     catch (const JWTXX::Error& ex)
     {
@@ -179,6 +217,16 @@ int main(int argc, char* argv[])
             }
             data = argv[++i];
             action = verify;
+        }
+        else if (strcmp(argv[i], "-p") == 0 || strcmp(argv[i], "--print") == 0)
+        {
+            if (i + 1 == argc)
+            {
+                std::cerr << argv[i] << " needs and argument - a token.\n";
+                return -1;
+            }
+            data = argv[++i];
+            action = print;
         }
     }
     return action(alg, keyFile, data);

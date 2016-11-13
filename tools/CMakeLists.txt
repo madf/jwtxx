@@ -4,6 +4,7 @@ enable_language(CXX)
 
 include_directories(${PROJECT_BINARY_DIR}) # toolversion.h
 include_directories(${jwtxx_BINARY_DIR}/include) # jwtxx/version.h
+include_directories(${jwtxx_SOURCE_DIR}/src) # json.h
 
 add_custom_target(generate_tool_version COMMAND ${CMAKE_COMMAND} -D SOURCE_FILE=${PROJECT_SOURCE_DIR}/toolversion.h.in -D DEST_FILE=${PROJECT_BINARY_DIR}/toolversion.h -D PROJECT_VERSION=${PROJECT_VERSION} -P ${jwtxx_SOURCE_DIR}/cmake/version.cmake)
 
