@@ -27,6 +27,7 @@ constexpr const char brokenToken1[] = "eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJpc3Mi
 constexpr const char brokenToken2[] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.3MiOiJtYWRmIn0.MEYCIQCSn5y1q5hQm4kOfP-39rWVNY_61iukR9GUjhn2Y8DuyQIhAMLF77oGoNtNO_buqxZIAwMTPs_TO3FrjbRVua34W-jk";
 constexpr const char notAToken1[] = "";
 constexpr const char notAToken2[] = "Hello, World!";
+constexpr const char invalidHeaderToken[] = "eyJhbGciOiJIUzI1NyIsInR5cCI6IkpXIn0.eyJuYW1lIjoiZm9vIn0"; // Here should be a ECDSA signature, but the structure is checked first, so we can skip.
 
 }
 
@@ -328,4 +329,10 @@ BOOST_AUTO_TEST_CASE(TestParserErrors)
     BOOST_CHECK_THROW(JWTXX::JWT(brokenToken2, JWTXX::Key(JWTXX::Algorithm::ES512, "ecdsa-cert.pem")), JWTXX::JWT::ParseError);
     BOOST_CHECK_THROW(JWTXX::JWT(notAToken1, JWTXX::Key(JWTXX::Algorithm::ES512, "ecdsa-cert.pem")), JWTXX::JWT::ParseError);
     BOOST_CHECK_THROW(JWTXX::JWT(notAToken2, JWTXX::Key(JWTXX::Algorithm::ES512, "ecdsa-cert.pem")), JWTXX::JWT::ParseError);
+}
+
+BOOST_AUTO_TEST_CASE(TestParserHeaderErrors)
+{
+    BOOST_CHECK(!JWTXX::JWT::verify(invalidHeaderToken, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem")));
+    BOOST_CHECK_THROW(JWTXX::JWT(invalidHeaderToken, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem")), JWTXX::JWT::ValidationError);
 }

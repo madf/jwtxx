@@ -22,6 +22,7 @@ constexpr const char brokenTokenWithExp1[] = "bGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.e
 constexpr const char brokenTokenWithExp2[] = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.dWIiOiJ1c2VyIiwiaXNzIjoibWFkZiIsImlhdCI6MTQ3NTI0MjkyMywibmJmIjoxNDc1MjQyOTIzLCJleHAiOjE0NzUyNDY1MjN9.r8mj1m0XYra8hRg2e-E85N75gEGAWbcqIMjQunFleW9XmbqAdC9YYKbfLQRe0MTXTYjP4lsfZdo7fWW93dTOpA5IpcPKAZe53GPozs1bz7GvscElUrXusVR345v4TiCk_CTAvr6DqX5o44i6OP9og5lgguXja-u_UvormjeUTA1ASM3vsQ1mTmUx8iUExnmrXrAtgtSZe_a1ebOYmZd0-cpA82zT8BlrJes_Po35Qwe3wmtvY5EZBwpT6bgEss9QOuUtqXIVZYp0HhkfD5dkpzbS9j60bxlYfb7iVDPLRx1_1iLa7ehja-kkGOvcmJcFL-KxbZ9EjHAnVsB7jtDt3A";
 constexpr const char notAToken1[] = "";
 constexpr const char notAToken2[] = "Hello, World!";
+constexpr const char invalidHeaderToken[] = "eyJhbGciOiJSUzI1NyIsInR5cCI6IkpXIn0.eyJuYW1lIjoiZm9vIn0.siCZKFuTEx4maNq0nhxiG1GGnDEdeN3w-ZZ6IG7gShqxhJpZbrl9yuWZQuxspDyD1gdiVR0FwhUuBptUfuDZka8C9uJWF-bRPBAExp6f3WINM0qKTcvHgSchCbPGDtxoiMbkp0Xl7vbLdkA0ojSglJb-yC90qSOYc3nbr8kVcNDt5r3-N1RupVnjyFEGgad5YP22KCD1Pqj9LkX0I112ZiCEN03Bxmps7NKw983DbvLwbeHcyZH-WJbLh43wnX_aLZ0UZ-TbLsJ4ob5I6odmiEeSPTZM3XOlVsvmai5XATdTjXzA9uR_VGh1hbGclikFMwQ9hKJfmBZIPYelmSbJzg";
 
 }
 
@@ -329,4 +330,10 @@ BOOST_AUTO_TEST_CASE(TestParserErrors)
     BOOST_CHECK_THROW(JWTXX::JWT(brokenTokenWithExp2, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"), {JWTXX::Validate::exp(1475246524), JWTXX::Validate::iat(1475246524), JWTXX::Validate::nbf(1475246524)}), JWTXX::JWT::ParseError);
     BOOST_CHECK_THROW(JWTXX::JWT(notAToken1, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"), {JWTXX::Validate::exp(1475242922), JWTXX::Validate::iat(1475242922), JWTXX::Validate::nbf(1475242922)}), JWTXX::JWT::ParseError);
     BOOST_CHECK_THROW(JWTXX::JWT(notAToken2, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"), {JWTXX::Validate::exp(1475246524), JWTXX::Validate::iat(1475246524), JWTXX::Validate::nbf(1475246524)}), JWTXX::JWT::ParseError);
+}
+
+BOOST_AUTO_TEST_CASE(TestParserHeaderErrors)
+{
+    BOOST_CHECK(!JWTXX::JWT::verify(invalidHeaderToken, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem")));
+    BOOST_CHECK_THROW(JWTXX::JWT(invalidHeaderToken, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem")), JWTXX::JWT::ValidationError);
 }

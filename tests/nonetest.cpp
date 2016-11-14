@@ -17,6 +17,7 @@ constexpr const char brokenTokenWithExp1[] = "bGciOiJub25lIiwidHlwIjoiSldUIn0.ey
 constexpr const char brokenTokenWithExp2[] = "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.c3MiOiJtYWRmIiwic3ViIjoidXNlciIsIm5iZiI6MTQ3NTI0MDY0NiwiZXhwIjoxNDc1MjQ0MjQ2LCJpYXQiOjE0NzUyNDA2NDZ9";
 constexpr const char notAToken1[] = "";
 constexpr const char notAToken2[] = "Hello, World!";
+constexpr const char invalidHeaderToken[] = "eyJhbGciOiJIUzI1NyIsInR5cCI6IkpXIn0.eyJuYW1lIjoiZm9vIn0";
 
 }
 
@@ -120,4 +121,10 @@ BOOST_AUTO_TEST_CASE(TestParserErrors)
     BOOST_CHECK_THROW(JWTXX::JWT(brokenTokenWithExp2, JWTXX::Key(JWTXX::Algorithm::none, ""), {JWTXX::Validate::exp(1475244247), JWTXX::Validate::iat(1475244247), JWTXX::Validate::nbf(1475244247)}), JWTXX::JWT::ParseError);
     BOOST_CHECK_THROW(JWTXX::JWT(notAToken1, JWTXX::Key(JWTXX::Algorithm::none, ""), {JWTXX::Validate::exp(1475244247), JWTXX::Validate::iat(1475244247), JWTXX::Validate::nbf(1475244247)}), JWTXX::JWT::ParseError);
     BOOST_CHECK_THROW(JWTXX::JWT(notAToken2, JWTXX::Key(JWTXX::Algorithm::none, ""), {JWTXX::Validate::exp(1475244247), JWTXX::Validate::iat(1475244247), JWTXX::Validate::nbf(1475244247)}), JWTXX::JWT::ParseError);
+}
+
+BOOST_AUTO_TEST_CASE(TestParserHeaderErrors)
+{
+    BOOST_CHECK(!JWTXX::JWT::verify(invalidHeaderToken, JWTXX::Key(JWTXX::Algorithm::none, "")));
+    BOOST_CHECK_THROW(JWTXX::JWT(invalidHeaderToken, JWTXX::Key(JWTXX::Algorithm::none, "")), JWTXX::JWT::ValidationError);
 }
