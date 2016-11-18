@@ -64,7 +64,7 @@ std::string modeName(mode_t mode)
 
 int noAction(JWTXX::Algorithm /*alg*/, const std::string& /*keyFile*/, const std::string& /*data*/)
 {
-    std::cerr << "No action specified. Use -s (--sign) to sign a token or -V (--verify) to verify a token.\n";
+    std::cerr << "No action specified. Use -s (--sign) to sign a token or -V (--verify) to verify a token or -p (--print) to print a token.\n";
     return -1;
 }
 
