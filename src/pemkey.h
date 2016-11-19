@@ -14,15 +14,15 @@ namespace Keys
 class PEM : public Key::Impl
 {
     public:
-        PEM(const EVP_MD* digest, const std::string& keyData)
-            : m_digest(digest), m_data(keyData)
+        PEM(const EVP_MD* digest, const std::string& keyData, const Key::PasswordCallback& cb)
+            : m_digest(digest), m_data(keyData), m_cb(cb)
         {
         }
 
         std::string sign(const void* data, size_t size) const override
         {
             auto ctx = initCTX();
-            auto key = Utils::readPEMPrivateKey(m_data);
+            auto key = Utils::readPEMPrivateKey(m_data, m_cb);
             if (EVP_DigestSignInit(ctx.get(), nullptr, m_digest, nullptr, key.get()) != 1)
                 throw Key::Error("Can't init sign context. " + Utils::OPENSSLError());
             if (EVP_DigestSignUpdate(ctx.get(), data, size) != 1)
@@ -51,6 +51,7 @@ class PEM : public Key::Impl
     private:
         const EVP_MD* m_digest;
         std::string m_data;
+        Key::PasswordCallback m_cb;
 
         Utils::EVPMDCTXPtr initCTX() const
         {

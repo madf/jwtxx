@@ -43,7 +43,7 @@ struct NoneKey : public Key::Impl
     }
 };
 
-Key::Impl* createKey(Algorithm alg, const std::string& keyData)
+Key::Impl* createKey(Algorithm alg, const std::string& keyData, const Key::PasswordCallback& cb)
 {
     switch (alg)
     {
@@ -51,12 +51,12 @@ Key::Impl* createKey(Algorithm alg, const std::string& keyData)
         case Algorithm::HS256: return new Keys::HMAC(EVP_sha256(), keyData);
         case Algorithm::HS384: return new Keys::HMAC(EVP_sha384(), keyData);
         case Algorithm::HS512: return new Keys::HMAC(EVP_sha512(), keyData);
-        case Algorithm::RS256: return new Keys::PEM(EVP_sha256(), keyData);
-        case Algorithm::RS384: return new Keys::PEM(EVP_sha384(), keyData);
-        case Algorithm::RS512: return new Keys::PEM(EVP_sha512(), keyData);
-        case Algorithm::ES256: return new Keys::PEM(EVP_sha256(), keyData);
-        case Algorithm::ES384: return new Keys::PEM(EVP_sha384(), keyData);
-        case Algorithm::ES512: return new Keys::PEM(EVP_sha512(), keyData);
+        case Algorithm::RS256: return new Keys::PEM(EVP_sha256(), keyData, cb);
+        case Algorithm::RS384: return new Keys::PEM(EVP_sha384(), keyData, cb);
+        case Algorithm::RS512: return new Keys::PEM(EVP_sha512(), keyData, cb);
+        case Algorithm::ES256: return new Keys::PEM(EVP_sha256(), keyData, cb);
+        case Algorithm::ES384: return new Keys::PEM(EVP_sha384(), keyData, cb);
+        case Algorithm::ES512: return new Keys::PEM(EVP_sha512(), keyData, cb);
     }
     return new NoneKey; // Just in case.
 }
@@ -142,8 +142,8 @@ void JWTXX::enableOpenSSLErrors()
 {
     struct OpenSSLErrors
     {
-        OpenSSLErrors() { ERR_load_crypto_strings(); }
-        ~OpenSSLErrors() { ERR_free_strings(); CRYPTO_cleanup_all_ex_data(); }
+        OpenSSLErrors() { ERR_load_crypto_strings(); OpenSSL_add_all_algorithms(); }
+        ~OpenSSLErrors() { EVP_cleanup(); ERR_free_strings(); CRYPTO_cleanup_all_ex_data(); }
     };
     static const OpenSSLErrors enabled __attribute__((used));
 }
@@ -181,8 +181,8 @@ Algorithm JWTXX::stringToAlg(const std::string& value)
     else throw JWT::ParseError("Invalid algorithm name: '" + value + "'.");
 }
 
-Key::Key(Algorithm alg, const std::string& keyData)
-    : m_alg(alg), m_impl(createKey(alg, keyData))
+Key::Key(Algorithm alg, const std::string& keyData, const PasswordCallback& cb)
+    : m_alg(alg), m_impl(createKey(alg, keyData, cb))
 {
 }
 
@@ -283,11 +283,11 @@ std::string JWT::claim(const std::string& name) const
     return it->second;
 }
 
-std::string JWT::token(const std::string& keyData) const
+std::string JWT::token(const std::string& keyData, const Key::PasswordCallback& cb) const
 {
     auto data = Base64URL::encode(toJSON(m_header)) + "." +
                 Base64URL::encode(toJSON(m_claims));
-    Key key(m_alg, keyData);
+    Key key(m_alg, keyData, cb);
     auto signature = key.sign(data.c_str(), data.size());
     if (signature.empty())
         return data;

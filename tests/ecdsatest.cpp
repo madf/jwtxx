@@ -336,3 +336,72 @@ BOOST_AUTO_TEST_CASE(TestParserHeaderErrors)
     BOOST_CHECK(!JWTXX::JWT::verify(invalidHeaderToken, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem")));
     BOOST_CHECK_THROW(JWTXX::JWT(invalidHeaderToken, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem")), JWTXX::JWT::ValidationError);
 }
+
+BOOST_AUTO_TEST_CASE(TestCtor256PwNoCallback)
+{
+    JWTXX::JWT jwt(JWTXX::Algorithm::ES256, {{"iss", "madf"}});
+
+    BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::ES256);
+    BOOST_CHECK(!jwt.claims().empty());
+    BOOST_CHECK(!jwt.header().empty());
+    auto header = jwt.header();
+    BOOST_CHECK_EQUAL(header["alg"], "ES256");
+    BOOST_CHECK_EQUAL(header["typ"], "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_THROW(jwt.token("ecdsa-256-key-pair-pw.pem"), JWTXX::Key::Error);
+    BOOST_CHECK_THROW(jwt.token("ecdsa-256-key-pair-pw.pem", [](){ return "abc"; }), JWTXX::Key::Error);
+}
+
+BOOST_AUTO_TEST_CASE(TestCtor256Pw)
+{
+    JWTXX::JWT jwt(JWTXX::Algorithm::ES256, {{"iss", "madf"}});
+
+    BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::ES256);
+    BOOST_CHECK(!jwt.claims().empty());
+    BOOST_CHECK(!jwt.header().empty());
+    auto header = jwt.header();
+    BOOST_CHECK_EQUAL(header["alg"], "ES256");
+    BOOST_CHECK_EQUAL(header["typ"], "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    // ECDSA uses random nonce value, so the signature is always different and it is impossible to check its correctness by simple comparison. Due to the nature of ECDSA, non-random none makes possible recovery of the private key.
+    // There is an RFS 6979 which provide ECDSA algorithm with deterministic nonce that solves problem of private key recovery.
+    auto token = jwt.token("ecdsa-256-key-pair-pw.pem", [](){ return "123456"; });
+    auto part = token.substr(0, 56);
+    BOOST_CHECK(part == token256PartOrder1 || part == token256PartOrder2);
+}
+
+BOOST_AUTO_TEST_CASE(TestCtor384Pw)
+{
+    JWTXX::JWT jwt(JWTXX::Algorithm::ES384, {{"iss", "madf"}});
+
+    BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::ES384);
+    BOOST_CHECK(!jwt.claims().empty());
+    BOOST_CHECK(!jwt.header().empty());
+    auto header = jwt.header();
+    BOOST_CHECK_EQUAL(header["alg"], "ES384");
+    BOOST_CHECK_EQUAL(header["typ"], "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    // ECDSA uses random nonce value, so the signature is always different and it is impossible to check its correctness by simple comparison. Due to the nature of ECDSA, non-random none makes possible recovery of the private key.
+    // There is an RFS 6979 which provide ECDSA algorithm with deterministic nonce that solves problem of private key recovery.
+    auto token = jwt.token("ecdsa-256-key-pair-pw.pem", [](){ return "123456"; });
+    auto part = token.substr(0, 56);
+    BOOST_CHECK(part == token384PartOrder1 || part == token384PartOrder2);
+}
+
+BOOST_AUTO_TEST_CASE(TestCtor512Pw)
+{
+    JWTXX::JWT jwt(JWTXX::Algorithm::ES512, {{"iss", "madf"}});
+
+    BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::ES512);
+    BOOST_CHECK(!jwt.claims().empty());
+    BOOST_CHECK(!jwt.header().empty());
+    auto header = jwt.header();
+    BOOST_CHECK_EQUAL(header["alg"], "ES512");
+    BOOST_CHECK_EQUAL(header["typ"], "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    // ECDSA uses random nonce value, so the signature is always different and it is impossible to check its correctness by simple comparison. Due to the nature of ECDSA, non-random none makes possible recovery of the private key.
+    // There is an RFS 6979 which provide ECDSA algorithm with deterministic nonce that solves problem of private key recovery.
+    auto token = jwt.token("ecdsa-256-key-pair-pw.pem", [](){ return "123456"; });
+    auto part = token.substr(0, 56);
+    BOOST_CHECK(part == token512PartOrder1 || part == token512PartOrder2);
+}

@@ -14,6 +14,11 @@ namespace Utils = JWTXX::Utils;
 namespace
 {
 
+struct PasswordCallbackError : public JWTXX::Key::Error
+{
+    PasswordCallbackError() : Error("Can't read password-protected private key without password callback function.") {}
+};
+
 struct FileCloser
 {
     void operator()(FILE* fp) { fclose(fp); }
@@ -50,17 +55,37 @@ Utils::EVPKeyPtr readCert(const std::string& fileName)
     return Utils::EVPKeyPtr(X509_get_pubkey(cert.get()));
 }
 
+int passwordCallback(char* buf, int size, int /*rwflag*/, void* data)
+{
+    if (data == nullptr)
+        return 0;
+    JWTXX::Key::PasswordCallback& cb = *static_cast<JWTXX::Key::PasswordCallback*>(data);
+    if (!cb)
+        throw PasswordCallbackError();
+    auto password = cb();
+    std::strncpy(buf, password.c_str(), size - 1);
+    buf[size - 1] = '\0';
+    return std::min<int>(size, password.length());
 }
 
-Utils::EVPKeyPtr Utils::readPEMPrivateKey(const std::string& fileName)
+}
+
+Utils::EVPKeyPtr Utils::readPEMPrivateKey(const std::string& fileName, Key::PasswordCallback cb)
 {
     FilePtr fp(fopen(fileName.c_str(), "rb"));
     if (!fp)
         throw Key::Error("Can't open key file '" + fileName + "'. " + sysError());
-    EVPKeyPtr key(PEM_read_PrivateKey(fp.get(), nullptr, nullptr, nullptr));
-    if (!key)
-        throw Key::Error("Can't read private key '" + fileName + "'. " + OPENSSLError());
-    return key;
+    try
+    {
+        EVPKeyPtr key(PEM_read_PrivateKey(fp.get(), nullptr, passwordCallback, &cb));
+        if (!key)
+            throw Key::Error("Can't read private key '" + fileName + "'. " + OPENSSLError());
+        return key;
+    }
+    catch (const PasswordCallbackError&)
+    {
+        throw Key::Error("Can't read password-protected private key '" + fileName + "' without a password callback function.");
+    }
 }
 
 Utils::EVPKeyPtr Utils::readPEMPublicKey(const std::string& fileName)

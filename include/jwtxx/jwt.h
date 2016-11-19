@@ -73,6 +73,11 @@ Algorithm stringToAlg(const std::string& value);
 class Key
 {
     public:
+        /** @typedef PasswordCallback
+         *  @brief Callback function for password-protected keys. Should return password in plain text.
+         */
+        typedef std::function<std::string ()> PasswordCallback;
+
         /** @class Error
          *  @brief Key-specific exception.
          */
@@ -84,9 +89,10 @@ class Key
 
         /** @brief Constructs key using the specified algorithm and data.
          *  @param alg signature algorithm;
-         *  @param keyData a shared secret or a path to key file.
+         *  @param keyData a shared secret or a path to key file;
+         *  @param cb password callabck for password-protected keys.
          */
-        Key(Algorithm alg, const std::string& keyData);
+        Key(Algorithm alg, const std::string& keyData, const PasswordCallback& cb = {});
         /** @brief Destructor. */
         ~Key();
 
@@ -279,10 +285,11 @@ class JWT
         std::string claim(const std::string& name) const;
 
         /** @brief Returns a signed token.
-         *  @param keyData key-specific data.
+         *  @param keyData key-specific data;
+         *  @param cb password callback for password-protected keys.
          *  @note Automatically constructs key using the algorithm specified in this JWT.
          */
-        std::string token(const std::string& keyData) const;
+        std::string token(const std::string& keyData, const Key::PasswordCallback& cb = {}) const;
 
     private:
         Algorithm m_alg;

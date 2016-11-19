@@ -1,5 +1,7 @@
 #pragma once
 
+#include "jwtxx/jwt.h"
+
 #include <memory>
 
 #include <cstdio> // fopen, fclose
@@ -24,7 +26,7 @@ struct EVPMDCTXDeleter
 };
 typedef std::unique_ptr<EVP_MD_CTX, EVPMDCTXDeleter> EVPMDCTXPtr;
 
-EVPKeyPtr readPEMPrivateKey(const std::string& fileName);
+EVPKeyPtr readPEMPrivateKey(const std::string& fileName, Key::PasswordCallback cb);
 EVPKeyPtr readPEMPublicKey(const std::string& fileName);
 
 std::string OPENSSLError();
