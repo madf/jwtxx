@@ -104,32 +104,29 @@ int verify(JWTXX::Algorithm alg, const std::string& keyFile, const std::string& 
     }
 }
 
+void printPairs(const JWTXX::Pairs& pairs)
+{
+    std::cout << "{\n";
+    bool first = true;
+    for (const auto& header : pairs)
+    {
+        if (first)
+            first = false;
+        else
+            std::cout << ",\n";
+        std::cout << "\t\"" << header.first << "\": \"" << header.second << "\"";
+    }
+    std::cout << "\n}\n";
+}
+
 int print(JWTXX::Algorithm /*alg*/, const std::string& /*keyFile*/, const std::string& data)
 {
     try
     {
         auto res = JWTXX::JWT::parse(data);
-        std::cout << "{\n";
-        bool first = true;
-        for (const auto& header : res.header())
-        {
-            if (first)
-                first = false;
-            else
-                std::cout << ",\n";
-            std::cout << "\t\"" << header.first << "\": \"" << header.second << "\"";
-        }
-        std::cout << "\n}\n.\n{\n";
-        first = true;
-        for (const auto& claim : res.claims())
-        {
-            if (first)
-                first = false;
-            else
-                std::cout << ",\n";
-            std::cout << "\t\"" << claim.first << "\": \"" << claim.second << "\"";
-        }
-        std::cout << "\n}\n";
+        printPairs(res.header());
+        std::cout << ".\n";
+        printPairs(res.claims());
         return 0;
     }
     catch (const JWTXX::Error& ex)
