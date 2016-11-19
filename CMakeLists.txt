@@ -30,4 +30,4 @@ if(Boost_FOUND)
     add_subdirectory(tests EXCLUDE_FROM_ALL)
 endif(Boost_FOUND)
 
-add_custom_target(cppcheck COMMAND /usr/bin/cppcheck --enable=all --std=c++11 -I ${jwtxx_SOURCE_DIR}/include ${jwtxx_SOURCE_DIR}/src ${jwtxx_SOURCE_DIR}/tools)
+add_custom_target(cppcheck COMMAND cppcheck --enable=all --std=c++11 -I ${jwtxx_SOURCE_DIR}/include ${jwtxx_SOURCE_DIR}/src ${jwtxx_SOURCE_DIR}/tools)
