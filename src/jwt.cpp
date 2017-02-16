@@ -208,7 +208,7 @@ JWT::JWT(Algorithm alg, Pairs claims, Pairs header)
     m_header["alg"] = algToString(m_alg);
 }
 
-JWT::JWT(const std::string& token, Key key, Validators&& validators)
+JWT::JWT(const std::string& token, Key key, JWTXX::Validators&& validators)
 {
     // Check structure in general - split parts.
     auto parts = split(token);
@@ -246,7 +246,7 @@ JWT JWT::parse(const std::string& token)
     return JWT(alg, claims, header);
 }
 
-JWTXX::ValidationResult JWT::verify(const std::string& token, Key key, Validators&& validators)
+JWTXX::ValidationResult JWT::verify(const std::string& token, Key key, JWTXX::Validators&& validators)
 {
     try
     {

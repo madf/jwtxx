@@ -6,6 +6,8 @@
 #include <openssl/x509.h>
 #include <openssl/err.h>
 
+#include <algorithm> // std::min
+
 #include <cstring> // strerror
 #include <cerrno> // errno
 
@@ -70,7 +72,7 @@ int passwordCallback(char* buf, int size, int /*rwflag*/, void* data)
 
 }
 
-Utils::EVPKeyPtr Utils::readPEMPrivateKey(const std::string& fileName, Key::PasswordCallback cb)
+Utils::EVPKeyPtr Utils::readPEMPrivateKey(const std::string& fileName, JWTXX::Key::PasswordCallback cb)
 {
     FilePtr fp(fopen(fileName.c_str(), "rb"));
     if (!fp)
