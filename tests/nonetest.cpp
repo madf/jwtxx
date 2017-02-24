@@ -10,14 +10,17 @@
 namespace
 {
 
-constexpr const char tokenOrder1[] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJpc3MiOiJtYWRmIn0";
-constexpr const char tokenOrder2[] = "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJpc3MiOiJtYWRmIn0";
-constexpr const char tokenWithExp[] = "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJpc3MiOiJtYWRmIiwic3ViIjoidXNlciIsIm5iZiI6MTQ3NTI0MDY0NiwiZXhwIjoxNDc1MjQ0MjQ2LCJpYXQiOjE0NzUyNDA2NDZ9";
-constexpr const char brokenTokenWithExp1[] = "bGciOiJub25lIiwidHlwIjoiSldUIn0.eyJpc3MiOiJtYWRmIiwic3ViIjoidXNlciIsIm5iZiI6MTQ3NTI0MDY0NiwiZXhwIjoxNDc1MjQ0MjQ2LCJpYXQiOjE0NzUyNDA2NDZ9";
-constexpr const char brokenTokenWithExp2[] = "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.c3MiOiJtYWRmIiwic3ViIjoidXNlciIsIm5iZiI6MTQ3NTI0MDY0NiwiZXhwIjoxNDc1MjQ0MjQ2LCJpYXQiOjE0NzUyNDA2NDZ9";
-constexpr const char notAToken1[] = "";
-constexpr const char notAToken2[] = "Hello, World!";
-constexpr const char invalidHeaderToken[] = "eyJhbGciOiJIUzI1NyIsInR5cCI6IkpXIn0.eyJuYW1lIjoiZm9vIn0";
+constexpr auto tokenOrder1 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJpc3MiOiJtYWRmIn0";
+constexpr auto tokenOrder2 = "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJpc3MiOiJtYWRmIn0";
+constexpr auto tokenWithExp = "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJpc3MiOiJtYWRmIiwic3ViIjoidXNlciIsIm5iZiI6MTQ3NTI0MDY0NiwiZXhwIjoxNDc1MjQ0MjQ2LCJpYXQiOjE0NzUyNDA2NDZ9";
+constexpr auto brokenTokenWithExp1 = "bGciOiJub25lIiwidHlwIjoiSldUIn0.eyJpc3MiOiJtYWRmIiwic3ViIjoidXNlciIsIm5iZiI6MTQ3NTI0MDY0NiwiZXhwIjoxNDc1MjQ0MjQ2LCJpYXQiOjE0NzUyNDA2NDZ9";
+constexpr auto brokenTokenWithExp2 = "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.c3MiOiJtYWRmIiwic3ViIjoidXNlciIsIm5iZiI6MTQ3NTI0MDY0NiwiZXhwIjoxNDc1MjQ0MjQ2LCJpYXQiOjE0NzUyNDA2NDZ9";
+constexpr auto notAToken1 = "";
+constexpr auto notAToken2 = "Hello, World!";
+constexpr auto invalidHeaderToken = "eyJhbGciOiJIUzI1NyIsInR5cCI6IkpXIn0.eyJuYW1lIjoiZm9vIn0";
+constexpr auto noTypToken = "eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9";
+constexpr auto wrongCaseTypToken = "eyJhbGciOiJub25lIiwidHlwIjoiald0In0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9";
+constexpr auto nonJWTTypToken = "eyJhbGciOiJub25lIiwidHlwIjoiald0eHgifQ.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9";
 
 }
 
@@ -127,4 +130,22 @@ BOOST_AUTO_TEST_CASE(TestParserHeaderErrors)
 {
     BOOST_CHECK(!JWTXX::JWT::verify(invalidHeaderToken, JWTXX::Key(JWTXX::Algorithm::none, "")));
     BOOST_CHECK_THROW(JWTXX::JWT(invalidHeaderToken, JWTXX::Key(JWTXX::Algorithm::none, "")), JWTXX::JWT::ValidationError);
+}
+
+BOOST_AUTO_TEST_CASE(TestParserNoTyp)
+{
+    BOOST_CHECK(JWTXX::JWT::verify(noTypToken, JWTXX::Key(JWTXX::Algorithm::none, "")));
+    BOOST_CHECK_NO_THROW(JWTXX::JWT(noTypToken, JWTXX::Key(JWTXX::Algorithm::none, "")));
+}
+
+BOOST_AUTO_TEST_CASE(TestParserWrongCaseTyp)
+{
+    BOOST_CHECK(JWTXX::JWT::verify(wrongCaseTypToken, JWTXX::Key(JWTXX::Algorithm::none, "")));
+    BOOST_CHECK_NO_THROW(JWTXX::JWT(wrongCaseTypToken, JWTXX::Key(JWTXX::Algorithm::none, "")));
+}
+
+BOOST_AUTO_TEST_CASE(TestParserNonJWTTyp)
+{
+    BOOST_CHECK(JWTXX::JWT::verify(nonJWTTypToken, JWTXX::Key(JWTXX::Algorithm::none, "")));
+    BOOST_CHECK_NO_THROW(JWTXX::JWT(nonJWTTypToken, JWTXX::Key(JWTXX::Algorithm::none, "")));
 }

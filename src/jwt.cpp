@@ -217,8 +217,6 @@ JWT::JWT(const std::string& token, Key key, JWTXX::Validators&& validators)
     m_header = fromJSON(Base64URL::decode(std::get<0>(parts)).toString());
     m_claims = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
 
-    if (m_header["typ"] != "JWT")
-        throw ValidationError("\"typ\" should be \"JWT\". Actual value: \"" + m_header["typ"] + "\".");
     auto algName = algToString(key.alg());
     if (m_header["alg"] != algName)
         throw ValidationError("\"alg\" should be \"" + algName + "\". Actual value: \"" + m_header["alg"] + "\".");
@@ -254,8 +252,6 @@ JWTXX::ValidationResult JWT::verify(const std::string& token, Key key, JWTXX::Va
         auto data = std::get<0>(parts) + "." + std::get<1>(parts);
         Pairs header = fromJSON(Base64URL::decode(std::get<0>(parts)).toString());
         Pairs claims = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
-        if (header["typ"] != "JWT")
-            return ValidationResult::failure("\"typ\" should be \"JWT\". Actual value: \"" + header["typ"] + "\".");
         auto algName = algToString(key.alg());
         if (header["alg"] != algName)
             return ValidationResult::failure("\"alg\" should be \"" + algName + "\". Actual value: \"" + header["alg"] + "\".");

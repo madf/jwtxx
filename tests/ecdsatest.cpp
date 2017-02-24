@@ -10,24 +10,24 @@
 namespace
 {
 
-constexpr const char token256PartOrder1[] = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtYWRmIn0";
-constexpr const char token256PartOrder2[] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJpc3MiOiJtYWRmIn0";
-constexpr const char token256Order1[] = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtYWRmIn0.MEYCIQDLfrUl5UjzAJRoTSIHWYtrZgGeTVLe7Jbwr8VSdWPX1QIhAO44atlfe9nNKgoG5GjQSjBRFSRZnmfajNma_NVUJTQ4";
-constexpr const char token256Order2[] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJpc3MiOiJtYWRmIn0.MEUCIQDxYb1VcYO_q5Cz5BiPiAYq64yXWQnpetbeceeQG1_4YgIgdGXWZPqE5czzYTjxRkQFrJr1SCwmhhZFIn8I1GYgoZI";
-constexpr const char token384PartOrder1[] = "eyJhbGciOiJFUzM4NCIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtYWRmIn0";
-constexpr const char token384PartOrder2[] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzM4NCJ9.eyJpc3MiOiJtYWRmIn0";
-constexpr const char token384Order1[] = "eyJhbGciOiJFUzM4NCIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtYWRmIn0.MEQCIEJhk_-PkmS5FyMMn-bH8gNoaFn0x7Pap-KcXEWuhq9wAiAl2mNe4GncJIjjhVyYOxKT42tvoXqHH-iMBFk0JRY98A";
-constexpr const char token384Order2[] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzM4NCJ9.eyJpc3MiOiJtYWRmIn0.MEUCIQDa3Hp1OG-oiXX2eaznBRup1Y5WqCUTmFEvxTEI-ngE-AIgH_7yc09xb-4EPScqtyIxJuJV0t2Wc93rSKaqswV0whs";
-constexpr const char token512PartOrder1[] = "eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtYWRmIn0";
-constexpr const char token512PartOrder2[] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJpc3MiOiJtYWRmIn0";
-constexpr const char token512Order1[] = "eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtYWRmIn0.MEUCIQCVS5EcXIIYk8BJVTphGS_gIkMDkHS-K5rlTVoi3fTnKAIgfSMsTcnjXQjoi_43hdRWQhiNKKu7D090RjJbYC1w-eg";
-constexpr const char token512Order2[] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJpc3MiOiJtYWRmIn0.MEYCIQCSn5y1q5hQm4kOfP-39rWVNY_61iukR9GUjhn2Y8DuyQIhAMLF77oGoNtNO_buqxZIAwMTPs_TO3FrjbRVua34W-jk";
-constexpr const char token512CorruptedSignature[] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJpc3MiOiJtYWRmIn0.MEYCIQCSn5y1q5hQm4kOfP-39rWVNY_61iukR9GUjhn2Y8DuyQIhAMLF77oGoNtNO_buqxZIAwMTPs_TO3FrjbRVua";
-constexpr const char brokenToken1[] = "eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJpc3MiOiJtYWRmIn0.MEYCIQCSn5y1q5hQm4kOfP-39rWVNY_61iukR9GUjhn2Y8DuyQIhAMLF77oGoNtNO_buqxZIAwMTPs_TO3FrjbRVua34W-jk";
-constexpr const char brokenToken2[] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.3MiOiJtYWRmIn0.MEYCIQCSn5y1q5hQm4kOfP-39rWVNY_61iukR9GUjhn2Y8DuyQIhAMLF77oGoNtNO_buqxZIAwMTPs_TO3FrjbRVua34W-jk";
-constexpr const char notAToken1[] = "";
-constexpr const char notAToken2[] = "Hello, World!";
-constexpr const char invalidHeaderToken[] = "eyJhbGciOiJIUzI1NyIsInR5cCI6IkpXIn0.eyJuYW1lIjoiZm9vIn0"; // Here should be a ECDSA signature, but the structure is checked first, so we can skip.
+constexpr auto token256PartOrder1 = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtYWRmIn0";
+constexpr auto token256PartOrder2 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJpc3MiOiJtYWRmIn0";
+constexpr auto token256Order1 = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtYWRmIn0.MEYCIQDLfrUl5UjzAJRoTSIHWYtrZgGeTVLe7Jbwr8VSdWPX1QIhAO44atlfe9nNKgoG5GjQSjBRFSRZnmfajNma_NVUJTQ4";
+constexpr auto token256Order2 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJpc3MiOiJtYWRmIn0.MEUCIQDxYb1VcYO_q5Cz5BiPiAYq64yXWQnpetbeceeQG1_4YgIgdGXWZPqE5czzYTjxRkQFrJr1SCwmhhZFIn8I1GYgoZI";
+constexpr auto token384PartOrder1 = "eyJhbGciOiJFUzM4NCIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtYWRmIn0";
+constexpr auto token384PartOrder2 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzM4NCJ9.eyJpc3MiOiJtYWRmIn0";
+constexpr auto token384Order1 = "eyJhbGciOiJFUzM4NCIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtYWRmIn0.MEQCIEJhk_-PkmS5FyMMn-bH8gNoaFn0x7Pap-KcXEWuhq9wAiAl2mNe4GncJIjjhVyYOxKT42tvoXqHH-iMBFk0JRY98A";
+constexpr auto token384Order2 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzM4NCJ9.eyJpc3MiOiJtYWRmIn0.MEUCIQDa3Hp1OG-oiXX2eaznBRup1Y5WqCUTmFEvxTEI-ngE-AIgH_7yc09xb-4EPScqtyIxJuJV0t2Wc93rSKaqswV0whs";
+constexpr auto token512PartOrder1 = "eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtYWRmIn0";
+constexpr auto token512PartOrder2 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJpc3MiOiJtYWRmIn0";
+constexpr auto token512Order1 = "eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtYWRmIn0.MEUCIQCVS5EcXIIYk8BJVTphGS_gIkMDkHS-K5rlTVoi3fTnKAIgfSMsTcnjXQjoi_43hdRWQhiNKKu7D090RjJbYC1w-eg";
+constexpr auto token512Order2 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJpc3MiOiJtYWRmIn0.MEYCIQCSn5y1q5hQm4kOfP-39rWVNY_61iukR9GUjhn2Y8DuyQIhAMLF77oGoNtNO_buqxZIAwMTPs_TO3FrjbRVua34W-jk";
+constexpr auto token512CorruptedSignature = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJpc3MiOiJtYWRmIn0.MEYCIQCSn5y1q5hQm4kOfP-39rWVNY_61iukR9GUjhn2Y8DuyQIhAMLF77oGoNtNO_buqxZIAwMTPs_TO3FrjbRVua";
+constexpr auto brokenToken1 = "eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJpc3MiOiJtYWRmIn0.MEYCIQCSn5y1q5hQm4kOfP-39rWVNY_61iukR9GUjhn2Y8DuyQIhAMLF77oGoNtNO_buqxZIAwMTPs_TO3FrjbRVua34W-jk";
+constexpr auto brokenToken2 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.3MiOiJtYWRmIn0.MEYCIQCSn5y1q5hQm4kOfP-39rWVNY_61iukR9GUjhn2Y8DuyQIhAMLF77oGoNtNO_buqxZIAwMTPs_TO3FrjbRVua34W-jk";
+constexpr auto notAToken1 = "";
+constexpr auto notAToken2 = "Hello, World!";
+constexpr auto invalidHeaderToken = "eyJhbGciOiJIUzI1NyIsInR5cCI6IkpXIn0.eyJuYW1lIjoiZm9vIn0"; // Here should be a ECDSA signature, but the structure is checked first, so we can skip.
 
 }
 
