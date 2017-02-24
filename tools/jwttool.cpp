@@ -1,6 +1,8 @@
 #include "toolversion.h"
 
 #include "json.h"
+#include "base64url.h"
+#include "utils.h"
 
 #include <iostream>
 #include <string>
@@ -15,6 +17,8 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+namespace Utils = JWTXX::Utils;
 
 namespace
 {
@@ -123,10 +127,12 @@ int print(JWTXX::Algorithm /*alg*/, const std::string& /*keyFile*/, const std::s
 {
     try
     {
-        auto res = JWTXX::JWT::parse(data);
-        printPairs(res.header());
+        auto parts = Utils::split(data);
+        JWTXX::Pairs header = JWTXX::fromJSON(JWTXX::Base64URL::decode(std::get<0>(parts)).toString());
+        JWTXX::Pairs claims = JWTXX::fromJSON(JWTXX::Base64URL::decode(std::get<1>(parts)).toString());
+        printPairs(header);
         std::cout << ".\n";
-        printPairs(res.claims());
+        printPairs(claims);
         return 0;
     }
     catch (const JWTXX::Error& ex)

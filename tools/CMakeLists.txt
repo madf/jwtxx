@@ -3,6 +3,7 @@ project(jwttool VERSION 1.0.1)
 enable_language(CXX)
 
 include_directories(${PROJECT_BINARY_DIR}) # toolversion.h
+include_directories(${OPENSSL_INCLUDE_DIR})
 include_directories(${jwtxx_BINARY_DIR}/include) # jwtxx/version.h
 include_directories(${jwtxx_SOURCE_DIR}/src) # json.h
 

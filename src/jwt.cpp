@@ -8,7 +8,6 @@
 #include "json.h"
 
 #include <vector>
-#include <tuple>
 #include <utility> // std::move
 
 #include <ctime>
@@ -27,8 +26,6 @@ namespace Validate = JWTXX::Validate;
 
 namespace
 {
-
-typedef std::tuple<std::string, std::string, std::string> Triple;
 
 struct NoneKey : public Key::Impl
 {
@@ -59,21 +56,6 @@ Key::Impl* createKey(Algorithm alg, const std::string& keyData, const Key::Passw
         case Algorithm::ES512: return new Keys::PEM(EVP_sha512(), keyData, cb);
     }
     return new NoneKey; // Just in case.
-}
-
-Triple split(const std::string& token)
-{
-    auto pos = token.find_first_of('.');
-    if (pos == std::string::npos)
-        throw JWT::ParseError("JWT should have at least 2 parts separated by a dot.");
-    auto spos = token.find_first_of('.', pos + 1);
-    if (spos == std::string::npos)
-        return std::make_tuple(token.substr(0, pos),
-                               token.substr(pos + 1, token.length() - pos - 1),
-                               "");
-    return std::make_tuple(token.substr(0, pos),
-                           token.substr(pos + 1, spos - pos - 1),
-                           token.substr(spos + 1, token.length() - spos - 1));
 }
 
 template <typename F>
@@ -211,7 +193,7 @@ JWT::JWT(Algorithm alg, Pairs claims, Pairs header)
 JWT::JWT(const std::string& token, Key key, JWTXX::Validators&& validators)
 {
     // Check structure in general - split parts.
-    auto parts = split(token);
+    auto parts = Utils::split(token);
 
     // Check internal structure. fromJSON will throw on non-JSON or non-object.
     m_header = fromJSON(Base64URL::decode(std::get<0>(parts)).toString());
@@ -235,7 +217,7 @@ JWT::JWT(const std::string& token, Key key, JWTXX::Validators&& validators)
 
 JWT JWT::parse(const std::string& token)
 {
-    auto parts = split(token);
+    auto parts = Utils::split(token);
     Pairs header = fromJSON(Base64URL::decode(std::get<0>(parts)).toString());
     Pairs claims = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
     Algorithm alg = Algorithm::none;
@@ -248,7 +230,7 @@ JWTXX::ValidationResult JWT::verify(const std::string& token, Key key, JWTXX::Va
 {
     try
     {
-        auto parts = split(token);
+        auto parts = Utils::split(token);
         auto data = std::get<0>(parts) + "." + std::get<1>(parts);
         Pairs header = fromJSON(Base64URL::decode(std::get<0>(parts)).toString());
         Pairs claims = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());

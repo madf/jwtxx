@@ -41,6 +41,7 @@ class Block
         Block(void* buffer, size_t size) : m_buffer(buffer), m_size(size) {}
 };
 
+inline
 std::string URLEncode(const std::string& data)
 {
     if (data.empty())
@@ -61,6 +62,7 @@ std::string URLEncode(const std::string& data)
     return res;
 }
 
+inline
 std::string URLDecode(const std::string& data)
 {
     if (data.empty())
@@ -85,6 +87,7 @@ std::string URLDecode(const std::string& data)
     return res;
 }
 
+inline
 std::string encode(const Block& block)
 {
     BIO* bio = BIO_push(BIO_new(BIO_f_base64()), BIO_new(BIO_s_mem()));
@@ -106,6 +109,7 @@ std::string encode(const Block& block)
     return URLEncode(res);
 }
 
+inline
 std::string encode(const std::string& data)
 {
     Block block(data.size());
@@ -113,6 +117,7 @@ std::string encode(const std::string& data)
     return encode(block);
 }
 
+inline
 Block decode(std::string data)
 {
     data = URLDecode(data);

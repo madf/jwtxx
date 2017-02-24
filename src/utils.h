@@ -3,8 +3,7 @@
 #include "jwtxx/jwt.h"
 
 #include <memory>
-
-#include <cstdio> // fopen, fclose
+#include <tuple>
 
 #include <openssl/evp.h>
 #include <openssl/ec.h>
@@ -30,6 +29,10 @@ EVPKeyPtr readPEMPrivateKey(const std::string& fileName, Key::PasswordCallback c
 EVPKeyPtr readPEMPublicKey(const std::string& fileName);
 
 std::string OPENSSLError();
+
+typedef std::tuple<std::string, std::string, std::string> Triple;
+
+Triple split(const std::string& token);
 
 }
 }

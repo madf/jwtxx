@@ -9,6 +9,7 @@
 #include <algorithm> // std::min
 
 #include <cstring> // strerror
+#include <cstdio> // fopen, fclose
 #include <cerrno> // errno
 
 namespace Utils = JWTXX::Utils;
@@ -109,4 +110,19 @@ std::string Utils::OPENSSLError()
     char buf[256];
     ERR_error_string_n(ERR_get_error(), buf, sizeof(buf));
     return buf;
+}
+
+Utils::Triple Utils::split(const std::string& token)
+{
+    auto pos = token.find_first_of('.');
+    if (pos == std::string::npos)
+        throw JWT::ParseError("JWT should have at least 2 parts separated by a dot.");
+    auto spos = token.find_first_of('.', pos + 1);
+    if (spos == std::string::npos)
+        return std::make_tuple(token.substr(0, pos),
+                               token.substr(pos + 1, token.length() - pos - 1),
+                               "");
+    return std::make_tuple(token.substr(0, pos),
+                           token.substr(pos + 1, spos - pos - 1),
+                           token.substr(spos + 1, token.length() - spos - 1));
 }
