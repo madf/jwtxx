@@ -1,4 +1,4 @@
-project(jwttool VERSION 1.0.1)
+project(jwttool VERSION 1.0.2)
 
 enable_language(CXX)
 
