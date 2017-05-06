@@ -10,11 +10,11 @@ namespace
 
 struct JSONDeleter
 {
-    void operator()(json_t* obj){ json_decref(obj); }
+    void operator()(json_t* obj) noexcept { json_decref(obj); }
 };
 typedef std::unique_ptr<json_t, JSONDeleter> JSON;
 
-std::string toString(const json_t* node)
+std::string toString(const json_t* node) noexcept
 {
     switch (json_typeof(node))
     {
@@ -31,7 +31,7 @@ std::string toString(const json_t* node)
 
 }
 
-std::string JWTXX::toJSON(const Pairs& data)
+std::string JWTXX::toJSON(const Pairs& data) noexcept
 {
     JSON root(json_object());
     for (const auto& item : data)

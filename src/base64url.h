@@ -16,20 +16,20 @@ namespace Base64URL
 class Block
 {
     public:
-        explicit Block(size_t size) : m_buffer(OPENSSL_malloc(size)), m_size(size) {}
+        explicit Block(size_t size) noexcept : m_buffer(OPENSSL_malloc(size)), m_size(size) {}
         ~Block() { OPENSSL_free(m_buffer); }
-        Block(Block&& rhs) : m_buffer(rhs.m_buffer), m_size(rhs.m_size) { rhs.m_buffer = nullptr; rhs.m_size = 0; }
-        Block& operator=(Block&& rhs) { m_buffer = rhs.m_buffer; m_size = rhs.m_size; rhs.m_buffer = nullptr; rhs.m_size = 0; return *this; }
+        Block(Block&& rhs) noexcept : m_buffer(rhs.m_buffer), m_size(rhs.m_size) { rhs.m_buffer = nullptr; rhs.m_size = 0; }
+        Block& operator=(Block&& rhs) noexcept { OPENSSL_free(m_buffer); m_buffer = rhs.m_buffer; m_size = rhs.m_size; rhs.m_buffer = nullptr; rhs.m_size = 0; return *this; }
 
-        size_t size() const { return m_size; }
-        const void* data() const { return m_buffer; }
+        size_t size() const noexcept { return m_size; }
+        const void* data() const noexcept { return m_buffer; }
 
         template <typename T = void*>
-        T data() { return static_cast<T>(m_buffer); }
+        T data() noexcept { return static_cast<T>(m_buffer); }
 
-        std::string toString() const { return std::string(static_cast<const char*>(m_buffer), m_size); }
+        std::string toString() const noexcept { return std::string(static_cast<const char*>(m_buffer), m_size); }
 
-        Block shrink(size_t size) { Block block(m_buffer, size); m_buffer = nullptr; m_size = 0; return block; }
+        Block shrink(size_t size) noexcept { Block block(m_buffer, size); m_buffer = nullptr; m_size = 0; return block; }
 
         Block(const Block&) = delete;
         Block& operator=(const Block&) = delete;
@@ -38,11 +38,11 @@ class Block
         void* m_buffer;
         size_t m_size;
 
-        Block(void* buffer, size_t size) : m_buffer(buffer), m_size(size) {}
+        Block(void* buffer, size_t size) noexcept : m_buffer(buffer), m_size(size) {}
 };
 
 inline
-std::string URLEncode(const std::string& data)
+std::string URLEncode(const std::string& data) noexcept
 {
     if (data.empty())
         return {};
@@ -63,7 +63,7 @@ std::string URLEncode(const std::string& data)
 }
 
 inline
-std::string URLDecode(const std::string& data)
+std::string URLDecode(const std::string& data) noexcept
 {
     if (data.empty())
         return {};
@@ -88,7 +88,7 @@ std::string URLDecode(const std::string& data)
 }
 
 inline
-std::string encode(const Block& block)
+std::string encode(const Block& block) noexcept
 {
     BIO* bio = BIO_push(BIO_new(BIO_f_base64()), BIO_new(BIO_s_mem()));
     BIO_set_flags(bio, BIO_FLAGS_BASE64_NO_NL);
@@ -110,7 +110,7 @@ std::string encode(const Block& block)
 }
 
 inline
-std::string encode(const std::string& data)
+std::string encode(const std::string& data) noexcept
 {
     Block block(data.size());
     memcpy(block.data(), data.c_str(), data.size());
@@ -118,7 +118,7 @@ std::string encode(const std::string& data)
 }
 
 inline
-Block decode(std::string data)
+Block decode(std::string data) noexcept
 {
     data = URLDecode(data);
 

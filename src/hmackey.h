@@ -14,7 +14,7 @@ namespace Keys
 class HMAC : public Key::Impl
 {
     public:
-        HMAC(const EVP_MD* digest, const std::string& keyData)
+        HMAC(const EVP_MD* digest, const std::string& keyData) noexcept
             : m_digest(digest), m_data(keyData)
         {
         }

@@ -14,7 +14,7 @@ namespace Keys
 class PEM : public Key::Impl
 {
     public:
-        PEM(const EVP_MD* digest, const std::string& keyData, const Key::PasswordCallback& cb)
+        PEM(const EVP_MD* digest, const std::string& keyData, const Key::PasswordCallback& cb) noexcept
             : m_digest(digest), m_data(keyData), m_cb(cb)
         {
         }

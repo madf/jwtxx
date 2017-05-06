@@ -23,7 +23,7 @@ namespace JWTXX
  *  @brief Enable OpenSSL human-readable error messages.
  *  You only need to call it once, in the beginning of your program.
  */
-void enableOpenSSLErrors();
+void enableOpenSSLErrors() noexcept;
 
 /** @enum Algorithm
  *  @brief JWT signature algorithms.
@@ -47,7 +47,7 @@ enum class Algorithm {
 struct Error : public std::runtime_error
 {
     /** @brief Constructor. */
-    explicit Error(const std::string& message) : runtime_error(message) {}
+    explicit Error(const std::string& message) noexcept : runtime_error(message) {}
 };
 
 /** @fn std::string algToString(Algorithm alg)
@@ -55,7 +55,7 @@ struct Error : public std::runtime_error
  *  @param alg algorithm code.
  *  @return string representation of the supplied code.
  */
-std::string algToString(Algorithm alg);
+std::string algToString(Algorithm alg) noexcept;
 
 /** @fn Algorithm stringToAlg(const std::string& value)
  *  @brief Converts algorithm name into algorithm code.
@@ -92,17 +92,17 @@ class Key
          *  @param keyData a shared secret or a path to key file;
          *  @param cb password callabck for password-protected keys.
          */
-        Key(Algorithm alg, const std::string& keyData, const PasswordCallback& cb = {});
+        Key(Algorithm alg, const std::string& keyData, const PasswordCallback& cb = {}) noexcept;
         /** @brief Destructor. */
         ~Key();
 
         /** @brief Move constructor. */
-        Key(Key&&);
+        Key(Key&&) noexcept;
         /** @brief Move assignment. */
-        Key& operator=(Key&&);
+        Key& operator=(Key&&) noexcept;
 
         /** @brief Returns algorithm code used by the key. */
-        Algorithm alg() const { return m_alg; }
+        Algorithm alg() const noexcept { return m_alg; }
 
         /** @brief Signs a chunk of memory.
          *  @param data a pointer to data for signing;
@@ -131,23 +131,23 @@ class ValidationResult
 {
     public:
         /** @brief 'Success' constructor. */
-        static ValidationResult ok() { return ValidationResult(); }
+        static ValidationResult ok() noexcept { return ValidationResult(); }
         /** @brief 'Failure' constructor.
          *  @param message error message.
          */
-        static ValidationResult failure(const std::string& message) { return ValidationResult(message); }
+        static ValidationResult failure(const std::string& message) noexcept { return ValidationResult(message); }
 
         /** @brief Cast operator to bool. */
-        explicit operator bool() const { return m_message.empty(); }
+        explicit operator bool() const noexcept { return m_message.empty(); }
 
         /** @brief Error message accessor. */
-        const std::string& message() const { return m_message; }
+        const std::string& message() const noexcept { return m_message; }
 
     private:
         std::string m_message;
 
-        ValidationResult() {}
-        explicit ValidationResult(const std::string& message) : m_message(message) {}
+        ValidationResult() noexcept {}
+        explicit ValidationResult(const std::string& message) noexcept : m_message(message) {}
 };
 
 /** @typedef Pairs
@@ -175,32 +175,32 @@ namespace Validate
  *  @brief Constructs validator for 'exp' claim.
  *  @param now current time, may be overriden.
  */
-Validator exp(std::time_t now = std::time(nullptr));
+Validator exp(std::time_t now = std::time(nullptr)) noexcept;
 /** @fn Validator nbf(std::time_t now = std::time(nullptr))
  *  @brief Constructs validator for 'nbf' claim.
  *  @param now current time, may be overriden.
  */
-Validator nbf(std::time_t now = std::time(nullptr));
+Validator nbf(std::time_t now = std::time(nullptr)) noexcept;
 /** @fn Validator iat(std::time_t now = std::time(nullptr))
  *  @brief Constructs validator for 'iat' claim.
  *  @param now current time, may be overriden.
  */
-Validator iat(std::time_t now = std::time(nullptr));
+Validator iat(std::time_t now = std::time(nullptr)) noexcept;
 /** @fn Validator iss(std::string issuer)
  *  @brief Constructs validator for 'iss' claim.
  *  @param issuer valid issuer name.
  */
-Validator iss(std::string issuer);
+Validator iss(std::string issuer) noexcept;
 /** @fn Validator aud(std::string audience)
  *  @brief Constructs validator for 'aud' claim.
  *  @param audience valid audience.
  */
-Validator aud(std::string audience);
+Validator aud(std::string audience) noexcept;
 /** @fn Validator sub(std::string subject)
  *  @brief Constructs validator for 'sub' claim.
  *  @param subject valid subject name.
  */
-Validator sub(std::string subject);
+Validator sub(std::string subject) noexcept;
 
 }
 
@@ -218,7 +218,7 @@ class JWT
             /** @brief Constructor.
              *  @param message error message.
              */
-            explicit Error(const std::string& message) : JWTXX::Error(message) {}
+            explicit Error(const std::string& message) noexcept : JWTXX::Error(message) {}
         };
 
         /** @class ParseError
@@ -229,7 +229,7 @@ class JWT
             /** @brief Constructor.
              *  @param message error message.
              */
-            explicit ParseError(const std::string& message) : Error(message) {}
+            explicit ParseError(const std::string& message) noexcept : Error(message) {}
         };
 
         /** @class ValidationError
@@ -240,7 +240,7 @@ class JWT
             /** @brief Constructor.
              *  @param message error message.
              */
-            explicit ValidationError(const std::string& message) : Error(message) {}
+            explicit ValidationError(const std::string& message) noexcept : Error(message) {}
         };
 
         /** @brief Constructs a JWT from a token.
@@ -255,7 +255,7 @@ class JWT
          *  @param claims a list of claims;
          *  @param header an optional list of header records; 'alg' and 'typ' can't be specified manually.
          */
-        JWT(Algorithm alg, Pairs claims, Pairs header = Pairs());
+        JWT(Algorithm alg, Pairs claims, Pairs header = Pairs()) noexcept;
 
         /** @brief Returns a JWT for a token without validation.
          *  @param token the token.
@@ -267,22 +267,22 @@ class JWT
          *  @param key key to use for signatire verification;
          *  @param validators an optional list of validators; validates 'exp' by default.
          */
-        static ValidationResult verify(const std::string& token, Key key, Validators&& validators = {Validate::exp()});
+        static ValidationResult verify(const std::string& token, Key key, Validators&& validators = {Validate::exp()}) noexcept;
 
         /** @brief Returns an algorithm. */
-        Algorithm alg() const { return m_alg; }
+        Algorithm alg() const noexcept { return m_alg; }
 
         /** @brief Returns a list of claims. */
-        const Pairs& claims() const { return m_claims; }
+        const Pairs& claims() const noexcept { return m_claims; }
 
         /** @brief Returns a list of header fields. */
-        const Pairs& header() const { return m_header; }
+        const Pairs& header() const noexcept { return m_header; }
 
         /** @brief Returns a value of a specific claim.
          *  @param name claim name.
          *  @note Returns an empty string if the claim is missing.
          */
-        std::string claim(const std::string& name) const;
+        std::string claim(const std::string& name) const noexcept;
 
         /** @brief Returns a signed token.
          *  @param keyData key-specific data;

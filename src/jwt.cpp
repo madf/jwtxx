@@ -40,7 +40,7 @@ struct NoneKey : public Key::Impl
     }
 };
 
-Key::Impl* createKey(Algorithm alg, const std::string& keyData, const Key::PasswordCallback& cb)
+Key::Impl* createKey(Algorithm alg, const std::string& keyData, const Key::PasswordCallback& cb) noexcept
 {
     switch (alg)
     {
@@ -59,7 +59,7 @@ Key::Impl* createKey(Algorithm alg, const std::string& keyData, const Key::Passw
 }
 
 template <typename F>
-JWTXX::ValidationResult validTime(const std::string& value, F&& next)
+JWTXX::ValidationResult validTime(const std::string& value, F&& next) noexcept
 {
     try
     {
@@ -76,7 +76,7 @@ JWTXX::ValidationResult validTime(const std::string& value, F&& next)
 }
 
 template <typename F>
-JWTXX::ValidationResult validClaim(const Pairs& claims, std::string claim, F&& next)
+JWTXX::ValidationResult validClaim(const Pairs& claims, std::string claim, F&& next) noexcept
 {
     auto it = claims.find(claim);
     if (it == std::end(claims))
@@ -85,7 +85,7 @@ JWTXX::ValidationResult validClaim(const Pairs& claims, std::string claim, F&& n
 }
 
 template <typename F>
-JWTXX::ValidationResult validTimeClaim(const Pairs& claims, std::string claim, F&& next)
+JWTXX::ValidationResult validTimeClaim(const Pairs& claims, std::string claim, F&& next) noexcept
 {
     return validClaim(claims, std::move(claim),
                       [&](const std::string& value)
@@ -95,7 +95,7 @@ JWTXX::ValidationResult validTimeClaim(const Pairs& claims, std::string claim, F
 }
 
 Validator stringValidator(std::string&& name,
-                          std::string&& validValue)
+                          std::string&& validValue) noexcept
 {
     return [=](const Pairs& claims)
            {
@@ -107,7 +107,7 @@ Validator stringValidator(std::string&& name,
            };
 }
 
-std::string formatTime(std::time_t value)
+std::string formatTime(std::time_t value) noexcept
 {
     std::tm tmb;
     char buf[20];
@@ -120,17 +120,17 @@ std::string formatTime(std::time_t value)
 
 }
 
-void JWTXX::enableOpenSSLErrors()
+void JWTXX::enableOpenSSLErrors() noexcept
 {
     struct OpenSSLErrors
     {
-        OpenSSLErrors() { ERR_load_crypto_strings(); OpenSSL_add_all_algorithms(); }
+        OpenSSLErrors() noexcept { ERR_load_crypto_strings(); OpenSSL_add_all_algorithms(); }
         ~OpenSSLErrors() { EVP_cleanup(); ERR_free_strings(); CRYPTO_cleanup_all_ex_data(); }
     };
     static const OpenSSLErrors enabled __attribute__((used));
 }
 
-std::string JWTXX::algToString(Algorithm alg)
+std::string JWTXX::algToString(Algorithm alg) noexcept
 {
     switch (alg)
     {
@@ -163,14 +163,14 @@ Algorithm JWTXX::stringToAlg(const std::string& value)
     else throw JWT::ParseError("Invalid algorithm name: '" + value + "'.");
 }
 
-Key::Key(Algorithm alg, const std::string& keyData, const PasswordCallback& cb)
+Key::Key(Algorithm alg, const std::string& keyData, const PasswordCallback& cb) noexcept
     : m_alg(alg), m_impl(createKey(alg, keyData, cb))
 {
 }
 
 Key::~Key() = default;
-Key::Key(Key&&) = default;
-Key& Key::operator=(Key&&) = default;
+Key::Key(Key&&) noexcept = default;
+Key& Key::operator=(Key&&) noexcept = default;
 
 std::string Key::sign(const void* data, size_t size) const
 {
@@ -183,7 +183,7 @@ bool Key::verify(const void* data, size_t size,
     return m_impl->verify(data, size, signature);
 }
 
-JWT::JWT(Algorithm alg, Pairs claims, Pairs header)
+JWT::JWT(Algorithm alg, Pairs claims, Pairs header) noexcept
     : m_alg(alg), m_header(header), m_claims(claims)
 {
     m_header["typ"] = "JWT";
@@ -226,7 +226,7 @@ JWT JWT::parse(const std::string& token)
     return JWT(alg, claims, header);
 }
 
-JWTXX::ValidationResult JWT::verify(const std::string& token, Key key, JWTXX::Validators&& validators)
+JWTXX::ValidationResult JWT::verify(const std::string& token, Key key, JWTXX::Validators&& validators) noexcept
 {
     try
     {
@@ -253,7 +253,7 @@ JWTXX::ValidationResult JWT::verify(const std::string& token, Key key, JWTXX::Va
     }
 }
 
-std::string JWT::claim(const std::string& name) const
+std::string JWT::claim(const std::string& name) const noexcept
 {
     auto it = m_claims.find(name);
     if (it == std::end(m_claims))
@@ -272,7 +272,7 @@ std::string JWT::token(const std::string& keyData, const Key::PasswordCallback& 
     return data + "." + signature;
 }
 
-Validator Validate::exp(std::time_t now)
+Validator Validate::exp(std::time_t now) noexcept
 {
     return [=](const Pairs& claims)
            {
@@ -284,7 +284,7 @@ Validator Validate::exp(std::time_t now)
            };
 }
 
-Validator Validate::nbf(std::time_t now)
+Validator Validate::nbf(std::time_t now) noexcept
 {
     return [=](const Pairs& claims)
            {
@@ -296,7 +296,7 @@ Validator Validate::nbf(std::time_t now)
            };
 }
 
-Validator Validate::iat(std::time_t now)
+Validator Validate::iat(std::time_t now) noexcept
 {
     return [=](const Pairs& claims)
            {
@@ -308,17 +308,17 @@ Validator Validate::iat(std::time_t now)
            };
 }
 
-Validator Validate::iss(std::string issuer)
+Validator Validate::iss(std::string issuer) noexcept
 {
     return stringValidator("iss", std::move(issuer));
 }
 
-Validator Validate::aud(std::string audience)
+Validator Validate::aud(std::string audience) noexcept
 {
     return stringValidator("aud", std::move(audience));
 }
 
-Validator Validate::sub(std::string subject)
+Validator Validate::sub(std::string subject) noexcept
 {
     return stringValidator("sub", std::move(subject));
 }
