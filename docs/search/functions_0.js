@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['alg',['alg',['../class_j_w_t_x_x_1_1_key.html#af636f6e74852c0146b1c8bb5067eaeef',1,'JWTXX::Key::alg()'],['../class_j_w_t_x_x_1_1_j_w_t.html#ab75b5a06624ddc002e8378ca4277e09f',1,'JWTXX::JWT::alg()']]],
-  ['algtostring',['algToString',['../namespace_j_w_t_x_x.html#a1e3898b267dfb4590fefe86d963a5931',1,'JWTXX']]],
-  ['aud',['aud',['../namespace_j_w_t_x_x_1_1_validate.html#a938a7e11618a23d37675e8bc18c72ad6',1,'JWTXX::Validate']]]
+  ['alg',['alg',['../class_j_w_t_x_x_1_1_key.html#a260b0fa23895a437121f083ffd8b2d49',1,'JWTXX::Key::alg()'],['../class_j_w_t_x_x_1_1_j_w_t.html#a8c4f81228441668be24a688cbec2c24f',1,'JWTXX::JWT::alg()']]],
+  ['algtostring',['algToString',['../namespace_j_w_t_x_x.html#aad3e72095f1fcafa39a8dd29e5fb92e4',1,'JWTXX']]],
+  ['aud',['aud',['../namespace_j_w_t_x_x_1_1_validate.html#aa88a10f5b207f2296fd4e647e21b879b',1,'JWTXX::Validate']]]
 ];
