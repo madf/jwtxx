@@ -24,13 +24,13 @@ struct PasswordCallbackError : public JWTXX::Key::Error
 
 struct FileCloser
 {
-    void operator()(FILE* fp) noexcept { fclose(fp); }
+    void operator()(FILE* fp) const noexcept { fclose(fp); }
 };
 typedef std::unique_ptr<FILE, FileCloser> FilePtr;
 
 struct X509Deleter
 {
-    void operator()(X509* cert) noexcept { X509_free(cert); }
+    void operator()(X509* cert) const noexcept { X509_free(cert); }
 };
 typedef std::unique_ptr<X509, X509Deleter> X509Ptr;
 

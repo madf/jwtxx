@@ -10,7 +10,7 @@ namespace
 
 struct JSONDeleter
 {
-    void operator()(json_t* obj) noexcept { json_decref(obj); }
+    void operator()(json_t* obj) const noexcept { json_decref(obj); }
 };
 typedef std::unique_ptr<json_t, JSONDeleter> JSON;
 

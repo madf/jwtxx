@@ -15,13 +15,13 @@ namespace Utils
 
 struct EVPKeyDeleter
 {
-    void operator()(EVP_PKEY* key) noexcept { EVP_PKEY_free(key); }
+    void operator()(EVP_PKEY* key) const noexcept { EVP_PKEY_free(key); }
 };
 typedef std::unique_ptr<EVP_PKEY, EVPKeyDeleter> EVPKeyPtr;
 
 struct EVPMDCTXDeleter
 {
-    void operator()(EVP_MD_CTX* ctx) noexcept { EVP_MD_CTX_destroy(ctx); }
+    void operator()(EVP_MD_CTX* ctx) const noexcept { EVP_MD_CTX_destroy(ctx); }
 };
 typedef std::unique_ptr<EVP_MD_CTX, EVPMDCTXDeleter> EVPMDCTXPtr;
 
