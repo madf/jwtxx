@@ -14,6 +14,14 @@ struct JSONDeleter
 };
 typedef std::unique_ptr<json_t, JSONDeleter> JSON;
 
+std::string dumpNode(const json_t* node) noexcept
+{
+    char* dump = json_dumps(node, JSON_COMPACT);
+    std::string res(dump != nullptr ? dump : "");
+    free(dump);
+    return res;
+}
+
 std::string toString(const json_t* node) noexcept
 {
     switch (json_typeof(node))
@@ -24,7 +32,7 @@ std::string toString(const json_t* node) noexcept
         case JSON_STRING: return json_string_value(node);
         case JSON_INTEGER: return std::to_string(json_integer_value(node));
         case JSON_REAL: return std::to_string(json_real_value(node));
-        default: return json_dumps(node, JSON_COMPACT);
+        default: return dumpNode(node);
     }
     return {}; // Just in case.
 }
@@ -36,10 +44,7 @@ std::string JWTXX::toJSON(const Pairs& data) noexcept
     JSON root(json_object());
     for (const auto& item : data)
         json_object_set_new(root.get(), item.first.c_str(), json_string(item.second.c_str()));
-    char* dump = json_dumps(root.get(), JSON_COMPACT);
-    std::string res(dump);
-    free(dump);
-    return res;
+    return dumpNode(root.get());
 }
 
 Pairs JWTXX::fromJSON(const std::string& data)
