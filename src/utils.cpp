@@ -17,6 +17,13 @@ namespace Utils = JWTXX::Utils;
 namespace
 {
 
+struct PasswordCallbackTester
+{
+    PasswordCallbackTester(JWTXX::Key::PasswordCallback cb) : callback(cb), missingCallback(false) {}
+    JWTXX::Key::PasswordCallback callback;
+    bool missingCallback;
+};
+
 struct PasswordCallbackError : public JWTXX::Key::Error
 {
     PasswordCallbackError() : Error("Can't read password-protected private key without password callback function.") {}
@@ -62,10 +69,13 @@ int passwordCallback(char* buf, int size, int /*rwflag*/, void* data)
 {
     if (data == nullptr)
         return 0;
-    JWTXX::Key::PasswordCallback& cb = *static_cast<JWTXX::Key::PasswordCallback*>(data);
-    if (!cb)
-        throw PasswordCallbackError();
-    auto password = cb();
+    PasswordCallbackTester& tester = *static_cast<PasswordCallbackTester*>(data);
+    if (!tester.callback)
+    {
+        tester.missingCallback = true;
+        return 0;
+    }
+    auto password = tester.callback();
     std::strncpy(buf, password.c_str(), size - 1);
     buf[size - 1] = '\0';
     return std::min<int>(size, password.length());
@@ -80,7 +90,10 @@ Utils::EVPKeyPtr Utils::readPEMPrivateKey(const std::string& fileName, JWTXX::Ke
         throw Key::Error("Can't open key file '" + fileName + "'. " + sysError());
     try
     {
-        EVPKeyPtr key(PEM_read_PrivateKey(fp.get(), nullptr, passwordCallback, &cb));
+        PasswordCallbackTester tester(cb);
+        EVPKeyPtr key(PEM_read_PrivateKey(fp.get(), nullptr, passwordCallback, &tester));
+        if (tester.missingCallback)
+            throw PasswordCallbackError();
         if (!key)
             throw Key::Error("Can't read private key '" + fileName + "'. " + OPENSSLError());
         return key;
