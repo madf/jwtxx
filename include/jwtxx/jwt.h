@@ -87,12 +87,18 @@ class Key
             explicit Error(const std::string& message) : JWTXX::Error(message) {}
         };
 
+        /** @brief Always throws exception, reports about missing callback.
+         *  @return doesn't return.
+         *  @throws Error
+         */
+        static std::string noPasswordCallback();
+
         /** @brief Constructs key using the specified algorithm and data.
          *  @param alg signature algorithm;
          *  @param keyData a shared secret or a path to key file;
          *  @param cb password callabck for password-protected keys.
          */
-        Key(Algorithm alg, const std::string& keyData, const PasswordCallback& cb = {}) noexcept;
+        Key(Algorithm alg, const std::string& keyData, const PasswordCallback& cb = noPasswordCallback) noexcept;
         /** @brief Destructor. */
         ~Key();
 
@@ -289,7 +295,7 @@ class JWT
          *  @param cb password callback for password-protected keys.
          *  @note Automatically constructs key using the algorithm specified in this JWT.
          */
-        std::string token(const std::string& keyData, const Key::PasswordCallback& cb = {}) const;
+        std::string token(const std::string& keyData, const Key::PasswordCallback& cb = Key::noPasswordCallback) const;
 
     private:
         Algorithm m_alg;

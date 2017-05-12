@@ -7,6 +7,7 @@
 #include <openssl/err.h>
 
 #include <algorithm> // std::min
+#include <exception>
 
 #include <cstring> // strerror
 #include <cstdio> // fopen, fclose
@@ -19,14 +20,9 @@ namespace
 
 struct PasswordCallbackTester
 {
-    PasswordCallbackTester(JWTXX::Key::PasswordCallback cb) : callback(cb), missingCallback(false) {}
+    explicit PasswordCallbackTester(const JWTXX::Key::PasswordCallback& cb) noexcept : callback(cb) {}
     JWTXX::Key::PasswordCallback callback;
-    bool missingCallback;
-};
-
-struct PasswordCallbackError : public JWTXX::Key::Error
-{
-    PasswordCallbackError() : Error("Can't read password-protected private key without password callback function.") {}
+    std::exception_ptr exception;
 };
 
 struct FileCloser
@@ -70,20 +66,23 @@ int passwordCallback(char* buf, int size, int /*rwflag*/, void* data)
     if (data == nullptr)
         return 0;
     PasswordCallbackTester& tester = *static_cast<PasswordCallbackTester*>(data);
-    if (!tester.callback)
+    try
     {
-        tester.missingCallback = true;
+        auto password = tester.callback();
+        std::strncpy(buf, password.c_str(), size - 1);
+        buf[size - 1] = '\0';
+        return std::min<int>(size, password.length());
+    }
+    catch (...)
+    {
+        tester.exception = std::current_exception();
         return 0;
     }
-    auto password = tester.callback();
-    std::strncpy(buf, password.c_str(), size - 1);
-    buf[size - 1] = '\0';
-    return std::min<int>(size, password.length());
 }
 
 }
 
-Utils::EVPKeyPtr Utils::readPEMPrivateKey(const std::string& fileName, JWTXX::Key::PasswordCallback cb)
+Utils::EVPKeyPtr Utils::readPEMPrivateKey(const std::string& fileName, const JWTXX::Key::PasswordCallback& cb)
 {
     FilePtr fp(fopen(fileName.c_str(), "rb"));
     if (!fp)
@@ -92,8 +91,8 @@ Utils::EVPKeyPtr Utils::readPEMPrivateKey(const std::string& fileName, JWTXX::Ke
     {
         PasswordCallbackTester tester(cb);
         EVPKeyPtr key(PEM_read_PrivateKey(fp.get(), nullptr, passwordCallback, &tester));
-        if (tester.missingCallback)
-            throw PasswordCallbackError();
+        if (tester.exception)
+            std::rethrow_exception(tester.exception);
         if (!key)
             throw Key::Error("Can't read private key '" + fileName + "'. " + OPENSSLError());
         return key;

@@ -183,6 +183,11 @@ bool Key::verify(const void* data, size_t size,
     return m_impl->verify(data, size, signature);
 }
 
+std::string Key::noPasswordCallback()
+{
+    throw Utils::PasswordCallbackError();
+}
+
 JWT::JWT(Algorithm alg, Pairs claims, Pairs header) noexcept
     : m_alg(alg), m_header(header), m_claims(claims)
 {

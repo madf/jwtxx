@@ -13,6 +13,11 @@ namespace JWTXX
 namespace Utils
 {
 
+struct PasswordCallbackError : public JWTXX::Key::Error
+{
+    PasswordCallbackError() noexcept : Error("Can't read password-protected private key without password callback function.") {}
+};
+
 struct EVPKeyDeleter
 {
     void operator()(EVP_PKEY* key) const noexcept { EVP_PKEY_free(key); }
@@ -25,7 +30,7 @@ struct EVPMDCTXDeleter
 };
 typedef std::unique_ptr<EVP_MD_CTX, EVPMDCTXDeleter> EVPMDCTXPtr;
 
-EVPKeyPtr readPEMPrivateKey(const std::string& fileName, Key::PasswordCallback cb);
+EVPKeyPtr readPEMPrivateKey(const std::string& fileName, const Key::PasswordCallback& cb);
 EVPKeyPtr readPEMPublicKey(const std::string& fileName);
 
 std::string OPENSSLError() noexcept;
