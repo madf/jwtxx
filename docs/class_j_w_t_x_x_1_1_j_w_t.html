@@ -92,7 +92,7 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aca34641bee989281a9c5bb2c26778ebe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#aca34641bee989281a9c5bb2c26778ebe">JWT</a> (const std::string &amp;<a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a432a531c9641bc514552f16e52a2afda">token</a>, <a class="el" href="class_j_w_t_x_x_1_1_key.html">Key</a> key, <a class="el" href="namespace_j_w_t_x_x.html#a9dcb6d12bc2c9c9fed78414603834541">Validators</a> &amp;&amp;validators={<a class="el" href="namespace_j_w_t_x_x_1_1_validate.html#aefed3174fcb82a9bfa72579e994dfdc3">Validate::exp</a>()})</td></tr>
+<tr class="memitem:aca34641bee989281a9c5bb2c26778ebe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#aca34641bee989281a9c5bb2c26778ebe">JWT</a> (const std::string &amp;<a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a3dfd28c670c692b1c5e44c0bf8cd9a83">token</a>, <a class="el" href="class_j_w_t_x_x_1_1_key.html">Key</a> key, <a class="el" href="namespace_j_w_t_x_x.html#a9dcb6d12bc2c9c9fed78414603834541">Validators</a> &amp;&amp;validators={<a class="el" href="namespace_j_w_t_x_x_1_1_validate.html#aefed3174fcb82a9bfa72579e994dfdc3">Validate::exp</a>()})</td></tr>
 <tr class="memdesc:aca34641bee989281a9c5bb2c26778ebe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html" title="Main class to work with JWT. ">JWT</a> from a token.  <a href="#aca34641bee989281a9c5bb2c26778ebe">More...</a><br /></td></tr>
 <tr class="separator:aca34641bee989281a9c5bb2c26778ebe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ae7eb17933f0f25ebad6b6f989611e1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a0ae7eb17933f0f25ebad6b6f989611e1">JWT</a> (<a class="el" href="namespace_j_w_t_x_x.html#a325397f3096fba5caea97be98f251bf3">Algorithm</a> <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a8c4f81228441668be24a688cbec2c24f">alg</a>, <a class="el" href="namespace_j_w_t_x_x.html#af80f958fd0fe35ef9d98a91554a0769b">Pairs</a> <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a68b598cae10b8c22f98e31c8f8b616dd">claims</a>, <a class="el" href="namespace_j_w_t_x_x.html#af80f958fd0fe35ef9d98a91554a0769b">Pairs</a> <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a1e4af26cbf25da0128ce839676d0773d">header</a>=<a class="el" href="namespace_j_w_t_x_x.html#af80f958fd0fe35ef9d98a91554a0769b">Pairs</a>()) noexcept</td></tr>
@@ -113,16 +113,16 @@ const <a class="el" href="namespace_j_w_t_x_x.html#af80f958fd0fe35ef9d98a91554a0
 <tr class="memitem:a56a5d2d3c4aa49689e54eb07fec337e1"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a56a5d2d3c4aa49689e54eb07fec337e1">claim</a> (const std::string &amp;name) const noexcept</td></tr>
 <tr class="memdesc:a56a5d2d3c4aa49689e54eb07fec337e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a value of a specific claim.  <a href="#a56a5d2d3c4aa49689e54eb07fec337e1">More...</a><br /></td></tr>
 <tr class="separator:a56a5d2d3c4aa49689e54eb07fec337e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a432a531c9641bc514552f16e52a2afda"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a432a531c9641bc514552f16e52a2afda">token</a> (const std::string &amp;keyData, const <a class="el" href="class_j_w_t_x_x_1_1_key.html#a2c3557adcbae43f907823f4effcd8f33">Key::PasswordCallback</a> &amp;cb={}) const</td></tr>
-<tr class="memdesc:a432a531c9641bc514552f16e52a2afda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a signed token.  <a href="#a432a531c9641bc514552f16e52a2afda">More...</a><br /></td></tr>
-<tr class="separator:a432a531c9641bc514552f16e52a2afda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dfd28c670c692b1c5e44c0bf8cd9a83"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a3dfd28c670c692b1c5e44c0bf8cd9a83">token</a> (const std::string &amp;keyData, const <a class="el" href="class_j_w_t_x_x_1_1_key.html#a2c3557adcbae43f907823f4effcd8f33">Key::PasswordCallback</a> &amp;cb=<a class="el" href="class_j_w_t_x_x_1_1_key.html#a753919ead361aa12ec5120641be80be1">Key::noPasswordCallback</a>) const</td></tr>
+<tr class="memdesc:a3dfd28c670c692b1c5e44c0bf8cd9a83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a signed token.  <a href="#a3dfd28c670c692b1c5e44c0bf8cd9a83">More...</a><br /></td></tr>
+<tr class="separator:a3dfd28c670c692b1c5e44c0bf8cd9a83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a8a7c89d98e0f65dc0536209ae6122763"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html">JWT</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a8a7c89d98e0f65dc0536209ae6122763">parse</a> (const std::string &amp;<a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a432a531c9641bc514552f16e52a2afda">token</a>)</td></tr>
+<tr class="memitem:a8a7c89d98e0f65dc0536209ae6122763"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html">JWT</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a8a7c89d98e0f65dc0536209ae6122763">parse</a> (const std::string &amp;<a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a3dfd28c670c692b1c5e44c0bf8cd9a83">token</a>)</td></tr>
 <tr class="memdesc:a8a7c89d98e0f65dc0536209ae6122763"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html" title="Main class to work with JWT. ">JWT</a> for a token without validation.  <a href="#a8a7c89d98e0f65dc0536209ae6122763">More...</a><br /></td></tr>
 <tr class="separator:a8a7c89d98e0f65dc0536209ae6122763"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07315ede74b8718831d2de0fed776617"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_j_w_t_x_x_1_1_validation_result.html">ValidationResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a07315ede74b8718831d2de0fed776617">verify</a> (const std::string &amp;<a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a432a531c9641bc514552f16e52a2afda">token</a>, <a class="el" href="class_j_w_t_x_x_1_1_key.html">Key</a> key, <a class="el" href="namespace_j_w_t_x_x.html#a9dcb6d12bc2c9c9fed78414603834541">Validators</a> &amp;&amp;validators={<a class="el" href="namespace_j_w_t_x_x_1_1_validate.html#aefed3174fcb82a9bfa72579e994dfdc3">Validate::exp</a>()}) noexcept</td></tr>
+<tr class="memitem:a07315ede74b8718831d2de0fed776617"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_j_w_t_x_x_1_1_validation_result.html">ValidationResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a07315ede74b8718831d2de0fed776617">verify</a> (const std::string &amp;<a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html#a3dfd28c670c692b1c5e44c0bf8cd9a83">token</a>, <a class="el" href="class_j_w_t_x_x_1_1_key.html">Key</a> key, <a class="el" href="namespace_j_w_t_x_x.html#a9dcb6d12bc2c9c9fed78414603834541">Validators</a> &amp;&amp;validators={<a class="el" href="namespace_j_w_t_x_x_1_1_validate.html#aefed3174fcb82a9bfa72579e994dfdc3">Validate::exp</a>()}) noexcept</td></tr>
 <tr class="memdesc:a07315ede74b8718831d2de0fed776617"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validates a token without constructing a <a class="el" href="class_j_w_t_x_x_1_1_j_w_t.html" title="Main class to work with JWT. ">JWT</a>.  <a href="#a07315ede74b8718831d2de0fed776617">More...</a><br /></td></tr>
 <tr class="separator:a07315ede74b8718831d2de0fed776617"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -295,8 +295,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a432a531c9641bc514552f16e52a2afda"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a432a531c9641bc514552f16e52a2afda">&#9670;&nbsp;</a></span>token()</h2>
+<a id="a3dfd28c670c692b1c5e44c0bf8cd9a83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3dfd28c670c692b1c5e44c0bf8cd9a83">&#9670;&nbsp;</a></span>token()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -311,7 +311,7 @@ Static Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="class_j_w_t_x_x_1_1_key.html#a2c3557adcbae43f907823f4effcd8f33">Key::PasswordCallback</a> &amp;&#160;</td>
-          <td class="paramname"><em>cb</em> = <code>{}</code>&#160;</td>
+          <td class="paramname"><em>cb</em> = <code><a class="el" href="class_j_w_t_x_x_1_1_key.html#a753919ead361aa12ec5120641be80be1">Key::noPasswordCallback</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>

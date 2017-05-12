@@ -67,6 +67,7 @@ $(function() {
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="class_j_w_t_x_x_1_1_key-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">JWTXX::Key Class Reference</div>  </div>
@@ -93,9 +94,9 @@ typedef std::function&lt; std::string()&gt;&#160;</td><td class="memItemRight" v
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9ebb920624ce7b5ea5a06c6cb3b751a2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_key.html#a9ebb920624ce7b5ea5a06c6cb3b751a2">Key</a> (<a class="el" href="namespace_j_w_t_x_x.html#a325397f3096fba5caea97be98f251bf3">Algorithm</a> <a class="el" href="class_j_w_t_x_x_1_1_key.html#a260b0fa23895a437121f083ffd8b2d49">alg</a>, const std::string &amp;keyData, const <a class="el" href="class_j_w_t_x_x_1_1_key.html#a2c3557adcbae43f907823f4effcd8f33">PasswordCallback</a> &amp;cb={}) noexcept</td></tr>
-<tr class="memdesc:a9ebb920624ce7b5ea5a06c6cb3b751a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs key using the specified algorithm and data.  <a href="#a9ebb920624ce7b5ea5a06c6cb3b751a2">More...</a><br /></td></tr>
-<tr class="separator:a9ebb920624ce7b5ea5a06c6cb3b751a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42b4cdbcb12b4a24c46807ad574cbca9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_key.html#a42b4cdbcb12b4a24c46807ad574cbca9">Key</a> (<a class="el" href="namespace_j_w_t_x_x.html#a325397f3096fba5caea97be98f251bf3">Algorithm</a> <a class="el" href="class_j_w_t_x_x_1_1_key.html#a260b0fa23895a437121f083ffd8b2d49">alg</a>, const std::string &amp;keyData, const <a class="el" href="class_j_w_t_x_x_1_1_key.html#a2c3557adcbae43f907823f4effcd8f33">PasswordCallback</a> &amp;cb=<a class="el" href="class_j_w_t_x_x_1_1_key.html#a753919ead361aa12ec5120641be80be1">noPasswordCallback</a>) noexcept</td></tr>
+<tr class="memdesc:a42b4cdbcb12b4a24c46807ad574cbca9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs key using the specified algorithm and data.  <a href="#a42b4cdbcb12b4a24c46807ad574cbca9">More...</a><br /></td></tr>
+<tr class="separator:a42b4cdbcb12b4a24c46807ad574cbca9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee0c51885af4eee8621ff7d62e0b6670"><td class="memItemLeft" align="right" valign="top"><a id="aee0c51885af4eee8621ff7d62e0b6670"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_key.html#aee0c51885af4eee8621ff7d62e0b6670">~Key</a> ()</td></tr>
 <tr class="memdesc:aee0c51885af4eee8621ff7d62e0b6670"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
@@ -118,12 +119,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0db6059a462194624d66dbd5b5f206f9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_key.html#a0db6059a462194624d66dbd5b5f206f9">verify</a> (const void *data, size_t size, const std::string &amp;signature) const</td></tr>
 <tr class="memdesc:a0db6059a462194624d66dbd5b5f206f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verifies a signature of a chunk of memory.  <a href="#a0db6059a462194624d66dbd5b5f206f9">More...</a><br /></td></tr>
 <tr class="separator:a0db6059a462194624d66dbd5b5f206f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a753919ead361aa12ec5120641be80be1"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_j_w_t_x_x_1_1_key.html#a753919ead361aa12ec5120641be80be1">noPasswordCallback</a> ()</td></tr>
+<tr class="memdesc:a753919ead361aa12ec5120641be80be1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Always throws exception, reports about missing callback.  <a href="#a753919ead361aa12ec5120641be80be1">More...</a><br /></td></tr>
+<tr class="separator:a753919ead361aa12ec5120641be80be1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents signature algorithm Signs tokens and verifies token signatures. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a9ebb920624ce7b5ea5a06c6cb3b751a2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9ebb920624ce7b5ea5a06c6cb3b751a2">&#9670;&nbsp;</a></span>Key()</h2>
+<a id="a42b4cdbcb12b4a24c46807ad574cbca9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42b4cdbcb12b4a24c46807ad574cbca9">&#9670;&nbsp;</a></span>Key()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -147,7 +154,7 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="class_j_w_t_x_x_1_1_key.html#a2c3557adcbae43f907823f4effcd8f33">PasswordCallback</a> &amp;&#160;</td>
-          <td class="paramname"><em>cb</em> = <code>{}</code>&#160;</td>
+          <td class="paramname"><em>cb</em> = <code><a class="el" href="class_j_w_t_x_x_1_1_key.html#a753919ead361aa12ec5120641be80be1">noPasswordCallback</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -175,6 +182,40 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a753919ead361aa12ec5120641be80be1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a753919ead361aa12ec5120641be80be1">&#9670;&nbsp;</a></span>noPasswordCallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static std::string JWTXX::Key::noPasswordCallback </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Always throws exception, reports about missing callback. </p>
+<dl class="section return"><dt>Returns</dt><dd>doesn't return. </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="struct_j_w_t_x_x_1_1_key_1_1_error.html" title="Key-specific exception. ">Error</a></td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a8ba9d46a1fef09c253b1f70f433d9608"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8ba9d46a1fef09c253b1f70f433d9608">&#9670;&nbsp;</a></span>sign()</h2>
 
