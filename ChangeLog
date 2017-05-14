@@ -1,0 +1,17 @@
+2017-05-14 1.1.6:
+    * Exception-safe callback mechanism.
+    * Don't throw from C-callback. Fixes memleak in keys.
+    * Enable move and disable copy for key implementations.
+    * Proper work with json_dumps.
+    * Fix memory leak in key implementations.
+    * Add some more constness.
+
+2017-05-06 1.1.5:
+    * Fix memory leak in Base64URL, add noexcept spec.
+
+2017-02-24 1.1.4:
+    * Print parsed data as-is. Fixes #15.
+    * Remove check for 'typ' header. RFC7519. Fixes #16.
+
+2017-02-16 1.1.3:
+    * Initial release.
