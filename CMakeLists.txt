@@ -6,7 +6,11 @@ project(jwtxx VERSION 1.1.6)
 
 enable_language(CXX)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wextra -std=c++0x")
+if(MSVC)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
+else()
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wextra -std=c++0x")
+endif(MSVC)
 
 set(JANSSON_FIND_REQUIRED 1)
 find_package(Jansson)
@@ -27,7 +31,11 @@ add_subdirectory(tools EXCLUDE_FROM_ALL)
 
 if(Boost_FOUND)
     enable_testing()
-    add_subdirectory(tests EXCLUDE_FROM_ALL)
+	if (ADD_TESTS_TO_ALL_BUILD)
+		add_subdirectory(tests)
+	else()
+		add_subdirectory(tests EXCLUDE_FROM_ALL)
+	endif(ADD_TESTS_TO_ALL_BUILD)
 endif(Boost_FOUND)
 
 add_custom_target(cppcheck COMMAND cppcheck --enable=all --std=c++11 -I ${jwtxx_SOURCE_DIR}/include ${jwtxx_SOURCE_DIR}/src ${jwtxx_SOURCE_DIR}/tools)

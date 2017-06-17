@@ -1,8 +1,8 @@
 if(JANSSON_LIBRARIES AND JANSSON_INCLUDE_DIR)
     set(JANSSON_FOUND TRUE)
 else(JANSSON_LIBRARIES AND JANSSON_INCLUDE_DIR)
-    set(LIBRARY_PATHS ${JANSSON_ROOT} /usr/lib /usr/local/lib)
-    set(INCLUDE_PATHS ${JANSSON_ROOT} /usr/include /usr/local/include)
+    set(LIBRARY_PATHS ${JANSSON_ROOT} /usr/lib /usr/local/lib ${CMAKE_SOURCE_DIR}/lib/jansson)
+    set(INCLUDE_PATHS ${JANSSON_ROOT} /usr/include /usr/local/include ${CMAKE_SOURCE_DIR}/lib/jansson)
 
     find_path(JANSSON_INCLUDE_DIR NAMES jansson.h PATHS ${INCLUDE_PATHS})
     find_library(JANSSON_LIBRARIES NAMES jansson libjansson PATHS ${LIBRARY_PATHS})
