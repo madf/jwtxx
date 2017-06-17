@@ -68,8 +68,8 @@ Open `build/jansson.sln` and build the solution. Copy content of `build/include`
 #### Get OpenSSL and Boost
 First download development Windows OpenSSL binaries for example from [slproweb](https://slproweb.com/products/Win32OpenSSL.html) and run the installer. If you chose default installation path, add `C:\OpenSSL-Win32\bin` to your system `Path`.
 
-For running tests, you will also need `applink.c` from OpenSSL project which is required when compiling a `/MD DLL` uni test on Windows.
-Get the file from (openssl)[https://github.com/openssl/openssl] `/ms` directory and put it into `C:\OpenSSL-Win32\include\openssl`. This step is necessary because slproweb does not include this file in their releases. Some other OpenSSL binaries provider might so check whether the file exists or not.
+For running tests, you will also need `applink.c` from OpenSSL project which is required when compiling a `/MD DLL` on Windows.
+Get the file from [openssl](https://github.com/openssl/openssl) `/ms` directory and put it into `C:\OpenSSL-Win32\include\openssl`. This step is necessary because slproweb does not include this file in their releases. Some other OpenSSL binaries provider might, so check whether the file exists or not.
 
 If you want to run unit tests you should also get Boost sources.
 
