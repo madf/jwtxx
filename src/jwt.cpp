@@ -115,11 +115,12 @@ Validator stringValidator(std::string&& name,
 
 std::string formatTime(std::time_t value) noexcept
 {
-    std::tm * tmb;
     char buf[20];
 #ifdef WIN32
+	std::tm * tmb=nullptr;
     tmb = gmtime(&value);
 #else 
+	std::tm tmb;
     gmtime_r(&value, tmb);
 #endif
     auto res = std::strftime(buf, sizeof(buf), "%F %T", tmb);
