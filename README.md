@@ -63,7 +63,7 @@ Get [jansson](https://github.com/akheron/jansson) source code and checkout the l
 ```
 cmake -G "Visual Studio 14 2015" -H./ -B./build
 ```
-Open `build/jansson.sln` and build the solution. Copy content of `build/include` and `build/lib/Release` content to `jwtxx/lib/jansson`.
+Open `build/jansson.sln` and build the solution. Copy content of `build/include` and `build/lib/Release` and put them in a common folder. When using CMake, specify `-DJANSSON_ROOT` to specify the path to include files and lib.
 
 #### Get OpenSSL and Boost
 First download development Windows OpenSSL binaries for example from [slproweb](https://slproweb.com/products/Win32OpenSSL.html) and run the installer. If you chose default installation path, add `C:\OpenSSL-Win32\bin` to your system `Path`.
