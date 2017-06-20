@@ -25,9 +25,9 @@ namespace Keys = JWTXX::Keys;
 namespace Validate = JWTXX::Validate;
 
 #ifdef _GNUC
-	#define ATTR_UNUSED __attribute__((unused))
+    #define ATTR_USED __attribute__((used))
 #else
-	#define ATTR_UNUSED
+    #define ATTR_USED
 #endif
 
 namespace
@@ -120,7 +120,7 @@ std::string formatTime(std::time_t value) noexcept
 #ifdef WIN32
     tmb = gmtime(&value);
 #else 
-	gmtime_r(&value, tmb);
+    gmtime_r(&value, tmb);
 #endif
     auto res = std::strftime(buf, sizeof(buf), "%F %T", tmb);
     if (res == 0)
@@ -137,7 +137,7 @@ void JWTXX::enableOpenSSLErrors() noexcept
         OpenSSLErrors() noexcept { ERR_load_crypto_strings(); OpenSSL_add_all_algorithms(); }
         ~OpenSSLErrors() { EVP_cleanup(); ERR_free_strings(); CRYPTO_cleanup_all_ex_data(); }
     };
-    static const OpenSSLErrors enabled ATTR_UNUSED;
+    static const OpenSSLErrors enabled ATTR_USED;
 }
 
 std::string JWTXX::algToString(Algorithm alg) noexcept
