@@ -1,10 +1,10 @@
 enable_language(CXX)
 
 if(MSVC)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-	include_directories(${OPENSSL_INCLUDE_DIR})
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+    include_directories(${OPENSSL_INCLUDE_DIR})
 else()
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs -Wno-unused-parameter")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs -Wno-unused-parameter")
 endif(MSVC)
 
 include_directories(${Boost_INCLUDE_DIRS})

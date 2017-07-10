@@ -117,13 +117,15 @@ std::string formatTime(std::time_t value) noexcept
 {
     char buf[20];
 #ifdef WIN32
-	std::tm * tmb=nullptr;
+    std::tm* tmb = nullptr;
     tmb = gmtime(&value);
-#else 
-	std::tm tmb;
-    gmtime_r(&value, tmb);
-#endif
     auto res = std::strftime(buf, sizeof(buf), "%F %T", tmb);
+#else 
+    std::tm tmb;
+    gmtime_r(&value, &tmb);
+    auto res = std::strftime(buf, sizeof(buf), "%F %T", &tmb);
+#endif
+
     if (res == 0)
         return "<" + std::to_string(value) + ">";
     return std::string(buf, res);

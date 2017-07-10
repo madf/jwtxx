@@ -75,11 +75,11 @@ If you want to run unit tests you should also get Boost sources.
 
 Using CMake, generate the project with
 ```
-cmake -G "Visual Studio 14 2015" -H./ -B./build
+cmake -G "Visual Studio 14 2015" -DJANSSON_ROOT=C:/path/to/jansson -H./ -B./build
 ```
 if you want to include unit tests and Boost is in non-standard system path, tell CMake where to find it:
 ```
-cmake -G "Visual Studio 14 2015" -H./ -B./build -DBOOST_ROOT=C:/custom/path/boost -DBoost_NO_BOOST_CMAKE=TRUE
+cmake -G "Visual Studio 14 2015" -H./ -B./build -DJANSSON_ROOT=C:/path/to/jansson -DBOOST_ROOT=C:/path/to/boost -DBoost_NO_BOOST_CMAKE=TRUE
 ```
 By default, unit tests are not added to sln and `ALL_BUILD` target. For convenience of being able to build the libraries and unit tests in a single build you can add unit tests to `ALL_BUILD` target by specifying `-DADD_TESTS_TO_ALL_BUILD=true`.
 
