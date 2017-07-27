@@ -15,7 +15,7 @@
 #include <cerrno>
 
 #ifndef WIN32
-	#include <unistd.h>
+    #include <unistd.h>
 #endif
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -56,13 +56,13 @@ void showVersion(const std::string& self)
 #ifdef WIN32
 std::string modeName(unsigned short mode)
 {
-	switch (mode)
-	{
-	    case S_IFREG: return "a regular file";
-	    case S_IFDIR: return "a directory";
-	    case S_IFCHR: return "a character device";
-	}
-	return "unknown filesystem entity with mode " + std::to_string(mode);
+    switch (mode)
+    {
+        case S_IFREG: return "a regular file";
+        case S_IFDIR: return "a directory";
+        case S_IFCHR: return "a character device";
+    }
+    return "unknown filesystem entity with mode " + std::to_string(mode);
 }
 #else
 std::string modeName(mode_t mode)
