@@ -6,7 +6,7 @@ project(jwtxx VERSION 1.1.6)
 
 enable_language(CXX)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wextra -std=c++0x")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wextra -std=c++11")
 
 set(JANSSON_FIND_REQUIRED 1)
 find_package(Jansson)
@@ -15,7 +15,7 @@ find_package(OpenSSL 0.9.8 REQUIRED)
 
 find_package(Boost 1.46.0)
 
-try_compile(HAS_OVERRIDE_FEATURE ${CMAKE_CURRENT_BINARY_DIR} "${CMAKE_SOURCE_DIR}/checks/checkoverride.cpp")
+try_compile(HAS_OVERRIDE_FEATURE ${CMAKE_CURRENT_BINARY_DIR} "${PROJECT_SOURCE_DIR}/checks/checkoverride.cpp")
 if(NOT HAS_OVERRIDE_FEATURE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Doverride=")
 endif(NOT HAS_OVERRIDE_FEATURE)
