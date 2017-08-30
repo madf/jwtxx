@@ -44,23 +44,23 @@ std::string sysError() noexcept
 
 Utils::EVPKeyPtr readPublicKey(const std::string& src)
 {
-    // src is key data
-    if (src.find("-----BEGIN") == 0)
-    {
-        BIO* bio = BIO_new_mem_buf(src.data(), static_cast<int>(src.size()));
-        Utils::EVPKeyPtr key(PEM_read_bio_PUBKEY(bio, nullptr, nullptr, nullptr));
-
-        BIO_free(bio);
-
-        return key;
-    }
-
     // src is file name
     FilePtr fp(fopen(src.c_str(), "rb"));
-    if (!fp)
-        throw JWTXX::Key::Error("Can't open key file '" + src + "'. " + sysError());
+    if (fp)
+        return Utils::EVPKeyPtr(PEM_read_PUBKEY(fp.get(), nullptr, nullptr, nullptr));
 
-    return Utils::EVPKeyPtr(PEM_read_PUBKEY(fp.get(), nullptr, nullptr, nullptr));
+    // src is key data
+    if (src.find("-----BEGIN") != 0)
+    {
+        throw JWTXX::Key::Error("Public key = " + src + " is not valid " + sysError());
+    }
+
+    BIO* bio = BIO_new_mem_buf(src.data(), static_cast<int>(src.size()));
+    Utils::EVPKeyPtr key(PEM_read_bio_PUBKEY(bio, nullptr, nullptr, nullptr));
+
+    BIO_free(bio);
+
+    return key;
 }
 
 Utils::EVPKeyPtr readCert(const std::string& fileName)
