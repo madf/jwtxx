@@ -50,11 +50,6 @@ Utils::EVPKeyPtr readPublicKey(const std::string& src)
         return Utils::EVPKeyPtr(PEM_read_PUBKEY(fp.get(), nullptr, nullptr, nullptr));
 
     // src is key data
-    if (src.find("-----BEGIN") != 0)
-    {
-        throw JWTXX::Key::Error("Public key = " + src + " is not valid " + sysError());
-    }
-
     BIO* bio = BIO_new_mem_buf(src.data(), static_cast<int>(src.size()));
     Utils::EVPKeyPtr key(PEM_read_bio_PUBKEY(bio, nullptr, nullptr, nullptr));
 
