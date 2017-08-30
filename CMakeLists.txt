@@ -15,7 +15,7 @@ find_package(OpenSSL 0.9.8 REQUIRED)
 
 find_package(Boost 1.46.0)
 
-try_compile(HAS_OVERRIDE_FEATURE ${CMAKE_CURRENT_BINARY_DIR} "${CMAKE_SOURCE_DIR}/checks/checkoverride.cpp")
+try_compile(HAS_OVERRIDE_FEATURE ${CMAKE_CURRENT_BINARY_DIR} "${PROJECT_SOURCE_DIR}/checks/checkoverride.cpp")
 if(NOT HAS_OVERRIDE_FEATURE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Doverride=")
 endif(NOT HAS_OVERRIDE_FEATURE)

@@ -42,11 +42,24 @@ std::string sysError() noexcept
     return strerror(errno);
 }
 
-Utils::EVPKeyPtr readPublicKey(const std::string& fileName)
+Utils::EVPKeyPtr readPublicKey(const std::string& src)
 {
-    FilePtr fp(fopen(fileName.c_str(), "rb"));
+    // src is key data
+    if (src.find("-----BEGIN") == 0)
+    {
+        BIO* bio = BIO_new_mem_buf(src.data(), static_cast<int>(src.size()));
+        Utils::EVPKeyPtr key(PEM_read_bio_PUBKEY(bio, nullptr, nullptr, nullptr));
+
+        BIO_free(bio);
+
+        return key;
+    }
+
+    // src is file name
+    FilePtr fp(fopen(src.c_str(), "rb"));
     if (!fp)
-        throw JWTXX::Key::Error("Can't open key file '" + fileName + "'. " + sysError());
+        throw JWTXX::Key::Error("Can't open key file '" + src + "'. " + sysError());
+
     return Utils::EVPKeyPtr(PEM_read_PUBKEY(fp.get(), nullptr, nullptr, nullptr));
 }
 
