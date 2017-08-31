@@ -2,6 +2,7 @@
 
 int main()
 {
-    BIO* bio = BIO_new_mem_buf("abc", 3);
+    const char* buf = "abc";
+    BIO* bio = BIO_new_mem_buf(buf, 3);
     return 0;
 }
