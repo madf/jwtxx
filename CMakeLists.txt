@@ -20,6 +20,11 @@ if(NOT HAS_OVERRIDE_FEATURE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Doverride=")
 endif(NOT HAS_OVERRIDE_FEATURE)
 
+try_compile(CONST_BIO_NEW_MEM_BUF ${CMAKE_CURRENT_BINARY_DIR} "${PROJECT_SOURCE_DIR}/checks/openssl_bio_new_mem_buf.c" LINK_LIBRARIES ${OPENSSL_LIBRARIES})
+if(CONST_BIO_NEW_MEM_BUF)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCONST_BIO_NEW_MEM_BUF")
+endif(CONST_BIO_NEW_MEM_BUF)
+
 include_directories(${jwtxx_SOURCE_DIR}/include)
 
 add_subdirectory(src)

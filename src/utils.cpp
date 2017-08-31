@@ -50,7 +50,13 @@ Utils::EVPKeyPtr readPublicKey(const std::string& src)
         return Utils::EVPKeyPtr(PEM_read_PUBKEY(fp.get(), nullptr, nullptr, nullptr));
 
     // src is key data
-    BIO* bio = BIO_new_mem_buf(static_cast<const void*>(src.data()), static_cast<int>(src.size()));
+#ifdef CONST_BIO_NEW_MEM_BUF
+    // Starting from the OpenSSL 1.0.2 the first parameter of the BIO_new_mem_buf is constant.
+    BIO* bio = BIO_new_mem_buf(src.data(), static_cast<int>(src.size()));
+#else
+    // Before the OpenSSL 1.0.2 the first parameter of the BIO_new_mem_buf is not constant.
+    BIO* bio = BIO_new_mem_buf(const_cast<char*>(src.data()), static_cast<int>(src.size()));
+#endif
     Utils::EVPKeyPtr key(PEM_read_bio_PUBKEY(bio, nullptr, nullptr, nullptr));
 
     BIO_free(bio);
