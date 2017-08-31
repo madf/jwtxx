@@ -50,7 +50,7 @@ Utils::EVPKeyPtr readPublicKey(const std::string& src)
         return Utils::EVPKeyPtr(PEM_read_PUBKEY(fp.get(), nullptr, nullptr, nullptr));
 
     // src is key data
-    BIO* bio = BIO_new_mem_buf((void*)src.data(), static_cast<int>(src.size()));
+    BIO* bio = BIO_new_mem_buf(static_cast<const void*>(src.data()), static_cast<int>(src.size()));
     Utils::EVPKeyPtr key(PEM_read_bio_PUBKEY(bio, nullptr, nullptr, nullptr));
 
     BIO_free(bio);
