@@ -23,6 +23,15 @@ constexpr auto brokenTokenWithExp2 = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.dWIiO
 constexpr auto notAToken1 = "";
 constexpr auto notAToken2 = "Hello, World!";
 constexpr auto invalidHeaderToken = "eyJhbGciOiJSUzI1NyIsInR5cCI6IkpXIn0.eyJuYW1lIjoiZm9vIn0.siCZKFuTEx4maNq0nhxiG1GGnDEdeN3w-ZZ6IG7gShqxhJpZbrl9yuWZQuxspDyD1gdiVR0FwhUuBptUfuDZka8C9uJWF-bRPBAExp6f3WINM0qKTcvHgSchCbPGDtxoiMbkp0Xl7vbLdkA0ojSglJb-yC90qSOYc3nbr8kVcNDt5r3-N1RupVnjyFEGgad5YP22KCD1Pqj9LkX0I112ZiCEN03Bxmps7NKw983DbvLwbeHcyZH-WJbLh43wnX_aLZ0UZ-TbLsJ4ob5I6odmiEeSPTZM3XOlVsvmai5XATdTjXzA9uR_VGh1hbGclikFMwQ9hKJfmBZIPYelmSbJzg";
+constexpr auto publicrsa2048keydata = "-----BEGIN PUBLIC KEY-----\n"
+                                      "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwGvWFyzOxi1uckHS7Qva\n"
+                                      "VnOaqUEtIgrljEh62Z4dTrCVy7bH1LpR8sKKuWao+6JrpbzsqqYe0JQkEn1B5Pzk\n"
+                                      "wY3T/5kve6FwoOjZZxwEj1fsB4Pf0st4XOT/2KCoMBF17WZwMfkiCDIzoaNCMipK\n"
+                                      "holzOrW/foAFmHtnTehrrKb/7WGQ22a9hhiPdVBZLVLX+b7x9czotGn7u2nRqx65\n"
+                                      "LIpEljAIQoXl23g36gyZ7gk2G+++I25z9meh4ZNY9rd6rWTD8ZojhYcmGCnKdufN\n"
+                                      "yuzw6USToI18q218zDmkxxCEnGFrfmYE89l960HD7bQ4POFRZ4087HUMk5mVGCjW\n"
+                                      "XQIDAQAB\n"
+                                      "-----END PUBLIC KEY-----";
 
 }
 
@@ -271,6 +280,7 @@ BOOST_AUTO_TEST_CASE(TestParserWithCertDifferentFieldOrder512)
 BOOST_AUTO_TEST_CASE(TestVerifier)
 {
     BOOST_CHECK(JWTXX::JWT::verify(token512Order2, JWTXX::Key(JWTXX::Algorithm::RS512, "public-rsa-2048-key.pem")));
+    BOOST_CHECK(JWTXX::JWT::verify(token512Order2, JWTXX::Key(JWTXX::Algorithm::RS512, publicrsa2048keydata)));
     BOOST_CHECK(JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"), {JWTXX::Validate::exp(1475246522)}));
     BOOST_CHECK(!JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"), {JWTXX::Validate::exp(1475246524)}));
     BOOST_CHECK(!JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"), {JWTXX::Validate::iat(1475242922)}));
