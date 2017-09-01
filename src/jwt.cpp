@@ -24,6 +24,12 @@ using JWTXX::JWT;
 namespace Keys = JWTXX::Keys;
 namespace Validate = JWTXX::Validate;
 
+#ifdef _GNUC
+    #define ATTR_USED __attribute__((used))
+#else
+    #define ATTR_USED
+#endif
+
 namespace
 {
 
@@ -109,10 +115,16 @@ Validator stringValidator(std::string&& name,
 
 std::string formatTime(std::time_t value) noexcept
 {
-    std::tm tmb;
     char buf[20];
+#ifdef WIN32
+    std::tm* tmb = gmtime(&value);
+    auto res = std::strftime(buf, sizeof(buf), "%F %T", tmb);
+#else 
+    std::tm tmb;
     gmtime_r(&value, &tmb);
     auto res = std::strftime(buf, sizeof(buf), "%F %T", &tmb);
+#endif
+
     if (res == 0)
         return "<" + std::to_string(value) + ">";
     return std::string(buf, res);
@@ -127,7 +139,7 @@ void JWTXX::enableOpenSSLErrors() noexcept
         OpenSSLErrors() noexcept { ERR_load_crypto_strings(); OpenSSL_add_all_algorithms(); }
         ~OpenSSLErrors() { EVP_cleanup(); ERR_free_strings(); CRYPTO_cleanup_all_ex_data(); }
     };
-    static const OpenSSLErrors enabled __attribute__((used));
+    static const OpenSSLErrors enabled ATTR_USED;
 }
 
 std::string JWTXX::algToString(Algorithm alg) noexcept

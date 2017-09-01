@@ -14,7 +14,9 @@
 #include <cstring>
 #include <cerrno>
 
-#include <unistd.h>
+#ifndef WIN32
+    #include <unistd.h>
+#endif
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -51,13 +53,25 @@ void showVersion(const std::string& self)
               << "libjwtxx " << JWTXX::version << "\n";
 }
 
+#ifdef WIN32
+std::string modeName(unsigned short mode)
+{
+    switch (mode)
+    {
+        case S_IFREG: return "a regular file";
+        case S_IFDIR: return "a directory";
+        case S_IFCHR: return "a character device";
+    }
+    return "unknown filesystem entity with mode " + std::to_string(mode);
+}
+#else
 std::string modeName(mode_t mode)
 {
     switch (mode)
     {
         case S_IFSOCK: return "a socket";
         case S_IFLNK: return "a symbolic link";
-        case S_IFREG: return "a regilar file";
+        case S_IFREG: return "a regular file";
         case S_IFBLK: return "a block device";
         case S_IFDIR: return "a directory";
         case S_IFCHR: return "a character device";
@@ -65,6 +79,7 @@ std::string modeName(mode_t mode)
     }
     return "unknown filesystem entity with mode " + std::to_string(mode);
 }
+#endif
 
 int noAction(JWTXX::Algorithm /*alg*/, const std::string& /*keyFile*/, const std::string& /*data*/)
 {

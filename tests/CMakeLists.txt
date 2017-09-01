@@ -1,16 +1,21 @@
 enable_language(CXX)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs -Wno-unused-parameter")
+if(MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+    include_directories(${OPENSSL_INCLUDE_DIR})
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs -Wno-unused-parameter")
+endif(MSVC)
 
 include_directories(${Boost_INCLUDE_DIRS})
 
-add_executable(nonetest EXCLUDE_FROM_ALL nonetest.cpp)
+add_executable(nonetest nonetest.cpp)
 target_link_libraries(nonetest jwtxx ${OPENSSL_LIBRARIES} ${JANSSON_LIBRARIES})
-add_executable(hmactest EXCLUDE_FROM_ALL hmactest.cpp)
+add_executable(hmactest hmactest.cpp)
 target_link_libraries(hmactest jwtxx ${OPENSSL_LIBRARIES} ${JANSSON_LIBRARIES})
-add_executable(rsatest EXCLUDE_FROM_ALL rsatest.cpp)
+add_executable(rsatest rsatest.cpp)
 target_link_libraries(rsatest jwtxx ${OPENSSL_LIBRARIES} ${JANSSON_LIBRARIES})
-add_executable(ecdsatest EXCLUDE_FROM_ALL ecdsatest.cpp)
+add_executable(ecdsatest ecdsatest.cpp)
 target_link_libraries(ecdsatest jwtxx ${OPENSSL_LIBRARIES} ${JANSSON_LIBRARIES})
 
 add_test(none nonetest)

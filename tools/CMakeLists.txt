@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.0)
+
 project(jwttool VERSION 1.0.2)
 
 enable_language(CXX)

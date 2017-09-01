@@ -3,6 +3,10 @@
 
 #include "initopenssl.h"
 
+#ifdef WIN32
+    #include "openssl/applink.c"
+#endif 
+
 #define BOOST_TEST_MODULE JWTRSAAlgTest
 
 #include <boost/test/included/unit_test.hpp>

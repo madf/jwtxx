@@ -13,7 +13,7 @@ C++ library to work with JWT
 * openssl - cryptography.
 * boost (optional) - unit tests.
 
-## Compilation and installation
+## Compilation and installation on *NIX
 
 
 ```
@@ -53,6 +53,44 @@ foo/bin
 foo/include
 foo/lib
 ```
+
+## Compilation and installation with Visual Studio on Windows
+
+### Generate the project solution
+
+#### Build jansson
+Get [jansson](https://github.com/akheron/jansson) source code and checkout the latest version. In root folder run
+```
+cmake -G "Visual Studio 14 2015" -H./ -B./build
+```
+Open `build/jansson.sln` and build the solution. Copy content of `build/include` and `build/lib/Release` and put them in a common folder. When using CMake, specify `-DJANSSON_ROOT` to specify the path to include files and lib.
+
+#### Get OpenSSL and Boost
+First download development Windows OpenSSL binaries for example from [slproweb](https://slproweb.com/products/Win32OpenSSL.html) and run the installer. If you chose default installation path, add `C:\OpenSSL-Win32\bin` to your system `Path`.
+
+For running tests, you will also need `applink.c` from OpenSSL project which is required when compiling a `/MD DLL` on Windows.
+Get the file from [openssl](https://github.com/openssl/openssl) `/ms` directory and put it into `C:\OpenSSL-Win32\include\openssl`. This step is necessary because slproweb does not include this file in their releases. Some other OpenSSL binaries provider might, so check whether the file exists or not.
+
+If you want to run unit tests you should also get Boost sources.
+
+Using CMake, generate the project with
+```
+cmake -G "Visual Studio 14 2015" -DJANSSON_ROOT=C:/path/to/jansson -DOPENSSL_ROOT_DIR=C:/path/to/openssl -H./ -B./build
+```
+if you want to include unit tests and Boost is in non-standard system path, tell CMake where to find it with `BOOST_ROOT`:
+```
+cmake -G "Visual Studio 14 2015" -H./ -B./build -DJANSSON_ROOT=C:/path/to/jansson -DOPENSSL_ROOT_DIR=C:/path/to/openssl -DBOOST_ROOT=C:/path/to/boost -DBoost_NO_BOOST_CMAKE=TRUE
+```
+if boost includes and libraries are in non-standard paths, explicitly specify them with `BOOST_INCLUDEDIR` and `BOOST_LIBRARYDIR`
+```
+cmake -G "Visual Studio 14 2015" -H./ -B./build -DJANSSON_ROOT=C:/path/to/jansson -DOPENSSL_ROOT_DIR=C:/path/to/openssl -DBOOST_INCLUDEDIR=C:/path/to/boost -DBOOST_LIBRARYDIR=C:/path/to/boost/stage/lib -DBoost_NO_BOOST_CMAKE=TRUE
+```
+By default, unit tests are not added to sln and `ALL_BUILD` target. For convenience of being able to build the libraries and unit tests in a single build you can add unit tests to `ALL_BUILD` target by specifying `-DADD_TESTS_TO_ALL_BUILD=true`.
+
+Your solution file will be generated in `build/jwtxx.sln`. 
+Build the library by building `jwtxx` project.
+Build the libraries and unit tests by building `ALL_BUILD` project.
+Run unit tests by building `RUN_TESTS` project.
 
 ## Documentation
 
