@@ -13,7 +13,7 @@ find_package(Jansson)
 
 find_package(OpenSSL 0.9.8 REQUIRED)
 
-find_package(Boost 1.46.0)
+find_package(Boost 1.46.0 REQUIRED COMPONENTS unit_test_framework)
 
 try_compile(HAS_OVERRIDE_FEATURE ${CMAKE_CURRENT_BINARY_DIR} "${PROJECT_SOURCE_DIR}/checks/checkoverride.cpp")
 if(NOT HAS_OVERRIDE_FEATURE)

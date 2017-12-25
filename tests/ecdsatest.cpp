@@ -5,7 +5,7 @@
 
 #define BOOST_TEST_MODULE JWTECDSAAlgTest
 
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 
 namespace
 {
