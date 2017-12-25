@@ -296,6 +296,8 @@ BOOST_AUTO_TEST_CASE(TestVerifier)
     BOOST_CHECK(!JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"), {JWTXX::Validate::sub("someone")}));
     BOOST_CHECK(JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"), {JWTXX::Validate::aud("")}));
     BOOST_CHECK(JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"), {JWTXX::Validate::aud("something")})); // Audience is missing in the token
+    BOOST_CHECK(!JWTXX::JWT::verify(token512Order2, JWTXX::Key(JWTXX::Algorithm::RS512, "")));
+    BOOST_CHECK(!JWTXX::JWT::verify(token512Order2, JWTXX::Key(JWTXX::Algorithm::RS512, "abc")));
 }
 
 BOOST_AUTO_TEST_CASE(TestParserNoVerify)
