@@ -11,6 +11,8 @@ script:
   - mkdir build
   - cd build
   - cmake .. && make
+  - make tests && make test
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y libjansson-dev
+  - sudo apt-get install -y libboost-dev
