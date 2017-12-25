@@ -252,7 +252,7 @@ JWTXX::ValidationResult JWT::verify(const std::string& token, Key key, JWTXX::Va
         }
         return ValidationResult::ok();
     }
-    catch (const JWT::ParseError& error)
+    catch (const std::runtime_error& error)
     {
         return ValidationResult::failure(error.what());
     }

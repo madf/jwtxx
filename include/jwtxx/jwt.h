@@ -119,6 +119,7 @@ class Key
          *  @param data a pointer to signed data;
          *  @param size a size of signed data;
          *  @param signature a signature to verify.
+         *  @throws Error
          */
         bool verify(const void* data, size_t size, const std::string& signature) const;
 
