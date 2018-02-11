@@ -95,7 +95,7 @@ class Key
 
         /** @brief Constructs key using the specified algorithm and data.
          *  @param alg signature algorithm;
-         *  @param keyData a shared secret or a path to key file;
+         *  @param keyData a shared secret, a path to a key file or PEM data for public keys;
          *  @param cb password callabck for password-protected keys.
          */
         Key(Algorithm alg, const std::string& keyData, const PasswordCallback& cb = noPasswordCallback) noexcept;

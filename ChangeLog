@@ -1,3 +1,6 @@
+2018-02-11 1.1.7:
+    * Allow key creation from a memory buffer.
+
 2017-05-14 1.1.6:
     * Exception-safe callback mechanism.
     * Don't throw from C-callback. Fixes memleak in keys.
