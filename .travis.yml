@@ -11,9 +11,9 @@ compiler:
   - gcc
 # Build steps
 script:
-  - mkdir build
-  - cd build
-  - cmake .. && make
+  - mkdir build && cd build
+  - if [[ $TRAVIS_OS_NAME = osx ]]; then cmake ..; else cmake -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/ ..; fi
+  - make
   - make jwttool
   - make tests && make test
 before_install:
