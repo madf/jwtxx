@@ -17,6 +17,6 @@ script:
   - make jwttool
   - make tests && make test
 before_install:
-  - if [ $TRAVIS_OS_NAME = linux ]; sudo apt-get -qq update; else brew update; fi
-  - if [ $TRAVIS_OS_NAME = linux ]; sudo apt-get install -y libjansson-dev; else brew install jansson; fi
-  - if [ $TRAVIS_OS_NAME = linux ]; sudo apt-get install -y libboost-all-dev; else brew install boost; fi
+  - if [[ $TRAVIS_OS_NAME = linux ]]; then sudo apt-get -qq update; else brew update; fi
+  - if [[ $TRAVIS_OS_NAME = linux ]]; then sudo apt-get install -y libjansson-dev; else brew install jansson; fi
+  - if [[ $TRAVIS_OS_NAME = linux ]]; then sudo apt-get install -y libboost-all-dev; else brew install boost; fi
