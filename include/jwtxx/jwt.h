@@ -4,6 +4,8 @@
  *  @brief Classes, constants and functions to work with JWT.
  */
 
+#include "value.h"
+
 #include <functional>
 #include <string>
 #include <vector>
