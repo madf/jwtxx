@@ -1,3 +1,10 @@
+2018-03-31 1.1.8:
+    * Fix building on OSX when OpenSSL is installed from Homebrew.
+    * Generate correct ECDSA signatures. In previous versions the signatures
+      were generated using X9.62 DER format, which is OpenSSL default. JWT
+      requires plain format where (r, s) pair is encoded as a concatenation of
+      a pair of octet strings R || S.
+
 2018-02-11 1.1.7:
     * Allow key creation from a memory buffer.
 
