@@ -8,6 +8,10 @@ enable_language(CXX)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wextra -std=c++0x")
 
+if(APPLE)
+    set(OPENSSL_ROOT_DIR "/opt/local/" "/usr/local/opt/openssl/")
+endif(APPLE)
+
 set(JANSSON_FIND_REQUIRED 1)
 find_package(Jansson)
 

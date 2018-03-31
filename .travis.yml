@@ -12,7 +12,8 @@ compiler:
 # Build steps
 script:
   - mkdir build && cd build
-  - if [[ $TRAVIS_OS_NAME = osx ]]; then cmake -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/lib -DOPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include ..; else cmake ..; fi
+  - cmkae ..
+#  - if [[ $TRAVIS_OS_NAME = osx ]]; then cmake -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/lib -DOPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include ..; else cmake ..; fi
   - make
   - make jwttool
   - make tests && make test
