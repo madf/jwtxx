@@ -3,6 +3,7 @@
 #include "keyimpl.h"
 #include "hmackey.h"
 #include "pemkey.h"
+#include "eckey.h"
 #include "base64url.h"
 #include "utils.h"
 #include "json.h"
@@ -51,9 +52,9 @@ Key::Impl* createKey(Algorithm alg, const std::string& keyData, const Key::Passw
         case Algorithm::RS256: return new Keys::PEM(EVP_sha256(), keyData, cb);
         case Algorithm::RS384: return new Keys::PEM(EVP_sha384(), keyData, cb);
         case Algorithm::RS512: return new Keys::PEM(EVP_sha512(), keyData, cb);
-        case Algorithm::ES256: return new Keys::PEM(EVP_sha256(), keyData, cb);
-        case Algorithm::ES384: return new Keys::PEM(EVP_sha384(), keyData, cb);
-        case Algorithm::ES512: return new Keys::PEM(EVP_sha512(), keyData, cb);
+        case Algorithm::ES256: return new Keys::EC(EVP_sha256(), keyData, cb);
+        case Algorithm::ES384: return new Keys::EC(EVP_sha384(), keyData, cb);
+        case Algorithm::ES512: return new Keys::EC(EVP_sha512(), keyData, cb);
     }
     return new NoneKey; // Just in case.
 }

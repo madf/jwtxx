@@ -16,6 +16,7 @@ namespace Base64URL
 class Block
 {
     public:
+        Block() noexcept : m_buffer(nullptr), m_size(0) {}
         explicit Block(size_t size) noexcept : m_buffer(OPENSSL_malloc(size)), m_size(size) {}
         ~Block() { OPENSSL_free(m_buffer); }
         Block(Block&& rhs) noexcept : m_buffer(rhs.m_buffer), m_size(rhs.m_size) { rhs.m_buffer = nullptr; rhs.m_size = 0; }
@@ -27,12 +28,26 @@ class Block
         template <typename T = void*>
         T data() noexcept { return static_cast<T>(m_buffer); }
 
-        std::string toString() const noexcept { return std::string(static_cast<const char*>(m_buffer), m_size); }
+        template <typename T = void*>
+        T dataAt(size_t pos)
+        {
+            return static_cast<uint8_t*>(m_buffer) + pos;
+        }
+
+        std::string toString() const noexcept
+        {
+            if (m_size == 0)
+                return {};
+            return std::string(static_cast<const char*>(m_buffer), m_size);
+        }
 
         Block shrink(size_t size) noexcept { Block block(m_buffer, size); m_buffer = nullptr; m_size = 0; return block; }
 
         Block(const Block&) = delete;
         Block& operator=(const Block&) = delete;
+
+        static Block zero(size_t size) { Block res(size); memset(res.data(), 0, size); return res; }
+        static Block fromRaw(const void* ptr, size_t size) { Block res(size); memcpy(res.data(), ptr, size); return res; }
 
     private:
         void* m_buffer;

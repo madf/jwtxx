@@ -15,14 +15,25 @@ class PEM : public Key::Impl
 {
     public:
         PEM(const EVP_MD* digest, const std::string& keyData, const Key::PasswordCallback& cb) noexcept
-            : m_digest(digest), m_data(keyData), m_cb(cb)
+            : m_data(keyData), m_cb(cb), m_digest(digest)
         {
         }
 
         std::string sign(const void* data, size_t size) const override
         {
+            return Base64URL::encode(signImpl(Utils::readPEMPrivateKey(m_data, m_cb), data, size));
+        }
+        bool verify(const void* data, size_t size, const std::string& signature) const override
+        {
+            return verifyImpl(Utils::readPEMPublicKey(m_data), data, size, Base64URL::decode(signature));
+        }
+    protected:
+        std::string m_data;
+        Key::PasswordCallback m_cb;
+
+        Base64URL::Block signImpl(const Utils::EVPKeyPtr& key, const void* data, size_t size) const
+        {
             auto ctx = initCTX();
-            auto key = Utils::readPEMPrivateKey(m_data, m_cb);
             if (EVP_DigestSignInit(ctx.get(), nullptr, m_digest, nullptr, key.get()) != 1)
                 throw Key::Error("Can't init sign context. " + Utils::OPENSSLError());
             if (EVP_DigestSignUpdate(ctx.get(), data, size) != 1)
@@ -35,23 +46,20 @@ class PEM : public Key::Impl
             Base64URL::Block block(res);
             if (EVP_DigestSignFinal(ctx.get(), block.data<unsigned char*>(), &res) != 1)
                 throw Key::Error("Can't sign data. " + Utils::OPENSSLError());
-            return Base64URL::encode(block.shrink(res));
+            return block.shrink(res);
         }
-        bool verify(const void* data, size_t size, const std::string& signature) const override
+
+        bool verifyImpl(const Utils::EVPKeyPtr& key, const void* data, size_t size, Base64URL::Block signature) const
         {
             auto ctx = initCTX();
-            auto key = Utils::readPEMPublicKey(m_data);
             if (EVP_DigestVerifyInit(ctx.get(), nullptr, m_digest, nullptr, key.get()) != 1)
                 throw Key::Error("Can't init verification context. " + Utils::OPENSSLError());
             if (EVP_DigestVerifyUpdate(ctx.get(), data, size) != 1)
                 throw Key::Error("Can't add data to verification. " + Utils::OPENSSLError());
-            auto block(Base64URL::decode(signature));
-            return EVP_DigestVerifyFinal(ctx.get(), block.data<unsigned char*>(), block.size()) == 1;
+            return EVP_DigestVerifyFinal(ctx.get(), signature.data<unsigned char*>(), signature.size()) == 1;
         }
     private:
         const EVP_MD* m_digest;
-        std::string m_data;
-        Key::PasswordCallback m_cb;
 
         Utils::EVPMDCTXPtr initCTX() const
         {
