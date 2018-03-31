@@ -1,3 +1,8 @@
+2018-03-31 1.1.9
+    * Fix nasty memory leaks introduced in 1.1.8.
+    * Minimum required OpenSSL version is 1.0.0.
+    * Compatibility with OpenSSL-1.1.0.
+
 2018-03-31 1.1.8:
     * Fix building on OSX when OpenSSL is installed from Homebrew.
     * Don't crash when a key file is missing.
