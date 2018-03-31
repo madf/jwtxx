@@ -31,24 +31,29 @@ class EC : public PEM
             return verifyImpl(key, data, size, pack(primeSize(key), Base64URL::decode(signature)));
         }
     private:
+        struct SigDeleter
+        {
+            void operator()(ECDSA_SIG* ptr) { ECDSA_SIG_free(ptr); }
+        };
+        using SigPtr = std::unique_ptr<ECDSA_SIG, SigDeleter>;
         static Base64URL::Block unpack(size_t pSize, Base64URL::Block src)
         {
             // Unpack data
             auto srcSig = src.data<const unsigned char*>();
-            ECDSA_SIG* sig = d2i_ECDSA_SIG(nullptr, &srcSig, src.size());
+            SigPtr sig(d2i_ECDSA_SIG(nullptr, &srcSig, src.size()));
             if (sig == nullptr)
                 throw Key::Error("Can't unpack DER-encoded signature. " + Utils::OPENSSLError());
 
             // Check sizes
-            auto rSize = static_cast<size_t>(BN_num_bytes(sig->r));
-            auto sSize = static_cast<size_t>(BN_num_bytes(sig->s));
+            auto rSize = static_cast<size_t>(BN_num_bytes(sig.get()->r));
+            auto sSize = static_cast<size_t>(BN_num_bytes(sig.get()->s));
             if (rSize > pSize || sSize > pSize)
                 throw Key::Error("Signature param sizes are inconsistent with the field prime size (p: " + std::to_string(pSize) + ", r: " + std::to_string(rSize) + ", s: " + std::to_string(sSize) + ").");
 
             // Put them raw, leading zeros
             auto dest = Base64URL::Block::zero(pSize * 2);
-            BN_bn2bin(sig->r, dest.dataAt<unsigned char*>(pSize - rSize));
-            BN_bn2bin(sig->s, dest.dataAt<unsigned char*>(pSize * 2 - rSize));
+            BN_bn2bin(sig.get()->r, dest.dataAt<unsigned char*>(pSize - rSize));
+            BN_bn2bin(sig.get()->s, dest.dataAt<unsigned char*>(pSize * 2 - rSize));
             return dest;
         }
         static Base64URL::Block pack(size_t pSize, Base64URL::Block src)
@@ -60,19 +65,20 @@ class EC : public PEM
             auto r = BN_bin2bn(src.data<const unsigned char*>(), pSize, nullptr);
             auto s = BN_bin2bn(src.dataAt<const unsigned char*>(pSize), pSize, nullptr);
 
-            auto sig = ECDSA_SIG_new();
-            sig->r = r;
-            sig->s = s;
+            SigPtr sig(ECDSA_SIG_new());
+            BN_free(sig.get()->r);
+            BN_free(sig.get()->s);
+            sig.get()->r = r;
+            sig.get()->s = s;
 
-            auto sigSize = i2d_ECDSA_SIG(sig, nullptr);
+            auto sigSize = i2d_ECDSA_SIG(sig.get(), nullptr);
             if (sigSize <= 0)
                 throw Key::Error("Can't calculate size for signature DER encoding. " + Utils::OPENSSLError());
 
             unsigned char* ptr = nullptr;
-            i2d_ECDSA_SIG(sig, &ptr);
+            i2d_ECDSA_SIG(sig.get(), &ptr);
             if (ptr == nullptr)
                 throw Key::Error("Can't convert signature to DER encoding. " + Utils::OPENSSLError());
-            ECDSA_SIG_free(sig);
 
             auto res = Base64URL::Block::fromRaw(ptr, sigSize);
 
@@ -86,7 +92,9 @@ class EC : public PEM
             auto ecKey = EVP_PKEY_get1_EC_KEY(key.get());
             if (ecKey == nullptr)
                 throw Key::Error("Key is not an Elliptic Curve key.");
-            return (EC_GROUP_get_degree(EC_KEY_get0_group(ecKey)) + 7) / 8;
+            auto degree = (EC_GROUP_get_degree(EC_KEY_get0_group(ecKey)) + 7) / 8;
+            EC_KEY_free(ecKey); // EVP_PKEY_get1_EC_KEY increments refcounter of the key
+            return degree;
         }
 };
 
