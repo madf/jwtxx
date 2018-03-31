@@ -6,6 +6,29 @@
 #include <openssl/bn.h>
 #include <openssl/crypto.h>
 
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+inline
+void ECDSA_SIG_get0(const ECDSA_SIG *sig, const BIGNUM **pr, const BIGNUM **ps)
+{
+   if (pr != NULL)
+       *pr = sig->r;
+   if (ps != NULL)
+       *ps = sig->s;
+}
+
+inline
+int ECDSA_SIG_set0(ECDSA_SIG *sig, BIGNUM *r, BIGNUM *s)
+{
+   if (r == NULL || s == NULL)
+       return 0;
+   BN_clear_free(sig->r);
+   BN_clear_free(sig->s);
+   sig->r = r;
+   sig->s = s;
+   return 1;
+}
+#endif
+
 namespace JWTXX
 {
 namespace Keys
@@ -44,16 +67,22 @@ class EC : public PEM
             if (sig == nullptr)
                 throw Key::Error("Can't unpack DER-encoded signature. " + Utils::OPENSSLError());
 
+            const BIGNUM* r = nullptr;
+            const BIGNUM* s = nullptr;
+            ECDSA_SIG_get0(sig.get(), &r, &s);
+            if (r == nullptr || s == nullptr)
+                throw Key::Error("Can't unpack DER-encoded signature.");
+
             // Check sizes
-            auto rSize = static_cast<size_t>(BN_num_bytes(sig.get()->r));
-            auto sSize = static_cast<size_t>(BN_num_bytes(sig.get()->s));
+            auto rSize = static_cast<size_t>(BN_num_bytes(r));
+            auto sSize = static_cast<size_t>(BN_num_bytes(s));
             if (rSize > pSize || sSize > pSize)
                 throw Key::Error("Signature param sizes are inconsistent with the field prime size (p: " + std::to_string(pSize) + ", r: " + std::to_string(rSize) + ", s: " + std::to_string(sSize) + ").");
 
             // Put them raw, leading zeros
             auto dest = Base64URL::Block::zero(pSize * 2);
-            BN_bn2bin(sig.get()->r, dest.dataAt<unsigned char*>(pSize - rSize));
-            BN_bn2bin(sig.get()->s, dest.dataAt<unsigned char*>(pSize * 2 - rSize));
+            BN_bn2bin(r, dest.dataAt<unsigned char*>(pSize - rSize));
+            BN_bn2bin(s, dest.dataAt<unsigned char*>(pSize * 2 - rSize));
             return dest;
         }
         static Base64URL::Block pack(size_t pSize, Base64URL::Block src)
@@ -66,10 +95,7 @@ class EC : public PEM
             auto s = BN_bin2bn(src.dataAt<const unsigned char*>(pSize), pSize, nullptr);
 
             SigPtr sig(ECDSA_SIG_new());
-            BN_free(sig.get()->r);
-            BN_free(sig.get()->s);
-            sig.get()->r = r;
-            sig.get()->s = s;
+            ECDSA_SIG_set0(sig.get(), r, s);
 
             auto sigSize = i2d_ECDSA_SIG(sig.get(), nullptr);
             if (sigSize <= 0)

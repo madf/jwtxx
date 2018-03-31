@@ -15,7 +15,7 @@ endif(APPLE)
 set(JANSSON_FIND_REQUIRED 1)
 find_package(Jansson)
 
-find_package(OpenSSL 0.9.8 REQUIRED)
+find_package(OpenSSL 1.0.0 REQUIRED)
 
 find_package(Boost 1.46.0 COMPONENTS unit_test_framework)
 

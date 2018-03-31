@@ -11,6 +11,6 @@ add_custom_target(generate_tool_version COMMAND ${CMAKE_COMMAND} -D SOURCE_FILE=
 
 add_executable(${PROJECT_NAME} jwttool.cpp)
 add_dependencies(${PROJECT_NAME} generate_tool_version)
-target_link_libraries(${PROJECT_NAME} jwtxx ${OPENSSL_LIBRARIES} ${JANSSON_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} jwtxx ${OPENSSL_LIBRARIES} ${JANSSON_LIBRARIES} dl)
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
