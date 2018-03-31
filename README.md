@@ -10,7 +10,7 @@ C++ library to work with JWT
 
 * cmake - build system.
 * jansson - JSON parser.
-* openssl - cryptography.
+* openssl/libressl - cryptography.
 * boost (optional) - unit tests.
 
 ## Compilation and installation

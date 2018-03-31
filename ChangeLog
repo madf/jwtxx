@@ -1,3 +1,6 @@
+2018-03-31 1.1.10
+    * Initial compatibility with LibreSSL.
+
 2018-03-31 1.1.9
     * Fix nasty memory leaks introduced in 1.1.8.
     * Minimum required OpenSSL version is 1.0.0.
