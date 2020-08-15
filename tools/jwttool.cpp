@@ -7,6 +7,8 @@
 #include <iostream>
 #include <string>
 #include <functional>
+#include <tuple> // std::get
+#include <utility> // std::pair<>::first, std::pair<>::second
 
 #include <jwtxx/jwt.h>
 #include <jwtxx/version.h>
@@ -159,12 +161,14 @@ int main(int argc, char* argv[])
             showHelp(argv[0]);
             return 0;
         }
-        else if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--version") == 0)
+
+        if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--version") == 0)
         {
             showVersion(argv[0]);
             return 0;
         }
-        else if (strcmp(argv[i], "-a") == 0 || strcmp(argv[i], "--alg") == 0)
+
+        if (strcmp(argv[i], "-a") == 0 || strcmp(argv[i], "--alg") == 0)
         {
             if (i + 1 == argc)
             {
@@ -189,7 +193,7 @@ int main(int argc, char* argv[])
                 return -1;
             }
             keyFile = argv[++i];
-            struct stat sb;
+            struct stat sb{};
             if (stat(keyFile.c_str(), &sb) == -1)
             {
                 std::cerr << "Can't access file '" << keyFile << "'. Error: " << strerror(errno) << "\n";

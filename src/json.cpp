@@ -1,5 +1,11 @@
 #include "json.h"
 
+#include <unordered_map>
+#include <memory> // std::unique_ptr
+#include <utility> // std::pair<>::first, std::pair<>::second
+
+#include <cstdlib> // free
+
 #include <jansson.h>
 
 using JWTXX::JWT;
@@ -12,7 +18,7 @@ struct JSONDeleter
 {
     void operator()(json_t* obj) const noexcept { json_decref(obj); }
 };
-typedef std::unique_ptr<json_t, JSONDeleter> JSON;
+using JSON = std::unique_ptr<json_t, JSONDeleter>;
 
 std::string dumpNode(const json_t* node) noexcept
 {

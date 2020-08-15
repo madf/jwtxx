@@ -1,27 +1,42 @@
-if(JANSSON_LIBRARIES AND JANSSON_INCLUDE_DIR)
-    set(JANSSON_FOUND TRUE)
-else(JANSSON_LIBRARIES AND JANSSON_INCLUDE_DIR)
-    set(LIBRARY_PATHS ${JANSSON_ROOT} /usr/lib /usr/local/lib)
-    set(INCLUDE_PATHS ${JANSSON_ROOT} /usr/include /usr/local/include)
+find_path ( Jansson_INCLUDE_DIR NAMES jansson.h DOC "Path to Jansson header files." )
+mark_as_advanced ( Jansson_INCLUDE_DIR )
 
-    find_path(JANSSON_INCLUDE_DIR NAMES jansson.h PATHS ${INCLUDE_PATHS})
-    find_library(JANSSON_LIBRARIES NAMES jansson libjansson PATHS ${LIBRARY_PATHS})
+find_library ( Jansson_LIB NAMES jansson DOC "Location of Jansson library." )
+mark_as_advanced ( Jansson_LIB )
 
-    if(JANSSON_INCLUDE_DIR AND JANSSON_LIBRARIES)
-        set(JANSSON_FOUND TRUE)
-        set(JANSSON_INCLUDE_DIR ${JANSSON_INCLUDE_DIR} CACHE STRING "The include paths needed to use jansson.")
-        set(JANSSON_LIBRARIES ${JANSSON_LIBRARIES} CACHE STRING "The libraries needed to use jansson.")
+if ( Jansson_INCLUDE_DIR )
+    file ( READ "${Jansson_INCLUDE_DIR}/jansson.h" ver )
 
-        mark_as_advanced(JANSSON_INCLUDE_DIR JANSSON_LIBRARIES)
-    endif(JANSSON_INCLUDE_DIR AND JANSSON_LIBRARIES)
-endif(JANSSON_LIBRARIES AND JANSSON_INCLUDE_DIR)
+    string ( REGEX MATCH "JANSSON_MAJOR_VERSION  ([0-9]*)" _ ${ver} )
+    set ( ver_major ${CMAKE_MATCH_1} )
 
-if(JANSSON_FOUND)
-    if(NOT JANSSON_FIND_QUIETLY)
-        message(STATUS "Found jansson: ${JANSSON_LIBRARIES}")
-    endif(NOT JANSSON_FIND_QUIETLY)
-else(JANSSON_FOUND)
-    if(JANSSON_FIND_REQUIRED)
-        message(FATAL_ERROR "Could not find jansson library.")
-    endif(JANSSON_FIND_REQUIRED)
-endif(JANSSON_FOUND)
+    string ( REGEX MATCH "JANSSON_MINOR_VERSION  ([0-9]*)" _ ${ver} )
+    set ( ver_minor ${CMAKE_MATCH_1} )
+
+    string ( REGEX MATCH "JANSSON_MICRO_VERSION  ([0-9]*)" _ ${ver} )
+    set ( ver_micro ${CMAKE_MATCH_1} )
+
+    set ( Jansson_VERSION "${ver_major}.${ver_minor}.${ver_micro}" )
+
+    unset ( ver )
+    unset ( ver_major )
+    unset ( ver_minor )
+    unset ( ver_micro )
+endif ( Jansson_INCLUDE_DIR )
+
+include ( FindPackageHandleStandardArgs )
+find_package_handle_standard_args ( Jansson
+                                    REQUIRED_VARS Jansson_LIB Jansson_INCLUDE_DIR
+                                    VERSION_VAR Jansson_VERSION )
+
+# Create the imported target
+if ( Jansson_FOUND )
+    set ( Jansson_INCLUDE_DIRS ${Jansson_INCLUDE_DIR} )
+    set ( Jansson_LIBRARIES ${Jansson_LIB} )
+    if ( NOT TARGET Jansson::Jansson )
+        add_library ( Jansson::Jansson UNKNOWN IMPORTED )
+        set_target_properties ( Jansson::Jansson PROPERTIES
+                                IMPORTED_LOCATION "${Jansson_LIB}"
+                                INTERFACE_INCLUDE_DIRECTORIES "${Jansson_INCLUDE_DIR}" )
+    endif ( NOT TARGET Jansson::Jansson )
+endif ( Jansson_FOUND )
