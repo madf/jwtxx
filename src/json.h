@@ -2,6 +2,8 @@
 
 #include "jwtxx/jwt.h"
 
+#include <string>
+
 namespace JWTXX
 {
 

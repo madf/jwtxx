@@ -16,6 +16,8 @@ option ( BUILD_TOOL "Build jwttool utility." OFF )
 option ( BUILD_TESTS "Build tests." OFF )
 option ( BUILD_ALL "Build the lib, the tool and the tests." OFF )
 option ( ENABLE_COVERAGE "Enable code coverage analysis." OFF )
+option ( TIDY "Build with clang-tidy." OFF )
+option ( IWYU "Build with include-what-you-use." OFF )
 
 if ( BUILD_ALL )
     set ( BUILD_TOOL ON )
@@ -64,6 +66,46 @@ if ( CODE_COVERAGE_ENABLED )
     include ( CodeCoverage )
     APPEND_COVERAGE_COMPILER_FLAGS ()
 endif ( CODE_COVERAGE_ENABLED )
+
+if ( TIDY )
+    find_program ( CLANG_TIDY_EXE NAMES "clang-tidy" DOC "Path to clang-tidy executable" )
+    if ( NOT CLANG_TIDY_EXE )
+        message ( STATUS "clang-tidy not found." )
+    else ( NOT CLANG_TIDY_EXE )
+        message ( STATUS "clang-tidy found: ${CLANG_TIDY_EXE}" )
+        set ( DO_CLANG_TIDY "${CLANG_TIDY_EXE}"
+              "-checks=*,\
+-cppcoreguidelines-avoid-magic-numbers,\
+-cppcoreguidelines-pro-bounds-pointer-arithmetic,\
+-cppcoreguidelines-pro-type-cstyle-cast,\
+-cppcoreguidelines-pro-type-vararg,\
+-fuchsia-default-arguments,\
+-fuchsia-default-arguments-calls,\
+-fuchsia-overloaded-operator,\
+-google-readability-braces-around-statements,\
+-google-readability-namespace-comments,\
+-google-readability-todo,\
+-google-runtime-references,\
+-hicpp-braces-around-statements,\
+-hicpp-signed-bitwise,\
+-hicpp-vararg,\
+-llvm-namespace-comment,\
+-llvm-include-order,\
+-modernize-avoid-bind,\
+-modernize-use-trailing-return-type,\
+-readability-braces-around-statements" )
+    endif ( NOT CLANG_TIDY_EXE )
+endif ( TIDY )
+
+if ( IWYU )
+    find_program ( INCLUDE_WHAT_YOU_USE_EXE NAMES "include-what-you-use" DOC "Path to include-what-you-use executable" )
+    if ( NOT INCLUDE_WHAT_YOU_USE_EXE )
+        message ( STATUS "include-what-you-use not found." )
+    else ( NOT INCLUDE_WHAT_YOU_USE_EXE )
+        message ( STATUS "include-what-you-use found: ${INCLUDE_WHAT_YOU_USE_EXE}" )
+        set ( DO_INCLUDE_WHAT_YOU_USE "${INCLUDE_WHAT_YOU_USE_EXE}" )
+    endif ( NOT INCLUDE_WHAT_YOU_USE_EXE )
+endif ( IWYU )
 
 if ( APPLE )
     set ( OPENSSL_ROOT_DIR "/opt/local/" "/usr/local/opt/openssl/" )

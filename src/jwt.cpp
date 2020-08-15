@@ -8,12 +8,15 @@
 #include "utils.h"
 #include "json.h"
 
-#include <vector>
+#include <array>
+#include <iterator> // std::end
+#include <tuple> // std::get
 #include <utility> // std::move
 
 #include <ctime>
 
 #include <openssl/evp.h>
+#include <openssl/crypto.h> // CRYPTO_cleanup_all_ex_data
 #include <openssl/err.h>
 
 using JWTXX::Algorithm;
@@ -77,7 +80,7 @@ JWTXX::ValidationResult validTime(const std::string& value, F&& next) noexcept
 }
 
 template <typename F>
-JWTXX::ValidationResult validClaim(const Pairs& claims, std::string claim, F&& next) noexcept
+JWTXX::ValidationResult validClaim(const Pairs& claims, const std::string& claim, F&& next) noexcept
 {
     auto it = claims.find(claim);
     if (it == std::end(claims))
@@ -91,7 +94,7 @@ JWTXX::ValidationResult validTimeClaim(const Pairs& claims, std::string claim, F
     return validClaim(claims, std::move(claim),
                       [&](const std::string& value)
                       {
-                          return validTime(value, std::move(next));
+                          return validTime(value, std::forward<F>(next));
                       });
 }
 
@@ -100,7 +103,7 @@ Validator stringValidator(std::string&& name,
 {
     return [=](const Pairs& claims)
            {
-               return validClaim(claims, std::move(name),
+               return validClaim(claims, name,
                                  [=](const std::string& value)
                                  {
                                      return value == validValue ? JWTXX::ValidationResult::ok() : JWTXX::ValidationResult::failure("'" + name + "' claim should be '" + validValue + "'. Got: '" + value + "'.");
@@ -110,13 +113,13 @@ Validator stringValidator(std::string&& name,
 
 std::string formatTime(std::time_t value) noexcept
 {
-    std::tm tmb;
-    char buf[20];
+    std::tm tmb{};
+    std::array<char, 20> buf{};
     gmtime_r(&value, &tmb);
-    auto res = std::strftime(buf, sizeof(buf), "%F %T", &tmb);
+    auto res = std::strftime(buf.data(), buf.size(), "%F %T", &tmb);
     if (res == 0)
         return "<" + std::to_string(value) + ">";
-    return std::string(buf, res);
+    return std::string(buf.data(), res);
 }
 
 }
@@ -127,6 +130,11 @@ void JWTXX::enableOpenSSLErrors() noexcept
     {
         OpenSSLErrors() noexcept { ERR_load_crypto_strings(); OpenSSL_add_all_algorithms(); }
         ~OpenSSLErrors() { EVP_cleanup(); ERR_free_strings(); CRYPTO_cleanup_all_ex_data(); }
+
+        OpenSSLErrors(const OpenSSLErrors&) = delete;
+        OpenSSLErrors& operator=(const OpenSSLErrors&) = delete;
+        OpenSSLErrors(OpenSSLErrors&&) = delete;
+        OpenSSLErrors& operator=(OpenSSLErrors&&) = delete;
     };
     static const OpenSSLErrors enabled __attribute__((used));
 }
@@ -152,16 +160,17 @@ std::string JWTXX::algToString(Algorithm alg) noexcept
 Algorithm JWTXX::stringToAlg(const std::string& value)
 {
     if (value == "none") return Algorithm::none;
-    else if (value == "HS256") return Algorithm::HS256;
-    else if (value == "HS384") return Algorithm::HS384;
-    else if (value == "HS512") return Algorithm::HS512;
-    else if (value == "RS256") return Algorithm::RS256;
-    else if (value == "RS384") return Algorithm::RS384;
-    else if (value == "RS512") return Algorithm::RS512;
-    else if (value == "ES256") return Algorithm::ES256;
-    else if (value == "ES384") return Algorithm::ES384;
-    else if (value == "ES512") return Algorithm::ES512;
-    else throw JWT::ParseError("Invalid algorithm name: '" + value + "'.");
+    if (value == "HS256") return Algorithm::HS256;
+    if (value == "HS384") return Algorithm::HS384;
+    if (value == "HS512") return Algorithm::HS512;
+    if (value == "RS256") return Algorithm::RS256;
+    if (value == "RS384") return Algorithm::RS384;
+    if (value == "RS512") return Algorithm::RS512;
+    if (value == "ES256") return Algorithm::ES256;
+    if (value == "ES384") return Algorithm::ES384;
+    if (value == "ES512") return Algorithm::ES512;
+
+    throw JWT::ParseError("Invalid algorithm name: '" + value + "'.");
 }
 
 Key::Key(Algorithm alg, const std::string& keyData, const PasswordCallback& cb) noexcept
@@ -190,7 +199,7 @@ std::string Key::noPasswordCallback()
 }
 
 JWT::JWT(Algorithm alg, Pairs claims, Pairs header) noexcept
-    : m_alg(alg), m_header(header), m_claims(claims)
+    : m_alg(alg), m_header(std::move(header)), m_claims(std::move(claims))
 {
     m_header["typ"] = "JWT";
     m_header["alg"] = algToString(m_alg);

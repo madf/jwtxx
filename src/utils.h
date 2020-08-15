@@ -2,11 +2,12 @@
 
 #include "jwtxx/jwt.h"
 
+#include <string>
 #include <memory>
 #include <tuple>
 
 #include <openssl/evp.h>
-#include <openssl/ec.h>
+//#include <openssl/ec.h>
 
 namespace JWTXX
 {
@@ -22,20 +23,20 @@ struct EVPKeyDeleter
 {
     void operator()(EVP_PKEY* key) const noexcept { EVP_PKEY_free(key); }
 };
-typedef std::unique_ptr<EVP_PKEY, EVPKeyDeleter> EVPKeyPtr;
+using EVPKeyPtr = std::unique_ptr<EVP_PKEY, EVPKeyDeleter>;
 
 struct EVPMDCTXDeleter
 {
     void operator()(EVP_MD_CTX* ctx) const noexcept { EVP_MD_CTX_destroy(ctx); }
 };
-typedef std::unique_ptr<EVP_MD_CTX, EVPMDCTXDeleter> EVPMDCTXPtr;
+using EVPMDCTXPtr = std::unique_ptr<EVP_MD_CTX, EVPMDCTXDeleter>;
 
 EVPKeyPtr readPEMPrivateKey(const std::string& fileName, const Key::PasswordCallback& cb);
 EVPKeyPtr readPEMPublicKey(const std::string& fileName);
 
 std::string OPENSSLError() noexcept;
 
-typedef std::tuple<std::string, std::string, std::string> Triple;
+using Triple = std::tuple<std::string, std::string, std::string>;
 
 Triple split(const std::string& token);
 
