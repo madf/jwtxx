@@ -74,26 +74,18 @@ if ( TIDY )
     else ( NOT CLANG_TIDY_EXE )
         message ( STATUS "clang-tidy found: ${CLANG_TIDY_EXE}" )
         set ( DO_CLANG_TIDY "${CLANG_TIDY_EXE}"
-              "-checks=*,\
--cppcoreguidelines-avoid-magic-numbers,\
--cppcoreguidelines-pro-bounds-pointer-arithmetic,\
--cppcoreguidelines-pro-type-cstyle-cast,\
--cppcoreguidelines-pro-type-vararg,\
--fuchsia-default-arguments,\
--fuchsia-default-arguments-calls,\
--fuchsia-overloaded-operator,\
--google-readability-braces-around-statements,\
--google-readability-namespace-comments,\
--google-readability-todo,\
--google-runtime-references,\
--hicpp-braces-around-statements,\
--hicpp-signed-bitwise,\
--hicpp-vararg,\
--llvm-namespace-comment,\
--llvm-include-order,\
+             "-checks=-*,\
+clang-analyzer-*,\
+misc-*,\
+modernize-*,\
+performance-*,\
+portability-*,\
+readability-*,\
+bugprone-*,\
 -modernize-avoid-bind,\
 -modernize-use-trailing-return-type,\
--readability-braces-around-statements" )
+-readability-braces-around-statements, \
+-readability-magic-numbers" )
     endif ( NOT CLANG_TIDY_EXE )
 endif ( TIDY )
 
