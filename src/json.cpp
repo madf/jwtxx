@@ -8,7 +8,6 @@
 
 #include <jansson.h>
 
-using JWTXX::JWT;
 using JWTXX::Pairs;
 
 namespace
@@ -47,7 +46,7 @@ std::string toString(const json_t* node) noexcept
 
 std::string JWTXX::toJSON(const Pairs& data) noexcept
 {
-    JSON root(json_object());
+    const JSON root(json_object());
     for (const auto& item : data)
         json_object_set_new(root.get(), item.first.c_str(), json_string(item.second.c_str()));
     return dumpNode(root.get());
@@ -56,7 +55,7 @@ std::string JWTXX::toJSON(const Pairs& data) noexcept
 Pairs JWTXX::fromJSON(const std::string& data)
 {
     json_error_t error;
-    JSON root(json_loads(data.c_str(), 0, &error));
+    const JSON root(json_loads(data.c_str(), 0, &error));
     if (!root)
         throw JWT::ParseError("Error parsing json at position " + std::to_string(error.position) + " in '" + data + "', reason: " + error.text);
 
