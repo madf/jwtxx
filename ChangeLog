@@ -1,3 +1,8 @@
+2024-07-10 1.1.11
+    * Fix warning about CMake minimum version.
+    * Add instrumentation.
+    * CMake improvements.
+
 2018-03-31 1.1.10
     * Initial compatibility with LibreSSL.
 

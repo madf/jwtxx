@@ -73,19 +73,7 @@ if ( TIDY )
         message ( STATUS "clang-tidy not found." )
     else ( NOT CLANG_TIDY_EXE )
         message ( STATUS "clang-tidy found: ${CLANG_TIDY_EXE}" )
-        set ( DO_CLANG_TIDY "${CLANG_TIDY_EXE}"
-             "-checks=-*,\
-clang-analyzer-*,\
-misc-*,\
-modernize-*,\
-performance-*,\
-portability-*,\
-readability-*,\
-bugprone-*,\
--modernize-avoid-bind,\
--modernize-use-trailing-return-type,\
--readability-braces-around-statements, \
--readability-magic-numbers" )
+        set ( DO_CLANG_TIDY "${CLANG_TIDY_EXE}" )
     endif ( NOT CLANG_TIDY_EXE )
 endif ( TIDY )
 

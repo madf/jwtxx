@@ -64,8 +64,8 @@ std::string modeName(mode_t mode)
         case S_IFDIR: return "a directory";
         case S_IFCHR: return "a character device";
         case S_IFIFO: return "a FIFO";
+        default: return "unknown filesystem entity with mode " + std::to_string(mode);
     }
-    return "unknown filesystem entity with mode " + std::to_string(mode);
 }
 
 int noAction(JWTXX::Algorithm /*alg*/, const std::string& /*keyFile*/, const std::string& /*data*/)
@@ -79,7 +79,7 @@ int sign(JWTXX::Algorithm alg, const std::string& keyFile, const std::string& da
     try
     {
         auto source = JWTXX::fromJSON(data);
-        JWTXX::JWT jwt(alg, source);
+        const JWTXX::JWT jwt(alg, source);
         std::cout << jwt.token(keyFile) << "\n";
         return 0;
     }
@@ -130,8 +130,8 @@ int print(JWTXX::Algorithm /*alg*/, const std::string& /*keyFile*/, const std::s
     try
     {
         auto parts = Utils::split(data);
-        JWTXX::Pairs header = JWTXX::fromJSON(JWTXX::Base64URL::decode(std::get<0>(parts)).toString());
-        JWTXX::Pairs claims = JWTXX::fromJSON(JWTXX::Base64URL::decode(std::get<1>(parts)).toString());
+        const JWTXX::Pairs header = JWTXX::fromJSON(JWTXX::Base64URL::decode(std::get<0>(parts)).toString());
+        const JWTXX::Pairs claims = JWTXX::fromJSON(JWTXX::Base64URL::decode(std::get<1>(parts)).toString());
         printPairs(header);
         std::cout << ".\n";
         printPairs(claims);
@@ -144,7 +144,7 @@ int print(JWTXX::Algorithm /*alg*/, const std::string& /*keyFile*/, const std::s
     }
 }
 
-typedef std::function<int (JWTXX::Algorithm, const std::string&, const std::string&)> Action;
+using Action = std::function<int (JWTXX::Algorithm, const std::string&, const std::string&)>;
 
 }
 

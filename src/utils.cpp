@@ -49,7 +49,7 @@ std::string sysError() noexcept
 Utils::EVPKeyPtr readPublicKey(const std::string& src)
 {
     // src is file name
-    FilePtr fp(fopen(src.c_str(), "rbe"));
+    const FilePtr fp(fopen(src.c_str(), "rbe"));
     if (fp)
         return Utils::EVPKeyPtr(PEM_read_PUBKEY(fp.get(), nullptr, nullptr, nullptr));
 
@@ -70,10 +70,10 @@ Utils::EVPKeyPtr readPublicKey(const std::string& src)
 
 Utils::EVPKeyPtr readCert(const std::string& fileName)
 {
-    FilePtr fp(fopen(fileName.c_str(), "rbe"));
+    const FilePtr fp(fopen(fileName.c_str(), "rbe"));
     if (!fp)
         throw JWTXX::Key::Error("Can't open key file '" + fileName + "'. " + sysError());
-    X509Ptr cert(PEM_read_X509(fp.get(), nullptr, nullptr, nullptr));
+    const X509Ptr cert(PEM_read_X509(fp.get(), nullptr, nullptr, nullptr));
     if (!cert)
         return {};
     return Utils::EVPKeyPtr(X509_get_pubkey(cert.get()));
@@ -102,7 +102,7 @@ int passwordCallback(char* buf, int size, int /*rwflag*/, void* data)
 
 Utils::EVPKeyPtr Utils::readPEMPrivateKey(const std::string& fileName, const JWTXX::Key::PasswordCallback& cb)
 {
-    FilePtr fp(fopen(fileName.c_str(), "rbe"));
+    const FilePtr fp(fopen(fileName.c_str(), "rbe"));
     if (!fp)
         throw Key::Error("Can't open key file '" + fileName + "'. " + sysError());
     try
