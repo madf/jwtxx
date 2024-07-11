@@ -108,6 +108,9 @@ else ( CONST_BIO_NEW_MEM_BUF )
     message ( STATUS "The first parameter of the BIO_new_mem_buf is non-const." )
 endif ( CONST_BIO_NEW_MEM_BUF )
 
+set (CPACK_PACKAGE_NAME ${PROJECT_NAME})
+set (CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+
 add_subdirectory ( include )
 add_subdirectory ( src )
 
@@ -121,3 +124,5 @@ if ( BUILD_TESTS )
 endif ( BUILD_TESTS )
 
 add_custom_target ( cppcheck COMMAND cppcheck --enable=all --std=c++11 -I ${jwtxx_SOURCE_DIR}/include ${jwtxx_SOURCE_DIR}/src ${jwtxx_SOURCE_DIR}/tools )
+
+include (CPack)
