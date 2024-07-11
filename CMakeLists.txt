@@ -124,3 +124,5 @@ if ( BUILD_TESTS )
 endif ( BUILD_TESTS )
 
 add_custom_target ( cppcheck COMMAND cppcheck --enable=all --std=c++11 -I ${jwtxx_SOURCE_DIR}/include ${jwtxx_SOURCE_DIR}/src ${jwtxx_SOURCE_DIR}/tools )
+
+include (CPack)
