@@ -2,6 +2,7 @@
     * Fix warning about CMake minimum version.
     * Add instrumentation.
     * CMake improvements.
+    * GitHub actions.
 
 2018-03-31 1.1.10
     * Initial compatibility with LibreSSL.

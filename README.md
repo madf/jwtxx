@@ -1,6 +1,6 @@
 # jwtxx README
 
-[![Build Status](https://travis-ci.org/madf/jwtxx.svg?branch=master)](https://travis-ci.org/madf/jwtxx)
+[![Build/Test Status](https://github.com/madf/jwtxx/actions/workflows/ci.yml/badge.svg)](https://github.com/madf/jwtxx/actions/workflows/ci.yml)
 
 [![JWT Logo](http://jwt.io/img/logo-asset.svg)](https://jwt.io/)
 
