@@ -28,13 +28,16 @@ jobs:
       # and your own projects needs
       matrix:
         os:
+          - ubuntu-latest
           - ubuntu-22.04
           #- macos-10.15
           #- windows-2019
         compiler:
           # you can specify the version after `-` like "llvm-15.0.2".
-          - llvm-15.0.2
+          - llvm-15
+          - llvm-18
           - gcc-11
+          - gcc-14
         generator:
           - "Ninja Multi-Config"
           - "Unix Makefiles"
@@ -47,8 +50,12 @@ jobs:
           # if you try to use a compiler that does not have gcov set
           - compiler: gcc-11
             gcov_executable: gcov
+          - compiler: gcc-14
+            gcov_executable: gcov
 
-          - compiler: llvm-15.0.2
+          - compiler: llvm-15
+            gcov_executable: "llvm-cov gcov"
+          - compiler: llvm-18
             gcov_executable: "llvm-cov gcov"
 
           # Set up preferred package generators, for given build configurations
