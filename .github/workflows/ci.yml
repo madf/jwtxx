@@ -9,7 +9,6 @@ on:
       - master
 
 env:
-  CLANG_TIDY_VERSION: "15.0.2"
   VERBOSE: 1
 
 
@@ -55,8 +54,10 @@ jobs:
 
           - compiler: llvm-15
             gcov_executable: "llvm-cov gcov"
+            CLANG_TIDY_VERSION: "15"
           - compiler: llvm-18
             gcov_executable: "llvm-cov gcov"
+            CLANG_TIDY_VERSION: "18"
 
           # Set up preferred package generators, for given build configurations
           - build_type: Release
@@ -65,7 +66,7 @@ jobs:
 
     steps:
       - name: Check for llvm version mismatches
-        if: ${{ contains(matrix.compiler, 'llvm') && !contains(matrix.compiler, env.CLANG_TIDY_VERSION) }}
+        if: ${{ contains(matrix.compiler, 'llvm') && !contains(matrix.compiler, matrix.CLANG_TIDY_VERSION) }}
         uses: actions/github-script@v3
         with:
           script: |
@@ -96,7 +97,7 @@ jobs:
           ninja: true
           vcpkg: false
           ccache: true
-          clangtidy: ${{ env.CLANG_TIDY_VERSION }}
+          clangtidy: ${{ matrix.CLANG_TIDY_VERSION }}
 
 
           cppcheck: true
