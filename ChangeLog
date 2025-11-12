@@ -1,3 +1,7 @@
+2025-11-15 1.1.12
+    * New CMake compatibility (#33).
+    * OpenSSL-3.x compatibility (fix deprecations).
+
 2024-07-10 1.1.11
     * Fix warning about CMake minimum version.
     * Add instrumentation.
