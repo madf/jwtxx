@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pemkey.h"
+#include "utils.h"
 
 #include <openssl/ecdsa.h>
 #include <openssl/bn.h>
@@ -115,12 +116,7 @@ class EC : public PEM
         static size_t primeSize(const Utils::EVPKeyPtr& key)
         {
             // Field prime size in bytes
-            auto ecKey = EVP_PKEY_get1_EC_KEY(key.get());
-            if (ecKey == nullptr)
-                throw Key::Error("Key is not an Elliptic Curve key.");
-            auto degree = (EC_GROUP_get_degree(EC_KEY_get0_group(ecKey)) + 7) / 8;
-            EC_KEY_free(ecKey); // EVP_PKEY_get1_EC_KEY increments refcounter of the key
-            return degree;
+            return (EC_GROUP_get_degree(getECGroup(key).get()) + 7) / 8;
         }
 };
 

@@ -6,6 +6,8 @@
 #include <openssl/pem.h>
 #include <openssl/x509.h>
 #include <openssl/err.h>
+#include <openssl/core_names.h> // OSSL_PKEY_PARAM_GROUP_NAME
+#include <openssl/opensslv.h> // OPENSSL_VERSION_NUMBER
 
 #include <array>
 #include <functional> // std::function
@@ -155,4 +157,30 @@ Utils::Triple Utils::split(const std::string& token)
     return std::make_tuple(token.substr(0, pos),
                            token.substr(pos + 1, spos - pos - 1),
                            token.substr(spos + 1, token.length() - spos - 1));
+}
+
+Utils::ECGroupPtr Utils::getECGroup(const EVPKeyPtr& keyPtr)
+{
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+    size_t groupNameSize = 0;
+    EVP_PKEY_get_utf8_string_param(keyPtr.get(), OSSL_PKEY_PARAM_GROUP_NAME, nullptr, 0, &groupNameSize);
+    std::vector<char> groupName(groupNameSize + 1);
+    if (!EVP_PKEY_get_utf8_string_param(keyPtr.get(), OSSL_PKEY_PARAM_GROUP_NAME, groupName.data(), groupName.size(),
+                                        &groupNameSize))
+        return nullptr;
+
+    auto nid = OBJ_sn2nid(groupName.data());
+    if (nid == NID_undef)
+        return nullptr;
+
+    return ECGroupPtr{EC_GROUP_new_by_curve_name(nid)};
+#else
+    auto ecKey = EVP_PKEY_get1_EC_KEY(keyPtr.get());
+    if (ecKey == nullptr)
+        return nullptr;
+
+    ECGroupPtr res{EC_GROUP_dup(EC_KEY_get0_group(ecKey))};
+    EC_KEY_free(ecKey); // EVP_PKEY_get1_EC_KEY increments refcounter of the key
+    return res;
+#endif
 }

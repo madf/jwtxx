@@ -7,7 +7,7 @@
 #include <tuple>
 
 #include <openssl/evp.h>
-//#include <openssl/ec.h>
+#include <openssl/ec.h> // EC_GROUP_*
 
 namespace JWTXX
 {
@@ -39,6 +39,14 @@ std::string OPENSSLError() noexcept;
 using Triple = std::tuple<std::string, std::string, std::string>;
 
 Triple split(const std::string& token);
+
+struct ECGroupDeleter
+{
+    void operator()(EC_GROUP* group) const noexcept { EC_GROUP_free(group); }
+};
+using ECGroupPtr = std::unique_ptr<EC_GROUP, ECGroupDeleter>;
+
+ECGroupPtr getECGroup(const EVPKeyPtr& keyPtr);
 
 }
 }
