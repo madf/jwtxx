@@ -21,7 +21,7 @@
 
 using JWTXX::Algorithm;
 using JWTXX::Validator;
-using JWTXX::Pairs;
+using JWTXX::Value;
 using JWTXX::Key;
 using JWTXX::JWT;
 
@@ -63,24 +63,31 @@ Key::Impl* createKey(Algorithm alg, const std::string& keyData, const Key::Passw
 }
 
 template <typename F>
-JWTXX::ValidationResult validTime(const std::string& value, F&& next) noexcept
+JWTXX::ValidationResult validTime(const Value& value, F&& next) noexcept
 {
     try
     {
-        size_t pos = 0;
-        auto t = std::stoull(value, &pos);
-        if (pos != value.length())
-            return JWTXX::ValidationResult::failure("Invalid time value. Should be a positive integer value, got '" + value + "'.");
-        return next(t);
+        if (value.isInteger())
+            return next(value.getInteger());
+        if (value.isString()) // Backward compatibility
+        {
+            size_t pos = 0;
+            const auto s = value.getString();
+            auto t = std::stoull(s, &pos);
+            if (pos != s.length())
+                return JWTXX::ValidationResult::failure("Invalid time value. Should be a positive integer value, got '" + s + "'.");
+            return next(t);
+        }
+        return JWTXX::ValidationResult::failure("Invalid time value. Should be a positive integer value, got '" + value.toString() + "'.");
     }
     catch (const std::logic_error&)
     {
-        return JWTXX::ValidationResult::failure("Invalid time value. Should be a positive integer value, got '" + value + "'.");
+        return JWTXX::ValidationResult::failure("Invalid time value. Should be a positive integer value, got '" + value.toString() + "'.");
     }
 }
 
 template <typename F>
-JWTXX::ValidationResult validClaim(const Pairs& claims, const std::string& claim, F&& next) noexcept
+JWTXX::ValidationResult validClaim(const Value::Object& claims, const std::string& claim, F&& next) noexcept
 {
     auto it = claims.find(claim);
     if (it == std::end(claims))
@@ -89,10 +96,10 @@ JWTXX::ValidationResult validClaim(const Pairs& claims, const std::string& claim
 }
 
 template <typename F>
-JWTXX::ValidationResult validTimeClaim(const Pairs& claims, std::string claim, F&& next) noexcept
+JWTXX::ValidationResult validTimeClaim(const Value::Object& claims, std::string claim, F&& next) noexcept
 {
     return validClaim(claims, std::move(claim),
-                      [&](const std::string& value)
+                      [&](const Value& value)
                       {
                           return validTime(value, std::forward<F>(next));
                       });
@@ -101,12 +108,12 @@ JWTXX::ValidationResult validTimeClaim(const Pairs& claims, std::string claim, F
 Validator stringValidator(std::string&& name,
                           std::string&& validValue) noexcept
 {
-    return [=](const Pairs& claims)
+    return [=](const Value::Object& claims)
            {
                return validClaim(claims, name,
-                                 [=](const std::string& value)
+                                 [=](const Value& value)
                                  {
-                                     return value == validValue ? JWTXX::ValidationResult::ok() : JWTXX::ValidationResult::failure("'" + name + "' claim should be '" + validValue + "'. Got: '" + value + "'.");
+                                     return value.isString() && value.getString() == validValue ? JWTXX::ValidationResult::ok() : JWTXX::ValidationResult::failure("'" + name + "' claim should be '" + validValue + "'. Got: " + value.toString() + ".");
                                  });
            };
 }
@@ -122,12 +129,14 @@ std::string formatTime(std::time_t value) noexcept
     return std::string(buf.data(), res);
 }
 
-std::string findAlg(const Pairs& pairs) noexcept
+std::string findAlg(const Value::Object& pairs) noexcept
 {
     const auto it = pairs.find("alg");
     if (it == pairs.end())
-        return "";
-    return it->second;
+        return {};
+    if (it->second.isString())
+        return it->second.getString();
+    return {};
 }
 
 }
@@ -206,11 +215,11 @@ std::string Key::noPasswordCallback()
     throw Utils::PasswordCallbackError();
 }
 
-JWT::JWT(Algorithm alg, Pairs claims, Pairs header) noexcept
+JWT::JWT(Algorithm alg, Value::Object claims, Value::Object header) noexcept
     : m_alg(alg), m_header(std::move(header)), m_claims(std::move(claims))
 {
-    m_header["typ"] = "JWT";
-    m_header["alg"] = algToString(m_alg);
+    m_header["typ"] = Value("JWT");
+    m_header["alg"] = Value(algToString(m_alg));
 }
 
 JWT::JWT(const std::string& token, Key key, JWTXX::Validators&& validators)
@@ -222,9 +231,13 @@ JWT::JWT(const std::string& token, Key key, JWTXX::Validators&& validators)
     m_header = fromJSON(Base64URL::decode(std::get<0>(parts)).toString());
     m_claims = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
 
-    auto algName = algToString(key.alg());
-    if (m_header["alg"] != algName)
-        throw ValidationError("\"alg\" should be \"" + algName + "\". Actual value: \"" + m_header["alg"] + "\".");
+    const auto algName = algToString(key.alg());
+    const auto a = m_header["alg"];
+    if (!a.isString())
+        throw ValidationError("\"alg\" should be a string. Actual value: " + a.toString());
+    const auto tokenAlg = a.getString();
+    if (tokenAlg != algName)
+        throw ValidationError("\"alg\" should be \"" + algName + "\". Actual value: \"" + tokenAlg + "\".");
 
     auto data = std::get<0>(parts) + "." + std::get<1>(parts);
     if (!key.verify(data.c_str(), data.size(), std::get<2>(parts)))
@@ -241,13 +254,13 @@ JWT::JWT(const std::string& token, Key key, JWTXX::Validators&& validators)
 JWT JWT::parse(const std::string& token)
 {
     auto parts = Utils::split(token);
-    const Pairs header = fromJSON(Base64URL::decode(std::get<0>(parts)).toString());
-    const Pairs claims = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
-    Algorithm alg = Algorithm::none;
-    const auto algName = findAlg(header);
+    auto h = fromJSON(Base64URL::decode(std::get<0>(parts)).toString());
+    auto c = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
+    auto a = Algorithm::none;
+    const auto algName = findAlg(h);
     if (!algName.empty())
-        alg = stringToAlg(algName);
-    return JWT(alg, claims, header);
+        a = stringToAlg(algName);
+    return JWT(a, std::move(c), std::move(h));
 }
 
 JWTXX::ValidationResult JWT::verify(const std::string& token, Key key, JWTXX::Validators&& validators) noexcept
@@ -256,17 +269,17 @@ JWTXX::ValidationResult JWT::verify(const std::string& token, Key key, JWTXX::Va
     {
         auto parts = Utils::split(token);
         auto data = std::get<0>(parts) + "." + std::get<1>(parts);
-        const Pairs header = fromJSON(Base64URL::decode(std::get<0>(parts)).toString());
-        const Pairs claims = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
+        const auto h = fromJSON(Base64URL::decode(std::get<0>(parts)).toString());
+        const auto c = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
         auto algName = algToString(key.alg());
-        const auto hdrAlgName = findAlg(header);
+        const auto hdrAlgName = findAlg(h);
         if (hdrAlgName != algName)
             return ValidationResult::failure("\"alg\" should be \"" + algName + "\". Actual value: \"" + hdrAlgName + "\".");
         if (!key.verify(data.c_str(), data.size(), std::get<2>(parts)))
             return ValidationResult::failure("Signature is invalid.");
         for (const auto& validator : validators)
         {
-            auto res = validator(claims);
+            auto res = validator(c);
             if (!res)
                 return res;
         }
@@ -278,7 +291,7 @@ JWTXX::ValidationResult JWT::verify(const std::string& token, Key key, JWTXX::Va
     }
 }
 
-std::string JWT::claim(const std::string& name) const noexcept
+Value JWT::claim(const std::string& name) const noexcept
 {
     auto it = m_claims.find(name);
     if (it == std::end(m_claims))
@@ -294,12 +307,12 @@ std::string JWT::token(const std::string& keyData, const Key::PasswordCallback& 
     auto signature = key.sign(data.c_str(), data.size());
     if (signature.empty())
         return data;
-    return data + "." + signature;
+    return data + "." + std::move(signature);
 }
 
 Validator Validate::exp(std::time_t now) noexcept
 {
-    return [=](const Pairs& claims)
+    return [=](const Value::Object& claims)
            {
                return validTimeClaim(claims, "exp",
                                      [=](std::time_t value)
@@ -311,7 +324,7 @@ Validator Validate::exp(std::time_t now) noexcept
 
 Validator Validate::nbf(std::time_t now) noexcept
 {
-    return [=](const Pairs& claims)
+    return [=](const Value::Object& claims)
            {
                return validTimeClaim(claims, "nbf",
                                      [=](std::time_t value)
@@ -323,7 +336,7 @@ Validator Validate::nbf(std::time_t now) noexcept
 
 Validator Validate::iat(std::time_t now) noexcept
 {
-    return [=](const Pairs& claims)
+    return [=](const Value::Object& claims)
            {
                return validTimeClaim(claims, "iat",
                                      [=](std::time_t value)

@@ -36,9 +36,9 @@ BOOST_AUTO_TEST_CASE(TestCtor256)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "HS256");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "HS256");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("secret-key");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token256Order1 || token == token256Order2);
@@ -52,9 +52,9 @@ BOOST_AUTO_TEST_CASE(TestCtor384)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "HS384");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "HS384");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("secret-key");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token384Order1 || token == token384Order2);
@@ -68,9 +68,9 @@ BOOST_AUTO_TEST_CASE(TestCtor512)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "HS512");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "HS512");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("secret-key");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token512Order1 || token == token512Order2);
@@ -84,9 +84,9 @@ BOOST_AUTO_TEST_CASE(TestParser256)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "HS256");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "HS256");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("secret-key");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token256Order1 || token == token256Order2);
@@ -100,9 +100,9 @@ BOOST_AUTO_TEST_CASE(TestParserDifferentFieldOrder256)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "HS256");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "HS256");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("secret-key");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token256Order1 || token == token256Order2);
@@ -116,9 +116,9 @@ BOOST_AUTO_TEST_CASE(TestParser384)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "HS384");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "HS384");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("secret-key");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token384Order1 || token == token384Order2);
@@ -132,9 +132,9 @@ BOOST_AUTO_TEST_CASE(TestParserDifferentFieldOrder384)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "HS384");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "HS384");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("secret-key");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token384Order1 || token == token384Order2);
@@ -148,9 +148,9 @@ BOOST_AUTO_TEST_CASE(TestParser512)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "HS512");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "HS512");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("secret-key");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token512Order1 || token == token512Order2);
@@ -164,9 +164,9 @@ BOOST_AUTO_TEST_CASE(TestParserDifferentFieldOrder512)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "HS512");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "HS512");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("secret-key");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token512Order1 || token == token512Order2);
@@ -196,33 +196,33 @@ BOOST_AUTO_TEST_CASE(TestParserNoVerify)
 {
     auto jwt = JWTXX::JWT::parse(tokenWithExp);
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::HS256);
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
-    BOOST_CHECK_EQUAL(jwt.claim("sub"), "user");
-    BOOST_CHECK_EQUAL(jwt.claim("exp"), "1475246523");
-    BOOST_CHECK_EQUAL(jwt.claim("iat"), "1475242923");
-    BOOST_CHECK_EQUAL(jwt.claim("nbf"), "1475242923");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
+    BOOST_CHECK_EQUAL(jwt.claim("sub").getString(), "user");
+    BOOST_CHECK_EQUAL(jwt.claim("exp").getInteger(), 1475246523);
+    BOOST_CHECK_EQUAL(jwt.claim("iat").getInteger(), 1475242923);
+    BOOST_CHECK_EQUAL(jwt.claim("nbf").getInteger(), 1475242923);
 }
 
 BOOST_AUTO_TEST_CASE(TestParserNoVerifyCorruptedSignature)
 {
     auto jwt = JWTXX::JWT::parse(tokenCorruptedSign);
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::HS256);
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
-    BOOST_CHECK_EQUAL(jwt.claim("sub"), "user");
-    BOOST_CHECK_EQUAL(jwt.claim("exp"), "1475246523");
-    BOOST_CHECK_EQUAL(jwt.claim("iat"), "1475242923");
-    BOOST_CHECK_EQUAL(jwt.claim("nbf"), "1475242923");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
+    BOOST_CHECK_EQUAL(jwt.claim("sub").getString(), "user");
+    BOOST_CHECK_EQUAL(jwt.claim("exp").getInteger(), 1475246523);
+    BOOST_CHECK_EQUAL(jwt.claim("iat").getInteger(), 1475242923);
+    BOOST_CHECK_EQUAL(jwt.claim("nbf").getInteger(), 1475242923);
 }
 
 BOOST_AUTO_TEST_CASE(TestParserExtraVerification)
 {
     JWTXX::JWT jwt(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::HS256, "secret-key"), {JWTXX::Validate::exp(1475246522), JWTXX::Validate::iat(1475246522), JWTXX::Validate::nbf(1475246522)});
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::HS256);
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
-    BOOST_CHECK_EQUAL(jwt.claim("sub"), "user");
-    BOOST_CHECK_EQUAL(jwt.claim("exp"), "1475246523");
-    BOOST_CHECK_EQUAL(jwt.claim("iat"), "1475242923");
-    BOOST_CHECK_EQUAL(jwt.claim("nbf"), "1475242923");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
+    BOOST_CHECK_EQUAL(jwt.claim("sub").getString(), "user");
+    BOOST_CHECK_EQUAL(jwt.claim("exp").getInteger(), 1475246523);
+    BOOST_CHECK_EQUAL(jwt.claim("iat").getInteger(), 1475242923);
+    BOOST_CHECK_EQUAL(jwt.claim("nbf").getInteger(), 1475242923);
     BOOST_CHECK_THROW(JWTXX::JWT(tokenCorruptedSign, JWTXX::Key(JWTXX::Algorithm::HS256, "secret-key")), JWTXX::JWT::ValidationError);
     BOOST_CHECK_THROW(JWTXX::JWT(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::HS256, "secret-key"), {JWTXX::Validate::exp(1475242922), JWTXX::Validate::iat(1475242922), JWTXX::Validate::nbf(1475242922)}), JWTXX::JWT::ValidationError);
     BOOST_CHECK_THROW(JWTXX::JWT(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::HS256, "secret-key"), {JWTXX::Validate::exp(1475246524), JWTXX::Validate::iat(1475246524), JWTXX::Validate::nbf(1475246524)}), JWTXX::JWT::ValidationError);

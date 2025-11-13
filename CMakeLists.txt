@@ -8,7 +8,7 @@ enable_language ( CXX )
 
 set ( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -W -Wall -Wextra -Wshadow -Wold-style-cast -Wnull-dereference -Wstrict-aliasing -pedantic" )
 
-set ( CMAKE_CXX_STANDARD 11 )
+set ( CMAKE_CXX_STANDARD 17 )
 set ( CMAKE_CXX_STANDARD_REQUIRED ON )
 set ( CMAKE_CXX_EXTENSIONS OFF )
 
@@ -123,6 +123,6 @@ if ( BUILD_TESTS )
     add_subdirectory ( tests )
 endif ( BUILD_TESTS )
 
-add_custom_target ( cppcheck COMMAND cppcheck --enable=all --std=c++11 -I ${jwtxx_SOURCE_DIR}/include ${jwtxx_SOURCE_DIR}/src ${jwtxx_SOURCE_DIR}/tools )
+add_custom_target ( cppcheck COMMAND cppcheck --enable=all --disable=missingInclude --std=c++17 -I ${jwtxx_SOURCE_DIR}/include ${jwtxx_SOURCE_DIR}/src ${jwtxx_SOURCE_DIR}/tools )
 
 include (CPack)

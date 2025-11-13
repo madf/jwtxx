@@ -4,12 +4,14 @@
  *  @brief Classes, constants and functions to work with JWT.
  */
 
+#include "value.h"
+#include "error.h"
+
 #include <functional>
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <memory>
-#include <stdexcept>
 
 #include <ctime>
 
@@ -41,15 +43,6 @@ enum class Algorithm {
     none   /**< no signature */
 };
 
-/** @class Error
- *  @brief Base class for all exceptions in the library.
- */
-struct Error : public std::runtime_error
-{
-    /** @brief Constructor. */
-    explicit Error(const std::string& message) noexcept : runtime_error(message) {}
-};
-
 /** @fn std::string algToString(Algorithm alg)
  *  @brief Converts algorithm code into a string representation.
  *  @param alg algorithm code.
@@ -76,7 +69,7 @@ class Key
         /** @typedef PasswordCallback
          *  @brief Callback function for password-protected keys. Should return password in plain text.
          */
-        typedef std::function<std::string ()> PasswordCallback;
+        using PasswordCallback = std::function<std::string ()>;
 
         /** @class Error
          *  @brief Key-specific exception.
@@ -157,20 +150,15 @@ class ValidationResult
         explicit ValidationResult(const std::string& message) noexcept : m_message(message) {}
 };
 
-/** @typedef Pairs
- *  @brief Header and claim container.
- */
-typedef std::unordered_map<std::string, std::string> Pairs;
-
 /** @typedef Validator
  *  @brief Validation function for claims.
  */
-typedef std::function<ValidationResult (const Pairs&)> Validator;
+using Validator = std::function<ValidationResult (const Value::Object&)>;
 
 /** @typedef Validators
  *  @brief A list of validators.
  */
-typedef std::vector<Validator> Validators;
+using Validators = std::vector<Validator>;
 
 /** @namespace JWTXX::Validate
  *  @brief Validation functions are here.
@@ -262,7 +250,7 @@ class JWT
          *  @param claims a list of claims;
          *  @param header an optional list of header records; 'alg' and 'typ' can't be specified manually.
          */
-        JWT(Algorithm alg, Pairs claims, Pairs header = Pairs()) noexcept;
+        JWT(Algorithm alg, Value::Object claims, Value::Object header = Value::Object{}) noexcept;
 
         /** @brief Returns a JWT for a token without validation.
          *  @param token the token.
@@ -280,16 +268,16 @@ class JWT
         Algorithm alg() const noexcept { return m_alg; }
 
         /** @brief Returns a list of claims. */
-        const Pairs& claims() const noexcept { return m_claims; }
+        const Value::Object& claims() const noexcept { return m_claims; }
 
         /** @brief Returns a list of header fields. */
-        const Pairs& header() const noexcept { return m_header; }
+        const Value::Object& header() const noexcept { return m_header; }
 
         /** @brief Returns a value of a specific claim.
          *  @param name claim name.
          *  @note Returns an empty string if the claim is missing.
          */
-        std::string claim(const std::string& name) const noexcept;
+        Value claim(const std::string& name) const noexcept;
 
         /** @brief Returns a signed token.
          *  @param keyData key-specific data;
@@ -300,8 +288,8 @@ class JWT
 
     private:
         Algorithm m_alg;
-        Pairs m_header;
-        Pairs m_claims;
+        Value::Object m_header;
+        Value::Object m_claims;
 };
 
 }

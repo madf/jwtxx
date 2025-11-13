@@ -1,5 +1,6 @@
 #include "toolversion.h"
 
+#include "jwtxx/value.h"
 #include "json.h"
 #include "base64url.h"
 #include "utils.h"
@@ -21,6 +22,7 @@
 #include <sys/stat.h>
 
 namespace Utils = JWTXX::Utils;
+using Value = JWTXX::Value;
 
 namespace
 {
@@ -110,7 +112,7 @@ int verify(JWTXX::Algorithm alg, const std::string& keyFile, const std::string& 
     }
 }
 
-void printPairs(const JWTXX::Pairs& pairs)
+void printObject(const Value::Object& pairs)
 {
     std::cout << "{\n";
     bool first = true;
@@ -120,7 +122,7 @@ void printPairs(const JWTXX::Pairs& pairs)
             first = false;
         else
             std::cout << ",\n";
-        std::cout << "\t\"" << header.first << "\": \"" << header.second << "\"";
+        std::cout << "\t\"" << header.first << "\": \"" << header.second.toString() << "\"";
     }
     std::cout << "\n}\n";
 }
@@ -130,11 +132,11 @@ int print(JWTXX::Algorithm /*alg*/, const std::string& /*keyFile*/, const std::s
     try
     {
         auto parts = Utils::split(data);
-        const JWTXX::Pairs header = JWTXX::fromJSON(JWTXX::Base64URL::decode(std::get<0>(parts)).toString());
-        const JWTXX::Pairs claims = JWTXX::fromJSON(JWTXX::Base64URL::decode(std::get<1>(parts)).toString());
-        printPairs(header);
+        const auto header = JWTXX::fromJSON(JWTXX::Base64URL::decode(std::get<0>(parts)).toString());
+        const auto claims = JWTXX::fromJSON(JWTXX::Base64URL::decode(std::get<1>(parts)).toString());
+        printObject(header);
         std::cout << ".\n";
-        printPairs(claims);
+        printObject(claims);
         return 0;
     }
     catch (const JWTXX::Error& ex)
