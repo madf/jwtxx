@@ -83,7 +83,7 @@ class EC : public PEM
             // Put them raw, leading zeros
             auto dest = Base64URL::Block::zero(pSize * 2);
             BN_bn2bin(r, dest.dataAt<unsigned char*>(pSize - rSize));
-            BN_bn2bin(s, dest.dataAt<unsigned char*>(pSize * 2 - rSize));
+            BN_bn2bin(s, dest.dataAt<unsigned char*>(pSize * 2 - sSize));
             return dest;
         }
         static Base64URL::Block pack(size_t pSize, Base64URL::Block src)
