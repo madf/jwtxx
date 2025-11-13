@@ -1,4 +1,8 @@
-2025-11-15 1.1.12
+2025-11-13 2.0.0
+    * Allow arbitrary JSON types in claims (#26, #29).
+    * Fix producing incorrect ECDSA in some cases.
+
+2025-11-12 1.1.12
     * New CMake compatibility (#33).
     * OpenSSL-3.x compatibility (fix deprecations).
 

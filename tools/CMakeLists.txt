@@ -1,4 +1,4 @@
-project ( jwttool VERSION 1.0.2 )
+project ( jwttool VERSION 2.0.0 )
 
 find_package ( Threads REQUIRED )
 
