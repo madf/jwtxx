@@ -23,11 +23,16 @@ constexpr auto token512PartOrder2 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJpc3
 constexpr auto token512Order1 = "eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtYWRmIn0.5hKzWLIC7cMHAA5H7RJq7zJ74DoUTRN0fOFo8lgd0Axn-VDS-ekygXmEcRMs5E3SASvXMpc6MYEsdqeBBHqXBw";
 constexpr auto token512Order2 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJpc3MiOiJtYWRmIn0.7CAxZNbDiWAgloBmcU3p32FcarbkVGXUTz5hXkNm9ETciX8ENYJHqY0o4j6kNj-p9v5vdeGB7DnkdLbYMut52w";
 constexpr auto token512CorruptedSignature = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJpc3MiOiJtYWRmIn0.MEYCIQCSn5y1q5hQm4kOfP-39rWVNY_61iukR9GUjhn2Y8DuyQIhAMLF77oGoNtNO_buqxZIAwMTPs_TO3FrjbRVua";
+constexpr auto tokenWithExp = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0NzUyNDY1MjMsIm5iZiI6MTQ3NTI0MjkyMywiaWF0IjoxNDc1MjQyOTIzLCJpc3MiOiJtYWRmIiwic3ViIjoidXNlciJ9.7j20ZNmmQEH1etP5uMrvW6Zzoh9c5CYenulCrLrQeSNWh_QbW0Ro-APwY9DMrPksx1pJPiCpBTwG8iVOfOAvdQ";
 constexpr auto brokenToken1 = "eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJpc3MiOiJtYWRmIn0.MEYCIQCSn5y1q5hQm4kOfP-39rWVNY_61iukR9GUjhn2Y8DuyQIhAMLF77oGoNtNO_buqxZIAwMTPs_TO3FrjbRVua34W-jk";
 constexpr auto brokenToken2 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.3MiOiJtYWRmIn0.MEYCIQCSn5y1q5hQm4kOfP-39rWVNY_61iukR9GUjhn2Y8DuyQIhAMLF77oGoNtNO_buqxZIAwMTPs_TO3FrjbRVua34W-jk";
 constexpr auto notAToken1 = "";
 constexpr auto notAToken2 = "Hello, World!";
 constexpr auto invalidHeaderToken = "eyJhbGciOiJIUzI1NyIsInR5cCI6IkpXIn0.eyJuYW1lIjoiZm9vIn0"; // Here should be a ECDSA signature, but the structure is checked first, so we can skip.
+constexpr auto publicecdsa256keydata = "-----BEGIN PUBLIC KEY-----\n"
+                                       "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEyeJHlnlG6exAXB7XLRqVNI9YHfe4\n"
+                                       "LNq1/FsrfFSsknIe/a1j9Z50xnvqkTQcsB+mRzKb8lQynRpXvKHbsoCmTw==\n"
+                                       "-----END PUBLIC KEY-----";
 
 }
 
@@ -303,12 +308,43 @@ BOOST_AUTO_TEST_CASE(TestParserWithCert512Sig2)
     BOOST_CHECK(part == token512PartOrder1 || part == token512PartOrder2);
 }
 
+BOOST_AUTO_TEST_CASE(TestVerifier)
+{
+    BOOST_CHECK(JWTXX::JWT::verify(token512Order2, JWTXX::Key(JWTXX::Algorithm::ES512, "public-ecdsa-256-key.pem")));
+    BOOST_CHECK(JWTXX::JWT::verify(token512Order2, JWTXX::Key(JWTXX::Algorithm::ES512, publicecdsa256keydata)));
+    BOOST_CHECK(JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem"), {JWTXX::Validate::exp(1475246522)}));
+    BOOST_CHECK(!JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem"), {JWTXX::Validate::exp(1475246524)}));
+    BOOST_CHECK(!JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem"), {JWTXX::Validate::iat(1475242922)}));
+    BOOST_CHECK(JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem"), {JWTXX::Validate::iat(1475242924)}));
+    BOOST_CHECK(!JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem"), {JWTXX::Validate::nbf(1475242922)}));
+    BOOST_CHECK(JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem"), {JWTXX::Validate::nbf(1475242924)}));
+    BOOST_CHECK(JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem"), {JWTXX::Validate::exp(1475246522), JWTXX::Validate::iat(1475246522), JWTXX::Validate::nbf(1475246522)}));
+    BOOST_CHECK(!JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem"), {JWTXX::Validate::exp(1475246524), JWTXX::Validate::iat(1475246524), JWTXX::Validate::nbf(1475246524)}));
+    BOOST_CHECK(!JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem"), {JWTXX::Validate::exp(1475242922), JWTXX::Validate::iat(1475242922), JWTXX::Validate::nbf(1475242922)}));
+    BOOST_CHECK(JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem"), {JWTXX::Validate::iss("madf")}));
+    BOOST_CHECK(!JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem"), {JWTXX::Validate::iss("somebody")}));
+    BOOST_CHECK(JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem"), {JWTXX::Validate::sub("user")}));
+    BOOST_CHECK(!JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem"), {JWTXX::Validate::sub("someone")}));
+    BOOST_CHECK(JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem"), {JWTXX::Validate::aud("")}));
+    BOOST_CHECK(JWTXX::JWT::verify(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem"), {JWTXX::Validate::aud("something")})); // Audience is missing in the token
+    BOOST_CHECK(!JWTXX::JWT::verify(token512Order2, JWTXX::Key(JWTXX::Algorithm::ES512, "")));
+    BOOST_CHECK(!JWTXX::JWT::verify(token512Order2, JWTXX::Key(JWTXX::Algorithm::ES512, "abc")));
+}
+
 BOOST_AUTO_TEST_CASE(TestParserNoVerify)
 {
     auto jwt1 = JWTXX::JWT::parse(token512Order1);
     BOOST_CHECK_EQUAL(jwt1.alg(), JWTXX::Algorithm::ES512);
     auto jwt2 = JWTXX::JWT::parse(token512Order1);
     BOOST_CHECK_EQUAL(jwt2.alg(), JWTXX::Algorithm::ES512);
+
+    auto jwt = JWTXX::JWT::parse(tokenWithExp);
+    BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::ES256);
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
+    BOOST_CHECK_EQUAL(jwt.claim("sub").getString(), "user");
+    BOOST_CHECK_EQUAL(jwt.claim("exp").getInteger(), 1475246523);
+    BOOST_CHECK_EQUAL(jwt.claim("iat").getInteger(), 1475242923);
+    BOOST_CHECK_EQUAL(jwt.claim("nbf").getInteger(), 1475242923);
 }
 
 BOOST_AUTO_TEST_CASE(TestParserNoVerifyCorruptedSignature)
@@ -319,8 +355,16 @@ BOOST_AUTO_TEST_CASE(TestParserNoVerifyCorruptedSignature)
 
 BOOST_AUTO_TEST_CASE(TestParserExtraVerification)
 {
-    // TODO: add tests for claim verification
+    JWTXX::JWT jwt(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem"), {JWTXX::Validate::exp(1475246522), JWTXX::Validate::iat(1475246522), JWTXX::Validate::nbf(1475246522)});
+    BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::ES256);
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
+    BOOST_CHECK_EQUAL(jwt.claim("sub").getString(), "user");
+    BOOST_CHECK_EQUAL(jwt.claim("exp").getInteger(), 1475246523);
+    BOOST_CHECK_EQUAL(jwt.claim("iat").getInteger(), 1475242923);
+    BOOST_CHECK_EQUAL(jwt.claim("nbf").getInteger(), 1475242923);
     BOOST_CHECK_THROW(JWTXX::JWT(token512CorruptedSignature, JWTXX::Key(JWTXX::Algorithm::ES512, "ecdsa-cert.pem")), JWTXX::JWT::ValidationError);
+    BOOST_CHECK_THROW(JWTXX::JWT(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem"), {JWTXX::Validate::exp(1475242922), JWTXX::Validate::iat(1475242922), JWTXX::Validate::nbf(1475242922)}), JWTXX::JWT::ValidationError);
+    BOOST_CHECK_THROW(JWTXX::JWT(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem"), {JWTXX::Validate::exp(1475246524), JWTXX::Validate::iat(1475246524), JWTXX::Validate::nbf(1475246524)}), JWTXX::JWT::ValidationError);
 }
 
 BOOST_AUTO_TEST_CASE(TestParserErrors)
