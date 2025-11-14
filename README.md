@@ -6,6 +6,10 @@
 
 C++ library to work with JWT
 
+## Upgrading from 1.x
+
+If you're upgrading from jwtxx 1.x, please see the [Migration Guide](MIGRATION.md) for detailed instructions and examples.
+
 ## Dependencies
 
 * cmake - build system.
@@ -65,7 +69,9 @@ foo/lib
 
 RSA and ECDSA keys should be in PEM format. Public keys can be in form of certificates.
 
-[Library reference](https://madf.github.io/jwtxx/index.html)
+**Documentation:**
+- [Library reference](https://madf.github.io/jwtxx/index.html)
+- [Migration guide (1.x to 2.x)](MIGRATION.md)
 
 ### Examples
 
