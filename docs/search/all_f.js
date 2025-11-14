@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['validationerror_45',['ValidationError',['../struct_j_w_t_x_x_1_1_j_w_t_1_1_validation_error.html',1,'JWTXX::JWT::ValidationError'],['../struct_j_w_t_x_x_1_1_j_w_t_1_1_validation_error.html#a38c3ad6670679cd6afc3f59fffa1fad1',1,'JWTXX::JWT::ValidationError::ValidationError()']]],
-  ['validationresult_46',['ValidationResult',['../class_j_w_t_x_x_1_1_validation_result.html',1,'JWTXX']]],
-  ['validator_47',['Validator',['../namespace_j_w_t_x_x.html#a075cfd3ad1dc198ea47807ca7d840ad9',1,'JWTXX']]],
-  ['validators_48',['Validators',['../namespace_j_w_t_x_x.html#a9dcb6d12bc2c9c9fed78414603834541',1,'JWTXX']]],
-  ['verify_49',['verify',['../class_j_w_t_x_x_1_1_key.html#a0db6059a462194624d66dbd5b5f206f9',1,'JWTXX::Key::verify()'],['../class_j_w_t_x_x_1_1_j_w_t.html#a07315ede74b8718831d2de0fed776617',1,'JWTXX::JWT::verify()']]]
+  ['token_0',['token',['../class_j_w_t_x_x_1_1_j_w_t.html#a3dfd28c670c692b1c5e44c0bf8cd9a83',1,'JWTXX::JWT::token(const std::string &amp;keyData, const Key::PasswordCallback &amp;cb=Key::noPasswordCallback) const'],['../class_j_w_t_x_x_1_1_j_w_t.html#a36d50f3298dc115524aa9a126f1044a8',1,'JWTXX::JWT::token(const Key &amp;key) const']]],
+  ['tostring_1',['toString',['../class_j_w_t_x_x_1_1_value.html#abb17cffd7f9888faf38874a96cadbade',1,'JWTXX::Value']]]
 ];

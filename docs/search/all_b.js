@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['pairs_34',['Pairs',['../namespace_j_w_t_x_x.html#af80f958fd0fe35ef9d98a91554a0769b',1,'JWTXX']]],
-  ['parse_35',['parse',['../class_j_w_t_x_x_1_1_j_w_t.html#a8a7c89d98e0f65dc0536209ae6122763',1,'JWTXX::JWT']]],
-  ['parseerror_36',['ParseError',['../struct_j_w_t_x_x_1_1_j_w_t_1_1_parse_error.html',1,'JWTXX::JWT::ParseError'],['../struct_j_w_t_x_x_1_1_j_w_t_1_1_parse_error.html#afc590d07791fd3656b3d2e319976a8bb',1,'JWTXX::JWT::ParseError::ParseError()']]],
-  ['passwordcallback_37',['PasswordCallback',['../class_j_w_t_x_x_1_1_key.html#a2c3557adcbae43f907823f4effcd8f33',1,'JWTXX::Key']]]
+  ['object_0',['Object',['../class_j_w_t_x_x_1_1_value.html#ae3929315cbc66d403ca27740851e78e7',1,'JWTXX::Value']]],
+  ['ok_1',['ok',['../class_j_w_t_x_x_1_1_validation_result.html#ab995e81d569f1621f1f725fbd3721b52',1,'JWTXX::ValidationResult']]],
+  ['operator_20bool_2',['operator bool',['../class_j_w_t_x_x_1_1_validation_result.html#a37d05afcafea3ec09bcc9bc247f1d2e2',1,'JWTXX::ValidationResult']]],
+  ['operator_3c_3c_3',['operator&lt;&lt;',['../namespace_j_w_t_x_x.html#ad1a12bce4cab2a37da455b297e01fde3',1,'JWTXX::operator&lt;&lt;(std::ostream &amp;stream, const Algorithm &amp;alg)'],['../namespace_j_w_t_x_x.html#a3ad836552e5aefe97158bb2f19c4eeae',1,'JWTXX::operator&lt;&lt;(std::ostream &amp;stream, const Value &amp;v)']]],
+  ['operator_3d_4',['operator=',['../class_j_w_t_x_x_1_1_key.html#a7e2de4d9cc4ec9cef13955fd8a94cfe6',1,'JWTXX::Key::operator=()'],['../class_j_w_t_x_x_1_1_value.html#ac5e53185aa7cea31e6ae67826ee741f6',1,'JWTXX::Value::operator=(const Value &amp;)=default'],['../class_j_w_t_x_x_1_1_value.html#adced289ea9d4a61c512a9f31cbbafefe',1,'JWTXX::Value::operator=(Value &amp;&amp;)=default']]]
 ];
