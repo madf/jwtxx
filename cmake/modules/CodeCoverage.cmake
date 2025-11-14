@@ -153,13 +153,13 @@ function(SETUP_TARGET_FOR_COVERAGE)
         # Cleanup lcov
         COMMAND ${LCOV_PATH} --directory . --zerocounters
         # Create baseline to make sure untouched files show up in the report
-        COMMAND ${LCOV_PATH} -c -i -d . -o ${Coverage_NAME}.base
+        COMMAND ${LCOV_PATH} -c -i -d . -o ${Coverage_NAME}.base --ignore-errors inconsistent
 
         # Run tests
         COMMAND ${Coverage_EXECUTABLE}
 
         # Capturing lcov counters and generating report
-        COMMAND ${LCOV_PATH} --directory . --capture --output-file ${Coverage_NAME}.info
+        COMMAND ${LCOV_PATH} --directory . --capture --output-file ${Coverage_NAME}.info --ignore-errors inconsistent,inconsistent
         # add baseline counters
         COMMAND ${LCOV_PATH} -a ${Coverage_NAME}.base -a ${Coverage_NAME}.info --output-file ${Coverage_NAME}.total
         COMMAND ${LCOV_PATH} --remove ${Coverage_NAME}.total ${COVERAGE_EXCLUDES} --output-file ${PROJECT_BINARY_DIR}/${Coverage_NAME}.info.cleaned
@@ -172,16 +172,16 @@ function(SETUP_TARGET_FOR_COVERAGE)
     )
     
     # Show where to find the lcov info report
-    add_custom_command(TARGET ${Coverage_NAME} POST_BUILD
-        COMMAND ;
-        COMMENT "Lcov code coverage info report saved in ${Coverage_NAME}.info."
-    )
+    #add_custom_command(TARGET ${Coverage_NAME} POST_BUILD
+    #    COMMAND ;
+    #    COMMENT "Lcov code coverage info report saved in ${Coverage_NAME}.info."
+    #)
 
     # Show info where to find the report
-    add_custom_command(TARGET ${Coverage_NAME} POST_BUILD
-        COMMAND ;
-        COMMENT "Open ./${Coverage_NAME}/index.html in your browser to view the coverage report."
-    )
+    #add_custom_command(TARGET ${Coverage_NAME} POST_BUILD
+    #    COMMAND ;
+    #    COMMENT "Open ./${Coverage_NAME}/index.html in your browser to view the coverage report."
+    #)
 
 endfunction() # SETUP_TARGET_FOR_COVERAGE
 
