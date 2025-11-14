@@ -74,16 +74,17 @@ RSA and ECDSA keys should be in PEM format. Public keys can be in form of certif
 Key argument is a shared secret.
 
 ```c++
-#include <iostream>
-
 #include <jwtxx/jwt.h>
+#include <jwtxx/ios.h>
+
+#include <iostream>
 
 using namespace JWTXX;
 
 int main()
 {
     // Create
-    JWT jwt(Algorithm::HS256, {{"sub", "user"}, {"iss", "madf"}});
+    JWT jwt(Algorithm::HS256, {{"sub", Value("user")}, {"iss", Value("madf")}});
     auto token = jwt.token("secret-key");
 
     // Parse
@@ -108,16 +109,17 @@ int main()
 Key argument is either a private key (when you create a token) or a public key (when you parse it).
 
 ```c++
-#include <iostream>
-
 #include <jwtxx/jwt.h>
+#include <jwtxx/ios.h>
+
+#include <iostream>
 
 using namespace JWTXX;
 
 int main()
 {
     // Create
-    JWT jwt(Algorithm::RS256, {{"sub", "user"}, {"iss", "madf"}});
+    JWT jwt(Algorithm::RS256, {{"sub", Value("user")}, {"iss", Value("madf")}});
     auto token = jwt.token("/path/to/private-key.pem");
 
     // Parse
@@ -132,6 +134,29 @@ int main()
     {
         std::cerr << "Error parsing token: " << error.what() << std::endl;
     }
+
+    return 0;
+}
+```
+
+If many tokens are generated from the same key, it is better to reuse it. Key reuse will save I/O and PEM parsing and Key construction.
+
+```c++
+#include <jwtxx/jwt.h>
+
+#include <iostream>
+
+using namespace JWTXX;
+
+int main()
+{
+    Key key(Algorithm::RS256, "/path/to/private-key.pem");
+    auto token1 = JWT(key.alg(),  {{"sub", Value("user1")}, {"iss", Value("madf")}}).token(key);
+    std::cout << "Token 1: " << token1 << "\n";
+    auto token2 = JWT(key.alg(),  {{"sub", Value("user2")}, {"iss", Value("madf")}}).token(key);
+    std::cout << "Token 2: " << token2 << "\n";
+    auto token3 = JWT(key.alg(),  {{"sub", Value("user3")}, {"iss", Value("madf")}}).token(key);
+    std::cout << "Token 3: " << token3 << "\n";
 
     return 0;
 }

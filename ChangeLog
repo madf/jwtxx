@@ -3,6 +3,7 @@
     * Fix producing incorrect ECDSA in some cases.
     * Use time-constant comparison when verifying HMAC signature.
     * Handle base64 encoding/decoding errors.
+    * Make is possible to reuse key for multiple token generation.
 
 2025-11-12 1.1.12
     * New CMake compatibility (#33).

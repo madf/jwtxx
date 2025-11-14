@@ -286,6 +286,14 @@ class JWT
          */
         std::string token(const std::string& keyData, const Key::PasswordCallback& cb = Key::noPasswordCallback) const;
 
+        /** @brief Returns a signed token using a pre-constructed key.
+         *  @param key cryptographic key to use for signing.
+         *  @return signed JWT token string.
+         *  @note This overload allows key reuse for better performance when generating multiple tokens.
+         *  @note The key algorithm must match the algorithm specified in this JWT.
+         */
+        std::string token(const Key& key) const;
+
     private:
         Algorithm m_alg;
         Value::Object m_header;

@@ -7,6 +7,8 @@
 
 #include <boost/test/unit_test.hpp>
 
+using JWTXX::Value;
+
 namespace
 {
 
@@ -28,7 +30,7 @@ BOOST_GLOBAL_FIXTURE(InitOpenSSL);
 
 BOOST_AUTO_TEST_CASE(TestCtor)
 {
-    JWTXX::JWT jwt(JWTXX::Algorithm::none, {{"iss", "madf"}});
+    JWTXX::JWT jwt(JWTXX::Algorithm::none, {{"iss", Value("madf")}});
 
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::none);
     BOOST_CHECK(!jwt.claims().empty());

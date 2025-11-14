@@ -301,9 +301,13 @@ Value JWT::claim(const std::string& name) const noexcept
 
 std::string JWT::token(const std::string& keyData, const Key::PasswordCallback& cb) const
 {
+    return token(Key(m_alg, keyData, cb));
+}
+
+std::string JWT::token(const Key& key) const
+{
     auto data = Base64URL::encode(toJSON(m_header)) + "." +
                 Base64URL::encode(toJSON(m_claims));
-    const Key key(m_alg, keyData, cb);
     auto signature = key.sign(data.c_str(), data.size());
     if (signature.empty())
         return data;

@@ -65,6 +65,7 @@ std::string URLEncode(const std::string& data) noexcept
         return {};
 
     std::string res;
+    res.reserve(data.size());
     for (const auto& ch : data)
     {
         if (ch == '=')
@@ -86,6 +87,7 @@ std::string URLDecode(const std::string& data) noexcept
         return {};
 
     std::string res;
+    res.reserve(data.size());
     for (const auto& ch : data)
     {
         if (ch == '_')

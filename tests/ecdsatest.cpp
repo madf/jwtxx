@@ -7,6 +7,8 @@
 
 #include <boost/test/unit_test.hpp>
 
+using JWTXX::Value;
+
 namespace
 {
 
@@ -40,7 +42,7 @@ BOOST_GLOBAL_FIXTURE(InitOpenSSL);
 
 BOOST_AUTO_TEST_CASE(TestCtor256)
 {
-    JWTXX::JWT jwt(JWTXX::Algorithm::ES256, {{"iss", "madf"}});
+    JWTXX::JWT jwt(JWTXX::Algorithm::ES256, {{"iss", Value("madf")}});
 
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::ES256);
     BOOST_CHECK(!jwt.claims().empty());
@@ -58,7 +60,7 @@ BOOST_AUTO_TEST_CASE(TestCtor256)
 
 BOOST_AUTO_TEST_CASE(TestCtor384)
 {
-    JWTXX::JWT jwt(JWTXX::Algorithm::ES384, {{"iss", "madf"}});
+    JWTXX::JWT jwt(JWTXX::Algorithm::ES384, {{"iss", Value("madf")}});
 
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::ES384);
     BOOST_CHECK(!jwt.claims().empty());
@@ -76,7 +78,7 @@ BOOST_AUTO_TEST_CASE(TestCtor384)
 
 BOOST_AUTO_TEST_CASE(TestCtor512)
 {
-    JWTXX::JWT jwt(JWTXX::Algorithm::ES512, {{"iss", "madf"}});
+    JWTXX::JWT jwt(JWTXX::Algorithm::ES512, {{"iss", Value("madf")}});
 
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::ES512);
     BOOST_CHECK(!jwt.claims().empty());
@@ -383,7 +385,7 @@ BOOST_AUTO_TEST_CASE(TestParserHeaderErrors)
 
 BOOST_AUTO_TEST_CASE(TestCtor256PwNoCallback)
 {
-    JWTXX::JWT jwt(JWTXX::Algorithm::ES256, {{"iss", "madf"}});
+    JWTXX::JWT jwt(JWTXX::Algorithm::ES256, {{"iss", Value("madf")}});
 
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::ES256);
     BOOST_CHECK(!jwt.claims().empty());
@@ -398,7 +400,7 @@ BOOST_AUTO_TEST_CASE(TestCtor256PwNoCallback)
 
 BOOST_AUTO_TEST_CASE(TestCtor256Pw)
 {
-    JWTXX::JWT jwt(JWTXX::Algorithm::ES256, {{"iss", "madf"}});
+    JWTXX::JWT jwt(JWTXX::Algorithm::ES256, {{"iss", Value("madf")}});
 
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::ES256);
     BOOST_CHECK(!jwt.claims().empty());
@@ -416,7 +418,7 @@ BOOST_AUTO_TEST_CASE(TestCtor256Pw)
 
 BOOST_AUTO_TEST_CASE(TestCtor384Pw)
 {
-    JWTXX::JWT jwt(JWTXX::Algorithm::ES384, {{"iss", "madf"}});
+    JWTXX::JWT jwt(JWTXX::Algorithm::ES384, {{"iss", Value("madf")}});
 
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::ES384);
     BOOST_CHECK(!jwt.claims().empty());
@@ -434,7 +436,7 @@ BOOST_AUTO_TEST_CASE(TestCtor384Pw)
 
 BOOST_AUTO_TEST_CASE(TestCtor512Pw)
 {
-    JWTXX::JWT jwt(JWTXX::Algorithm::ES512, {{"iss", "madf"}});
+    JWTXX::JWT jwt(JWTXX::Algorithm::ES512, {{"iss", Value("madf")}});
 
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::ES512);
     BOOST_CHECK(!jwt.claims().empty());
