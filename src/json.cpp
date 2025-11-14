@@ -52,7 +52,7 @@ Value arrayToValue(const json_t* node) noexcept
 {
     Value::Array array(json_array_size(node));
     for (size_t i = 0; i < array.size(); ++i)
-        array.push_back(toValue(json_array_get(node, i)));
+        array[i] = toValue(json_array_get(node, i));
     return Value(std::move(array));
 }
 
