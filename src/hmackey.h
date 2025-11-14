@@ -46,7 +46,8 @@ class HMAC : public Key::Impl
         }
         bool verify(const void* data, size_t size, const std::string& signature) const override
         {
-            return sign(data, size) == signature;
+            const auto ds = sign(data, size);
+            return CRYPTO_memcmp(ds.c_str(), signature.c_str(), std::min(ds.length(), signature.length())) == 0;
         }
     private:
         const EVP_MD* m_digest;
