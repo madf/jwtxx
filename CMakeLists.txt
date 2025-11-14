@@ -14,6 +14,7 @@ set ( CMAKE_CXX_EXTENSIONS OFF )
 
 option ( BUILD_TOOL "Build jwttool utility." OFF )
 option ( BUILD_TESTS "Build tests." OFF )
+option ( BUILD_EXAMPLES "Build examples." OFF )
 option ( BUILD_ALL "Build the lib, the tool and the tests." OFF )
 option ( ENABLE_COVERAGE "Enable code coverage analysis." OFF )
 option ( TIDY "Build with clang-tidy." OFF )
@@ -22,6 +23,7 @@ option ( IWYU "Build with include-what-you-use." OFF )
 if ( BUILD_ALL )
     set ( BUILD_TOOL ON )
     set ( BUILD_TESTS ON )
+    set ( BUILD_EXAMPLES ON )
 endif ( BUILD_ALL )
 
 if ( ENABLE_COVERAGE )
@@ -122,6 +124,10 @@ if ( BUILD_TESTS )
     enable_testing ()
     add_subdirectory ( tests )
 endif ( BUILD_TESTS )
+
+if ( BUILD_EXAMPLES )
+    add_subdirectory ( examples )
+endif ( BUILD_EXAMPLES )
 
 add_custom_target ( cppcheck COMMAND cppcheck --enable=all --disable=missingInclude --std=c++17 -I ${jwtxx_SOURCE_DIR}/include ${jwtxx_SOURCE_DIR}/src ${jwtxx_SOURCE_DIR}/tools )
 
