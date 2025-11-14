@@ -1,5 +1,7 @@
 #pragma once
 
+#include "jwtxx/error.h"
+
 #include <string>
 
 #include <openssl/evp.h>
@@ -103,11 +105,18 @@ std::string URLDecode(const std::string& data) noexcept
 }
 
 inline
-std::string encode(const Block& block) noexcept
+std::string encode(const Block& block)
 {
     BIO* bio = BIO_push(BIO_new(BIO_f_base64()), BIO_new(BIO_s_mem()));
+    if (bio == nullptr)
+        throw Error("Base64URL: cannot allocate base64 encoder.");
     BIO_set_flags(bio, BIO_FLAGS_BASE64_NO_NL);
-    BIO_write(bio, block.data(), block.size());
+    const auto rv = BIO_write(bio, block.data(), block.size());
+    if (rv < 0)
+    {
+        BIO_free_all(bio);
+        throw Error("Base64URL: cannot encode input data.");
+    }
 
     std::string res;
 
@@ -125,7 +134,7 @@ std::string encode(const Block& block) noexcept
 }
 
 inline
-std::string encode(const std::string& data) noexcept
+std::string encode(const std::string& data)
 {
     Block block(data.size());
     memcpy(block.data(), data.c_str(), data.size());
@@ -133,17 +142,24 @@ std::string encode(const std::string& data) noexcept
 }
 
 inline
-Block decode(std::string data) noexcept
+Block decode(std::string data)
 {
     data = URLDecode(data);
 
     BIO* bio = BIO_push(BIO_new(BIO_f_base64()), BIO_new_mem_buf(const_cast<char*>(data.c_str()), data.size()));
+    if (bio == nullptr)
+        throw Error("Base64URL: cannot allocate base64 decoder.");
     BIO_set_flags(bio, BIO_FLAGS_BASE64_NO_NL);
     Block block(data.size());
-    int res = BIO_read(bio, block.data(), block.size());
+    const auto rv = BIO_read(bio, block.data(), block.size());
+    if (rv < 0)
+    {
+        BIO_free_all(bio);
+        throw Error("Base64URL: cannot decode input data.");
+    }
     BIO_free_all(bio);
 
-    return block.shrink(res);
+    return block.shrink(rv);
 }
 
 }

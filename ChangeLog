@@ -1,6 +1,8 @@
 2025-11-13 2.0.0
     * Allow arbitrary JSON types in claims (#26, #29).
     * Fix producing incorrect ECDSA in some cases.
+    * Use time-constant comparison when verifying HMAC signature.
+    * Handle base64 encoding/decoding errors.
 
 2025-11-12 1.1.12
     * New CMake compatibility (#33).
