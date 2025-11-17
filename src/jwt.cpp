@@ -1,6 +1,7 @@
 #include "jwtxx/jwt.h"
 
 #include "keyimpl.h"
+#include "nonekey.h"
 #include "hmackey.h"
 #include "pemkey.h"
 #include "eckey.h"
@@ -31,24 +32,11 @@ namespace Validate = JWTXX::Validate;
 namespace
 {
 
-struct NoneKey : public Key::Impl
-{
-    std::string sign(const void* /*data*/, size_t /*size*/) const override
-    {
-        return {};
-    }
-    bool verify(const void* /*data*/, size_t /*size*/,
-                const std::string& /*signature*/) const override
-    {
-        return true;
-    }
-};
-
 Key::Impl* createKey(Algorithm alg, const std::string& keyData, const Key::PasswordCallback& cb) noexcept
 {
     switch (alg)
     {
-        case Algorithm::none: return new NoneKey;
+        case Algorithm::none: return new Keys::None{};
         case Algorithm::HS256: return new Keys::HMAC(EVP_sha256(), keyData);
         case Algorithm::HS384: return new Keys::HMAC(EVP_sha384(), keyData);
         case Algorithm::HS512: return new Keys::HMAC(EVP_sha512(), keyData);
@@ -59,7 +47,7 @@ Key::Impl* createKey(Algorithm alg, const std::string& keyData, const Key::Passw
         case Algorithm::ES384: return new Keys::EC(EVP_sha384(), keyData, cb);
         case Algorithm::ES512: return new Keys::EC(EVP_sha512(), keyData, cb);
     }
-    return new NoneKey; // Just in case.
+    return new Keys::None{}; // Just in case.
 }
 
 template <typename F>

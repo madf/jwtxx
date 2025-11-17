@@ -1,13 +1,3 @@
-/**
- * @file validation_example.cpp
- * @brief Example demonstrating JWT claim validation
- *
- * This example shows:
- * - Using built-in validators (exp, nbf, iat, iss, aud, sub)
- * - Combining multiple validators
- * - Handling validation errors
- */
-
 #include <jwtxx/jwt.h>
 #include <jwtxx/ios.h>
 
@@ -18,27 +8,22 @@ using namespace JWTXX;
 
 int main()
 {
-    std::cout << "=== JWT Validation Example ===\n\n";
-
-    // Get current time
     auto now = std::time(nullptr);
     auto future = now + 3600;  // 1 hour from now
 
-    // Create JWT with time-based claims
     std::cout << "1. Creating JWT with time-based and string claims...\n";
     JWT jwt(Algorithm::HS256, {
-        {"iss", Value("myapp")},            // Issuer
-        {"sub", Value("user123")},          // Subject
-        {"aud", Value("api")},              // Audience
-        {"iat", Value(static_cast<int64_t>(now))},       // Issued at
-        {"nbf", Value(static_cast<int64_t>(now))},       // Not before
-        {"exp", Value(static_cast<int64_t>(future))}     // Expiration
+        {"iss", Value("myapp")},
+        {"sub", Value("user123")},
+        {"aud", Value("api")},
+        {"iat", Value(static_cast<int64_t>(now))},
+        {"nbf", Value(static_cast<int64_t>(now))},
+        {"exp", Value(static_cast<int64_t>(future))}
     });
 
     auto token = jwt.token("secret-key");
     std::cout << "   Token created\n\n";
 
-    // Validate with default validator (exp)
     std::cout << "2. Validating with default validator (exp)...\n";
     try
     {
@@ -50,7 +35,6 @@ int main()
         std::cerr << "   Validation failed: " << e.what() << "\n\n";
     }
 
-    // Validate with multiple validators
     std::cout << "3. Validating with multiple validators...\n";
     try
     {
@@ -69,7 +53,6 @@ int main()
         std::cerr << "   Validation failed: " << e.what() << "\n\n";
     }
 
-    // Example of validation failure
     std::cout << "4. Testing validation failure (wrong issuer)...\n";
     try
     {
@@ -83,7 +66,6 @@ int main()
         std::cout << "   Expected validation error: " << e.what() << "\n\n";
     }
 
-    // Using verify() method instead of constructor
     std::cout << "5. Using verify() method (non-throwing)...\n";
     auto result = JWT::verify(token, Key(Algorithm::HS256, "secret-key"), {
         Validate::exp(now + 7200),
@@ -94,7 +76,5 @@ int main()
         std::cout << "   Token is valid\n";
     else
         std::cout << "   Token is invalid: " << result.message() << "\n";
-
-    std::cout << "\n=== Example completed successfully ===\n";
     return 0;
 }

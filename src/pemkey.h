@@ -19,13 +19,13 @@ class PEM : public Key::Impl
         {
         }
 
-        std::string sign(const void* data, size_t size) const override
+        std::string sign(const void* data, size_t size) override
         {
-            return Base64URL::encode(signImpl(Utils::readPEMPrivateKey(m_data, m_cb), data, size));
+            return Base64URL::encode(signImpl(getPrivKey(), data, size));
         }
-        bool verify(const void* data, size_t size, const std::string& signature) const override
+        bool verify(const void* data, size_t size, const std::string& signature) override
         {
-            return verifyImpl(Utils::readPEMPublicKey(m_data), data, size, Base64URL::decode(signature));
+            return verifyImpl(getPubKey(), data, size, Base64URL::decode(signature));
         }
     protected:
         std::string m_data;
@@ -58,8 +58,24 @@ class PEM : public Key::Impl
                 throw Key::Error("Can't add data to verification. " + Utils::OPENSSLError());
             return EVP_DigestVerifyFinal(ctx.get(), signature.data<unsigned char*>(), signature.size()) == 1;
         }
+
+        Utils::EVPKeyPtr& getPubKey()
+        {
+            if (!m_pubKeyPtr)
+                m_pubKeyPtr = Utils::readPEMPublicKey(m_data);
+            return m_pubKeyPtr;
+        }
+
+        Utils::EVPKeyPtr& getPrivKey()
+        {
+            if (!m_privKeyPtr)
+                m_privKeyPtr = Utils::readPEMPrivateKey(m_data, m_cb);
+            return m_privKeyPtr;
+        }
     private:
         const EVP_MD* m_digest;
+        Utils::EVPKeyPtr m_pubKeyPtr;
+        Utils::EVPKeyPtr m_privKeyPtr;
 
         Utils::EVPMDCTXPtr initCTX() const
         {

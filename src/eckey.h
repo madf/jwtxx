@@ -43,15 +43,15 @@ class EC : public PEM
         {
         }
 
-        std::string sign(const void* data, size_t size) const override
+        std::string sign(const void* data, size_t size) override
         {
-            auto key = Utils::readPEMPrivateKey(m_data, m_cb);
+            auto& key = getPrivKey();
             return Base64URL::encode(unpack(primeSize(key), signImpl(key, data, size)));
         }
 
-        bool verify(const void* data, size_t size, const std::string& signature) const override
+        bool verify(const void* data, size_t size, const std::string& signature) override
         {
-            auto key = Utils::readPEMPublicKey(m_data);
+            auto& key = getPubKey();
             return verifyImpl(key, data, size, pack(primeSize(key), Base64URL::decode(signature)));
         }
     private:

@@ -18,8 +18,8 @@ struct Key::Impl
     Impl(Impl&&) = default;
     Impl& operator=(Impl&&) = default;
 
-    virtual std::string sign(const void* data, size_t size) const = 0;
-    virtual bool verify(const void* data, size_t size, const std::string& signature) const = 0;
+    virtual std::string sign(const void* data, size_t size) = 0;
+    virtual bool verify(const void* data, size_t size, const std::string& signature) = 0;
 };
 
 }
