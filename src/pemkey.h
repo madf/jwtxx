@@ -21,11 +21,17 @@ class PEM : public Key::Impl
 
         std::string sign(const void* data, size_t size) override
         {
-            return Base64URL::encode(signImpl(getPrivKey(), data, size));
+            auto& key = getPrivKey();
+            if (EVP_PKEY_is_a(key.get(), "RSA") == 0)
+                throw Key::Error("Expected RSA key, got " + std::string(EVP_PKEY_get0_type_name(key.get())));
+            return Base64URL::encode(signImpl(key, data, size));
         }
         bool verify(const void* data, size_t size, const std::string& signature) override
         {
-            return verifyImpl(getPubKey(), data, size, Base64URL::decode(signature));
+            auto& key = getPubKey();
+            if (EVP_PKEY_is_a(key.get(), "RSA") == 0)
+                throw Key::Error("Expected RSA key, got " + std::string(EVP_PKEY_get0_type_name(key.get())));
+            return verifyImpl(key, data, size, Base64URL::decode(signature));
         }
     protected:
         std::string m_data;
