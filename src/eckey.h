@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pemkey.h"
+#include "asymmetric.h"
 #include "utils.h"
 
 #include <openssl/ecdsa.h>
@@ -35,26 +35,26 @@ namespace JWTXX
 namespace Keys
 {
 
-class EC : public PEM
+class EC : public Key::Impl
 {
     public:
         EC(const EVP_MD* digest, const std::string& keyData, const Key::PasswordCallback& cb) noexcept
-            : PEM(digest, keyData, cb)
+            : m_key(Asymmetric::Type::EC, digest, keyData, cb)
         {
         }
 
         std::string sign(const void* data, size_t size) override
         {
-            auto& key = getPrivKey("EC");
-            return Base64URL::encode(unpack(primeSize(key), signImpl(key, data, size)));
+            return Base64URL::encode(unpack(primeSize(m_key.getPrivKey()), m_key.sign(data, size)));
         }
 
         bool verify(const void* data, size_t size, const std::string& signature) override
         {
-            auto& key = getPubKey("EC");
-            return verifyImpl(key, data, size, pack(primeSize(key), Base64URL::decode(signature)));
+            return m_key.verify(data, size, pack(primeSize(m_key.getPubKey()), Base64URL::decode(signature)));
         }
     private:
+        Asymmetric m_key;
+
         struct SigDeleter
         {
             void operator()(ECDSA_SIG* ptr) { ECDSA_SIG_free(ptr); }
