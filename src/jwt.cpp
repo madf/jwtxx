@@ -68,6 +68,10 @@ JWTXX::ValidationResult validTime(const Value& value, F&& next) noexcept
         }
         return JWTXX::ValidationResult::failure("Invalid time value. Should be a positive integer value, got '" + value.toString() + "'.");
     }
+    catch (const Value::Error&)
+    {
+        return JWTXX::ValidationResult::failure("Invalid time value. Should be a positive integer value, got '" + value.toString() + "'.");
+    }
     catch (const std::logic_error&)
     {
         return JWTXX::ValidationResult::failure("Invalid time value. Should be a positive integer value, got '" + value.toString() + "'.");
@@ -84,9 +88,9 @@ JWTXX::ValidationResult validClaim(const Value::Object& claims, const std::strin
 }
 
 template <typename F>
-JWTXX::ValidationResult validTimeClaim(const Value::Object& claims, std::string claim, F&& next) noexcept
+JWTXX::ValidationResult validTimeClaim(const Value::Object& claims, const std::string& claim, F&& next) noexcept
 {
-    return validClaim(claims, std::move(claim),
+    return validClaim(claims, claim,
                       [&](const Value& value)
                       {
                           return validTime(value, std::forward<F>(next));
@@ -123,7 +127,16 @@ std::string findAlg(const Value::Object& pairs) noexcept
     if (it == pairs.end())
         return {};
     if (it->second.isString())
-        return it->second.getString();
+    {
+        try
+        {
+            return it->second.getString();
+        }
+        catch (const Value::Error&)
+        {
+            return {};
+        }
+    }
     return {};
 }
 

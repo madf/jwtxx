@@ -165,8 +165,8 @@ Utils::ECGroupPtr Utils::getECGroup(const EVPKeyPtr& keyPtr)
     size_t groupNameSize = 0;
     EVP_PKEY_get_utf8_string_param(keyPtr.get(), OSSL_PKEY_PARAM_GROUP_NAME, nullptr, 0, &groupNameSize);
     std::vector<char> groupName(groupNameSize + 1);
-    if (!EVP_PKEY_get_utf8_string_param(keyPtr.get(), OSSL_PKEY_PARAM_GROUP_NAME, groupName.data(), groupName.size(),
-                                        &groupNameSize))
+    if (EVP_PKEY_get_utf8_string_param(keyPtr.get(), OSSL_PKEY_PARAM_GROUP_NAME, groupName.data(), groupName.size(),
+                                       &groupNameSize) == 0)
         return nullptr;
 
     auto nid = OBJ_sn2nid(groupName.data());
