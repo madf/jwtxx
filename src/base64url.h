@@ -48,8 +48,8 @@ class Block
         Block(const Block&) = delete;
         Block& operator=(const Block&) = delete;
 
-        static Block zero(size_t size) { Block res(size); memset(res.data(), 0, size); return res; }
-        static Block fromRaw(const void* ptr, size_t size) { Block res(size); memcpy(res.data(), ptr, size); return res; }
+        static Block zero(size_t size) noexcept { Block res(size); memset(res.data(), 0, size); return res; }
+        static Block fromRaw(const void* ptr, size_t size) noexcept { Block res(size); memcpy(res.data(), ptr, size); return res; }
 
     private:
         void* m_buffer;

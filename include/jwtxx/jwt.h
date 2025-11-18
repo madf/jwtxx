@@ -91,7 +91,7 @@ class Key
          *  @param keyData a shared secret, a path to a key file or PEM data for public keys;
          *  @param cb password callabck for password-protected keys.
          */
-        Key(Algorithm alg, const std::string& keyData, const PasswordCallback& cb = noPasswordCallback) noexcept;
+        Key(Algorithm alg, const std::string& keyData, const PasswordCallback& cb = noPasswordCallback);
         /** @brief Destructor. */
         ~Key();
 

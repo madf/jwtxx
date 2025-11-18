@@ -17,6 +17,8 @@ class Asymmetric
         Asymmetric(Type type, const EVP_MD* digest, const std::string& keyData, const Key::PasswordCallback& cb)
             : m_type(type), m_digest(digest), m_data(keyData), m_cb(cb), m_ctx(EVP_MD_CTX_create())
         {
+            if (!m_ctx)
+                throw Key::Error("Can't create message digest context. " + Utils::OPENSSLError());
         }
 
         Base64URL::Block sign(const void* data, size_t size)

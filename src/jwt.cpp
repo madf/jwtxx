@@ -32,7 +32,7 @@ namespace Validate = JWTXX::Validate;
 namespace
 {
 
-Key::Impl* createKey(Algorithm alg, const std::string& keyData, const Key::PasswordCallback& cb) noexcept
+Key::Impl* createKey(Algorithm alg, const std::string& keyData, const Key::PasswordCallback& cb)
 {
     switch (alg)
     {
@@ -47,7 +47,7 @@ Key::Impl* createKey(Algorithm alg, const std::string& keyData, const Key::Passw
         case Algorithm::ES384: return new Keys::EC(EVP_sha384(), keyData, cb);
         case Algorithm::ES512: return new Keys::EC(EVP_sha512(), keyData, cb);
     }
-    return new Keys::None{}; // Just in case.
+    throw Key::Error("Unknown algorithm: <" + std::to_string(static_cast<int>(alg)) + ">");
 }
 
 template <typename F>
@@ -191,7 +191,7 @@ Algorithm JWTXX::stringToAlg(const std::string& value)
     throw JWT::ParseError("Invalid algorithm name: '" + value + "'.");
 }
 
-Key::Key(Algorithm alg, const std::string& keyData, const PasswordCallback& cb) noexcept
+Key::Key(Algorithm alg, const std::string& keyData, const PasswordCallback& cb)
     : m_alg(alg), m_impl(createKey(alg, keyData, cb))
 {
 }
