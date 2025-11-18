@@ -92,6 +92,8 @@ $(function(){ initResizable(false); });
 <p><a href="https://github.com/madf/jwtxx/actions/workflows/ci.yml"><img src="https://github.com/madf/jwtxx/actions/workflows/ci.yml/badge.svg" alt="Build/Test Status" style="pointer-events: none;" class="inline"/></a></p>
 <p><a href="https://jwt.io/"><img src="http://jwt.io/img/logo-asset.svg" alt="JWT Logo" style="pointer-events: none;" class="inline"/></a></p>
 <p>C++ library to work with JWT</p>
+<h1>Upgrading from 1.x</h1>
+<p>If you're upgrading from jwtxx 1.x, please see the Migration Guide for detailed instructions and examples.</p>
 <h1>Dependencies</h1>
 <ul>
 <li>cmake - build system.</li>
@@ -128,7 +130,10 @@ $(function(){ initResizable(false); });
 <li>ES256, ES384, ES512 - Algorithms based on elliptic curves digital signature with SHA-256, SHA-384 and SHA-512 hash functions respectively. Use PKI.</li>
 </ul>
 <p>RSA and ECDSA keys should be in PEM format. Public keys can be in form of certificates.</p>
-<p><a href="https://madf.github.io/jwtxx/index.html">Library reference</a></p>
+<p><b>Documentation:</b></p><ul>
+<li><a href="https://madf.github.io/jwtxx/index.html">Library reference</a></li>
+<li>Migration guide (1.x to 2.x)</li>
+</ul>
 <h2>Examples</h2>
 <h5>HS256</h5>
 <p>Key argument is a shared secret.</p>
@@ -160,16 +165,16 @@ $(function(){ initResizable(false); });
 <div class="line"> </div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_j_w_t_x_x_1_1_j_w_t_html"><div class="ttname"><a href="class_j_w_t_x_x_1_1_j_w_t.html">JWTXX::JWT</a></div><div class="ttdoc">Main class to work with JWT.</div><div class="ttdef"><b>Definition</b> jwt.h:206</div></div>
+<div class="ttc" id="aclass_j_w_t_x_x_1_1_j_w_t_html"><div class="ttname"><a href="class_j_w_t_x_x_1_1_j_w_t.html">JWTXX::JWT</a></div><div class="ttdoc">Main class to work with JWT.</div><div class="ttdef"><b>Definition</b> jwt.h:205</div></div>
 <div class="ttc" id="aclass_j_w_t_x_x_1_1_j_w_t_html_a3dfd28c670c692b1c5e44c0bf8cd9a83"><div class="ttname"><a href="class_j_w_t_x_x_1_1_j_w_t.html#a3dfd28c670c692b1c5e44c0bf8cd9a83">JWTXX::JWT::token</a></div><div class="ttdeci">std::string token(const std::string &amp;keyData, const Key::PasswordCallback &amp;cb=Key::noPasswordCallback) const</div><div class="ttdoc">Returns a signed token.</div></div>
-<div class="ttc" id="aclass_j_w_t_x_x_1_1_key_html"><div class="ttname"><a href="class_j_w_t_x_x_1_1_key.html">JWTXX::Key</a></div><div class="ttdoc">Represents signature algorithm Signs tokens and verifies token signatures.</div><div class="ttdef"><b>Definition</b> jwt.h:67</div></div>
+<div class="ttc" id="aclass_j_w_t_x_x_1_1_key_html"><div class="ttname"><a href="class_j_w_t_x_x_1_1_key.html">JWTXX::Key</a></div><div class="ttdoc">Represents signature algorithm Signs tokens and verifies token signatures.</div><div class="ttdef"><b>Definition</b> jwt.h:66</div></div>
 <div class="ttc" id="aclass_j_w_t_x_x_1_1_value_html"><div class="ttname"><a href="class_j_w_t_x_x_1_1_value.html">JWTXX::Value</a></div><div class="ttdoc">Represents a JSON value that can hold any JSON type.</div><div class="ttdef"><b>Definition</b> value.h:24</div></div>
 <div class="ttc" id="aios_8h_html"><div class="ttname"><a href="ios_8h.html">ios.h</a></div><div class="ttdoc">Stream input/output functions.</div></div>
 <div class="ttc" id="ajwt_8h_html"><div class="ttname"><a href="jwt_8h.html">jwt.h</a></div><div class="ttdoc">Classes, constants and functions to work with JWT.</div></div>
 <div class="ttc" id="anamespace_j_w_t_x_x_html"><div class="ttname"><a href="namespace_j_w_t_x_x.html">JWTXX</a></div><div class="ttdoc">All classes, functions and constants are here.</div><div class="ttdef"><b>Definition</b> error.h:6</div></div>
-<div class="ttc" id="anamespace_j_w_t_x_x_html_a325397f3096fba5caea97be98f251bf3aeb86be6fe0588de61c66e415b1e789a6"><div class="ttname"><a href="namespace_j_w_t_x_x.html#a325397f3096fba5caea97be98f251bf3aeb86be6fe0588de61c66e415b1e789a6">JWTXX::Algorithm::HS256</a></div><div class="ttdeci">@ HS256</div><div class="ttdef"><b>Definition</b> jwt.h:34</div></div>
+<div class="ttc" id="anamespace_j_w_t_x_x_html_a325397f3096fba5caea97be98f251bf3aeb86be6fe0588de61c66e415b1e789a6"><div class="ttname"><a href="namespace_j_w_t_x_x.html#a325397f3096fba5caea97be98f251bf3aeb86be6fe0588de61c66e415b1e789a6">JWTXX::Algorithm::HS256</a></div><div class="ttdeci">@ HS256</div><div class="ttdef"><b>Definition</b> jwt.h:33</div></div>
 <div class="ttc" id="anamespace_j_w_t_x_x_html_aad3e72095f1fcafa39a8dd29e5fb92e4"><div class="ttname"><a href="namespace_j_w_t_x_x.html#aad3e72095f1fcafa39a8dd29e5fb92e4">JWTXX::algToString</a></div><div class="ttdeci">std::string algToString(Algorithm alg) noexcept</div><div class="ttdoc">Converts algorithm code into a string representation.</div></div>
-<div class="ttc" id="astruct_j_w_t_x_x_1_1_j_w_t_1_1_error_html"><div class="ttname"><a href="struct_j_w_t_x_x_1_1_j_w_t_1_1_error.html">JWTXX::JWT::Error</a></div><div class="ttdoc">JWT-specific exception.</div><div class="ttdef"><b>Definition</b> jwt.h:212</div></div>
+<div class="ttc" id="astruct_j_w_t_x_x_1_1_j_w_t_1_1_error_html"><div class="ttname"><a href="struct_j_w_t_x_x_1_1_j_w_t_1_1_error.html">JWTXX::JWT::Error</a></div><div class="ttdoc">JWT-specific exception.</div><div class="ttdef"><b>Definition</b> jwt.h:211</div></div>
 </div><!-- fragment --><h5>RS256</h5>
 <p>Key argument is either a private key (when you create a token) or a public key (when you parse it).</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="jwt_8h.html">jwtxx/jwt.h</a>&gt;</span></div>
@@ -200,7 +205,7 @@ $(function(){ initResizable(false); });
 <div class="line"> </div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="anamespace_j_w_t_x_x_html_a325397f3096fba5caea97be98f251bf3ab774c36caa844a2b0e94f9c04c3ccacc"><div class="ttname"><a href="namespace_j_w_t_x_x.html#a325397f3096fba5caea97be98f251bf3ab774c36caa844a2b0e94f9c04c3ccacc">JWTXX::Algorithm::RS256</a></div><div class="ttdeci">@ RS256</div><div class="ttdef"><b>Definition</b> jwt.h:37</div></div>
+<div class="ttc" id="anamespace_j_w_t_x_x_html_a325397f3096fba5caea97be98f251bf3ab774c36caa844a2b0e94f9c04c3ccacc"><div class="ttname"><a href="namespace_j_w_t_x_x.html#a325397f3096fba5caea97be98f251bf3ab774c36caa844a2b0e94f9c04c3ccacc">JWTXX::Algorithm::RS256</a></div><div class="ttdeci">@ RS256</div><div class="ttdef"><b>Definition</b> jwt.h:36</div></div>
 </div><!-- fragment --><p>If many tokens are generated from the same key, it is better to reuse it. Key reuse will save I/O and PEM parsing and Key construction.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="jwt_8h.html">jwtxx/jwt.h</a>&gt;</span></div>
 <div class="line"> </div>
