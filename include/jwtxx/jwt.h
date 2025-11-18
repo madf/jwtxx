@@ -243,7 +243,7 @@ class JWT
          *  @param key key to use for signatire verification;
          *  @param validators an optional list of validators; validates 'exp' by default.
          */
-        JWT(const std::string& token, Key key, Validators&& validators = {Validate::exp()});
+        JWT(const std::string& token, Key key, Validators validators = {Validate::exp()});
 
         /** @brief Constructs a JWT from scratch.
          *  @param alg signature algorithm;
@@ -262,7 +262,7 @@ class JWT
          *  @param key key to use for signatire verification;
          *  @param validators an optional list of validators; validates 'exp' by default.
          */
-        static ValidationResult verify(const std::string& token, Key key, Validators&& validators = {Validate::exp()}) noexcept;
+        static ValidationResult verify(const std::string& token, Key key, Validators validators = {Validate::exp()}) noexcept;
 
         /** @brief Returns an algorithm. */
         Algorithm alg() const noexcept { return m_alg; }

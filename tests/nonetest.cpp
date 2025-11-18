@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE(TestParserErrors)
 BOOST_AUTO_TEST_CASE(TestParserHeaderErrors)
 {
     BOOST_CHECK(!JWTXX::JWT::verify(invalidHeaderToken, JWTXX::Key(JWTXX::Algorithm::none, "")));
-    BOOST_CHECK_THROW(JWTXX::JWT(invalidHeaderToken, JWTXX::Key(JWTXX::Algorithm::none, "")), JWTXX::JWT::ValidationError);
+    BOOST_CHECK_THROW(JWTXX::JWT(invalidHeaderToken, JWTXX::Key(JWTXX::Algorithm::none, "")), JWTXX::JWT::Error);
 }
 
 BOOST_AUTO_TEST_CASE(TestParserNoTyp)

@@ -28,6 +28,8 @@ using JWTXX::JWT;
 
 namespace Keys = JWTXX::Keys;
 namespace Validate = JWTXX::Validate;
+namespace Utils = JWTXX::Utils;
+namespace Base64URL = JWTXX::Base64URL;
 
 namespace
 {
@@ -121,7 +123,7 @@ std::string formatTime(std::time_t value) noexcept
     return std::string(buf.data(), res);
 }
 
-std::string findAlg(const Value::Object& pairs) noexcept
+std::string findAlg(const Value::Object& pairs)
 {
     const auto it = pairs.find("alg");
     if (it == pairs.end())
@@ -134,10 +136,50 @@ std::string findAlg(const Value::Object& pairs) noexcept
         }
         catch (const Value::Error&)
         {
-            return {};
+            throw JWT::ParseError("\"alg\" should be a string. Actual value: \"" + it->second.toString() + "\".");
         }
     }
-    return {};
+    throw JWT::ParseError("\"alg\" should be a string. Actual value: \"" + it->second.toString() + "\".");
+}
+
+struct JWTData
+{
+    Algorithm alg;
+    Value::Object header;
+    Value::Object claims;
+    std::string data;
+    std::string signature;
+};
+
+JWTData parseJWT(const std::string& token)
+{
+    auto parts = Utils::split(token);
+    auto h = JWTXX::fromJSON(Base64URL::decode(std::get<0>(parts)).toString());
+    auto c = JWTXX::fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
+    auto a = Algorithm::none;
+    const auto algName = findAlg(h);
+    if (!algName.empty())
+        a = JWTXX::stringToAlg(algName);
+    return {a, h, c, std::get<0>(parts) + "." + std::get<1>(parts), std::get<2>(parts)};
+}
+
+JWTData parseAndValidateJWT(const std::string& token, Key key, JWTXX::Validators&& validators)
+{
+    auto d = parseJWT(token);
+
+    if (d.alg != key.alg())
+        throw JWT::ValidationError("\"alg\" should be \"" + JWTXX::algToString(key.alg()) + "\". Actual value: \"" + JWTXX::algToString(d.alg) + "\".");
+
+    if (!key.verify(d.data.c_str(), d.data.size(), d.signature))
+        throw JWT::ValidationError("Signature is invalid.");
+    for (const auto& validator : validators)
+    {
+        auto res = validator(d.claims);
+        if (!res)
+            throw JWT::ValidationError(res.message());
+    }
+
+    return d;
 }
 
 }
@@ -223,67 +265,25 @@ JWT::JWT(Algorithm alg, Value::Object claims, Value::Object header) noexcept
     m_header["alg"] = Value(algToString(m_alg));
 }
 
-JWT::JWT(const std::string& token, Key key, JWTXX::Validators&& validators)
+JWT::JWT(const std::string& token, Key key, JWTXX::Validators validators)
 {
-    // Check structure in general - split parts.
-    auto parts = Utils::split(token);
-
-    // Check internal structure. fromJSON will throw on non-JSON or non-object.
-    m_header = fromJSON(Base64URL::decode(std::get<0>(parts)).toString());
-    m_claims = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
-
-    const auto algName = algToString(key.alg());
-    const auto a = m_header["alg"];
-    if (!a.isString())
-        throw ValidationError("\"alg\" should be a string. Actual value: " + a.toString());
-    const auto tokenAlg = a.getString();
-    if (tokenAlg != algName)
-        throw ValidationError("\"alg\" should be \"" + algName + "\". Actual value: \"" + tokenAlg + "\".");
-
-    auto data = std::get<0>(parts) + "." + std::get<1>(parts);
-    if (!key.verify(data.c_str(), data.size(), std::get<2>(parts)))
-        throw ValidationError("Signature is invalid.");
-    m_alg = key.alg();
-    for (const auto& validator : validators)
-    {
-        auto res = validator(m_claims);
-        if (!res)
-            throw ValidationError(res.message());
-    }
+    auto d = parseAndValidateJWT(token, std::move(key), std::move(validators));
+    m_alg = d.alg;
+    m_header = std::move(d.header);
+    m_claims = std::move(d.claims);
 }
 
 JWT JWT::parse(const std::string& token)
 {
-    auto parts = Utils::split(token);
-    auto h = fromJSON(Base64URL::decode(std::get<0>(parts)).toString());
-    auto c = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
-    auto a = Algorithm::none;
-    const auto algName = findAlg(h);
-    if (!algName.empty())
-        a = stringToAlg(algName);
-    return JWT(a, std::move(c), std::move(h));
+    auto d = parseJWT(token);
+    return JWT(d.alg, std::move(d.claims), std::move(d.header));
 }
 
-JWTXX::ValidationResult JWT::verify(const std::string& token, Key key, JWTXX::Validators&& validators) noexcept
+JWTXX::ValidationResult JWT::verify(const std::string& token, Key key, JWTXX::Validators validators) noexcept
 {
     try
     {
-        auto parts = Utils::split(token);
-        auto data = std::get<0>(parts) + "." + std::get<1>(parts);
-        const auto h = fromJSON(Base64URL::decode(std::get<0>(parts)).toString());
-        const auto c = fromJSON(Base64URL::decode(std::get<1>(parts)).toString());
-        auto algName = algToString(key.alg());
-        const auto hdrAlgName = findAlg(h);
-        if (hdrAlgName != algName)
-            return ValidationResult::failure("\"alg\" should be \"" + algName + "\". Actual value: \"" + hdrAlgName + "\".");
-        if (!key.verify(data.c_str(), data.size(), std::get<2>(parts)))
-            return ValidationResult::failure("Signature is invalid.");
-        for (const auto& validator : validators)
-        {
-            auto res = validator(c);
-            if (!res)
-                return res;
-        }
+        std::ignore = parseAndValidateJWT(token, std::move(key), std::move(validators));
         return ValidationResult::ok();
     }
     catch (const std::runtime_error& error)

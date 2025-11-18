@@ -349,7 +349,7 @@ BOOST_AUTO_TEST_CASE(TestParserErrors)
 BOOST_AUTO_TEST_CASE(TestParserHeaderErrors)
 {
     BOOST_CHECK(!JWTXX::JWT::verify(invalidHeaderToken, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem")));
-    BOOST_CHECK_THROW(JWTXX::JWT(invalidHeaderToken, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem")), JWTXX::JWT::ValidationError);
+    BOOST_CHECK_THROW(JWTXX::JWT(invalidHeaderToken, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem")), JWTXX::JWT::Error);
 }
 
 BOOST_AUTO_TEST_CASE(TestCtor256PwNoCallback)
