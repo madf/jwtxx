@@ -5,8 +5,10 @@
 #include <unordered_map>
 #include <memory> // std::unique_ptr
 #include <utility> // std::pair<>::first, std::pair<>::second
+#include <type_traits> // std::is_same_v, std::decay_t
 
 #include <cstdlib> // free
+#include <cstdint>
 
 #include <jansson.h>
 

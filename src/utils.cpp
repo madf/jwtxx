@@ -10,6 +10,7 @@
 #include <openssl/opensslv.h> // OPENSSL_VERSION_NUMBER
 
 #include <array>
+#include <vector>
 #include <functional> // std::function
 #include <algorithm> // std::min
 #include <utility> // std::move

@@ -13,6 +13,7 @@
 #include <iterator> // std::end
 #include <tuple> // std::get
 #include <utility> // std::move
+#include <stdexcept> // std::runtime_error, std::logic_error
 
 #include <ctime>
 
