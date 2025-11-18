@@ -31,6 +31,7 @@ constexpr auto brokenToken2 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.3MiOiJtYWRmI
 constexpr auto notAToken1 = "";
 constexpr auto notAToken2 = "Hello, World!";
 constexpr auto invalidHeaderToken = "eyJhbGciOiJIUzI1NyIsInR5cCI6IkpXIn0.eyJuYW1lIjoiZm9vIn0"; // Here should be a ECDSA signature, but the structure is checked first, so we can skip.
+constexpr auto token256Foreign = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ0ZXN0In0.ewV_cvn8aWQaRGgX9i0kynodPkBwAqm2no36ARi-i8GkrW9UmDw95-fAFHaCvhUHwU2V5F2LxULu2db7iZVxzQ";
 constexpr auto publicecdsa256keydata = "-----BEGIN PUBLIC KEY-----\n"
                                        "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEyeJHlnlG6exAXB7XLRqVNI9YHfe4\n"
                                        "LNq1/FsrfFSsknIe/a1j9Z50xnvqkTQcsB+mRzKb8lQynRpXvKHbsoCmTw==\n"
@@ -450,4 +451,32 @@ BOOST_AUTO_TEST_CASE(TestCtor512Pw)
     auto token = jwt.token("ecdsa-256-key-pair-pw.pem", [](){ return "123456"; });
     auto part = token.substr(0, 56);
     BOOST_CHECK(part == token512PartOrder1 || part == token512PartOrder2);
+}
+
+BOOST_AUTO_TEST_CASE(TestForeignToken)
+{
+    JWTXX::JWT jwt(token256Foreign, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem"));
+
+    BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::ES256);
+    BOOST_CHECK(!jwt.claims().empty());
+    BOOST_CHECK(!jwt.header().empty());
+    auto header = jwt.header();
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "ES256");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("aud").getString(), "test");
+}
+
+BOOST_AUTO_TEST_CASE(TestSelfValidation)
+{
+    JWTXX::JWT jwt(JWTXX::Algorithm::ES256, {{"iss", Value("madf")}});
+    const auto token = jwt.token("ecdsa-256-key-pair.pem");
+    JWTXX::JWT jwt2(token, JWTXX::Key(JWTXX::Algorithm::ES256, "public-ecdsa-256-key.pem"));
+
+    BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::ES256);
+    BOOST_CHECK(!jwt.claims().empty());
+    BOOST_CHECK(!jwt.header().empty());
+    auto header = jwt.header();
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "ES256");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
 }
