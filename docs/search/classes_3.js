@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['parseerror_54',['ParseError',['../struct_j_w_t_x_x_1_1_j_w_t_1_1_parse_error.html',1,'JWTXX::JWT']]]
+  ['null_0',['Null',['../struct_j_w_t_x_x_1_1_value_1_1_null.html',1,'JWTXX::Value']]]
 ];

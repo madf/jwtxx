@@ -102,7 +102,7 @@ int passwordCallback(char* buf, int size, int /*rwflag*/, void* data)
 
 }
 
-Utils::EVPKeyPtr Utils::readPEMPrivateKey(const std::string& fileName, const JWTXX::Key::PasswordCallback& cb)
+Utils::EVPKeyPtr Utils::readPEMPrivateKey(const std::string& fileName, const JWTXX::Key::PasswordCallback& cb, const char* type)
 {
     const FilePtr fp(fopen(fileName.c_str(), "rbe"));
     if (!fp)
@@ -115,6 +115,8 @@ Utils::EVPKeyPtr Utils::readPEMPrivateKey(const std::string& fileName, const JWT
             std::rethrow_exception(tester.exception);
         if (!key)
             throw Key::Error("Can't read private key '" + fileName + "'. " + OPENSSLError());
+        if (EVP_PKEY_is_a(key.get(), type) == 0)
+            throw Key::Error("Expected " + std::string(type) + " key, got " + std::string(EVP_PKEY_get0_type_name(key.get())));
         return key;
     }
     catch (const PasswordCallbackError&)
@@ -123,7 +125,7 @@ Utils::EVPKeyPtr Utils::readPEMPrivateKey(const std::string& fileName, const JWT
     }
 }
 
-Utils::EVPKeyPtr Utils::readPEMPublicKey(const std::string& fileName)
+Utils::EVPKeyPtr Utils::readPEMPublicKey(const std::string& fileName, const char* type)
 {
     auto key = readPublicKey(fileName);
     std::string pkError;
@@ -134,6 +136,8 @@ Utils::EVPKeyPtr Utils::readPEMPublicKey(const std::string& fileName)
     }
     if (!key)
         throw Key::Error("File '" + fileName + "' is neither public key (" + pkError + ") nor certificate (" + OPENSSLError() + ").");
+    if (EVP_PKEY_is_a(key.get(), type) == 0)
+        throw Key::Error("Expected " + std::string(type) + " key, got " + std::string(EVP_PKEY_get0_type_name(key.get())));
     return key;
 }
 
@@ -165,8 +169,8 @@ Utils::ECGroupPtr Utils::getECGroup(const EVPKeyPtr& keyPtr)
     size_t groupNameSize = 0;
     EVP_PKEY_get_utf8_string_param(keyPtr.get(), OSSL_PKEY_PARAM_GROUP_NAME, nullptr, 0, &groupNameSize);
     std::vector<char> groupName(groupNameSize + 1);
-    if (!EVP_PKEY_get_utf8_string_param(keyPtr.get(), OSSL_PKEY_PARAM_GROUP_NAME, groupName.data(), groupName.size(),
-                                        &groupNameSize))
+    if (EVP_PKEY_get_utf8_string_param(keyPtr.get(), OSSL_PKEY_PARAM_GROUP_NAME, groupName.data(), groupName.size(),
+                                       &groupNameSize) == 0)
         return nullptr;
 
     auto nid = OBJ_sn2nid(groupName.data());

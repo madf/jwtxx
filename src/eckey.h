@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pemkey.h"
+#include "asymmetric.h"
 #include "utils.h"
 
 #include <openssl/ecdsa.h>
@@ -35,32 +35,37 @@ namespace JWTXX
 namespace Keys
 {
 
-class EC : public PEM
+class EC : public Key::Impl
 {
     public:
         EC(const EVP_MD* digest, const std::string& keyData, const Key::PasswordCallback& cb) noexcept
-            : PEM(digest, keyData, cb)
+            : m_key(Asymmetric::Type::EC, digest, keyData, cb), m_primeSize(0)
         {
         }
 
-        std::string sign(const void* data, size_t size) const override
+        std::string sign(const void* data, size_t size) override
         {
-            auto key = Utils::readPEMPrivateKey(m_data, m_cb);
-            return Base64URL::encode(unpack(primeSize(key), signImpl(key, data, size)));
+            if (m_primeSize == 0)
+                m_primeSize = primeSize(m_key.getPrivKey());
+            return Base64URL::encode(unpack(m_key.sign(data, size)));
         }
 
-        bool verify(const void* data, size_t size, const std::string& signature) const override
+        bool verify(const void* data, size_t size, const std::string& signature) override
         {
-            auto key = Utils::readPEMPublicKey(m_data);
-            return verifyImpl(key, data, size, pack(primeSize(key), Base64URL::decode(signature)));
+            if (m_primeSize == 0)
+                m_primeSize = primeSize(m_key.getPubKey());
+            return m_key.verify(data, size, pack(Base64URL::decode(signature)));
         }
     private:
+        Asymmetric m_key;
+        size_t m_primeSize;
+
         struct SigDeleter
         {
             void operator()(ECDSA_SIG* ptr) { ECDSA_SIG_free(ptr); }
         };
         using SigPtr = std::unique_ptr<ECDSA_SIG, SigDeleter>;
-        static Base64URL::Block unpack(size_t pSize, Base64URL::Block src)
+        Base64URL::Block unpack(Base64URL::Block src)
         {
             // Unpack data
             auto srcSig = src.data<const unsigned char*>();
@@ -77,34 +82,30 @@ class EC : public PEM
             // Check sizes
             auto rSize = static_cast<size_t>(BN_num_bytes(r));
             auto sSize = static_cast<size_t>(BN_num_bytes(s));
-            if (rSize > pSize || sSize > pSize)
-                throw Key::Error("Signature param sizes are inconsistent with the field prime size (p: " + std::to_string(pSize) + ", r: " + std::to_string(rSize) + ", s: " + std::to_string(sSize) + ").");
+            if (rSize > m_primeSize || sSize > m_primeSize)
+                throw Key::Error("Signature param sizes are inconsistent with the field prime size (p: " + std::to_string(m_primeSize) + ", r: " + std::to_string(rSize) + ", s: " + std::to_string(sSize) + ").");
 
             // Put them raw, leading zeros
-            auto dest = Base64URL::Block::zero(pSize * 2);
-            BN_bn2bin(r, dest.dataAt<unsigned char*>(pSize - rSize));
-            BN_bn2bin(s, dest.dataAt<unsigned char*>(pSize * 2 - rSize));
+            auto dest = Base64URL::Block::zero(m_primeSize * 2);
+            BN_bn2bin(r, dest.dataAt<unsigned char*>(m_primeSize - rSize));
+            BN_bn2bin(s, dest.dataAt<unsigned char*>(m_primeSize * 2 - sSize));
             return dest;
         }
-        static Base64URL::Block pack(size_t pSize, Base64URL::Block src)
+        Base64URL::Block pack(Base64URL::Block src)
         {
             // Broken signature here is a validation error
-            if (src.size() != pSize * 2)
-                throw JWT::ValidationError("Signature size is inconsistent with the field prime size (p: " + std::to_string(pSize) + ", 2p: " + std::to_string(pSize * 2) + ", s: " + std::to_string(src.size()) + ").");
+            if (src.size() != m_primeSize * 2)
+                throw JWT::ValidationError("Signature size is inconsistent with the field prime size (p: " + std::to_string(m_primeSize) + ", 2p: " + std::to_string(m_primeSize * 2) + ", s: " + std::to_string(src.size()) + ").");
 
-            auto r = BN_bin2bn(src.data<const unsigned char*>(), pSize, nullptr);
-            auto s = BN_bin2bn(src.dataAt<const unsigned char*>(pSize), pSize, nullptr);
+            auto r = BN_bin2bn(src.data<const unsigned char*>(), m_primeSize, nullptr);
+            auto s = BN_bin2bn(src.dataAt<const unsigned char*>(m_primeSize), m_primeSize, nullptr);
 
             SigPtr sig(ECDSA_SIG_new());
             ECDSA_SIG_set0(sig.get(), r, s);
 
-            auto sigSize = i2d_ECDSA_SIG(sig.get(), nullptr);
-            if (sigSize <= 0)
-                throw Key::Error("Can't calculate size for signature DER encoding. " + Utils::OPENSSLError());
-
             unsigned char* ptr = nullptr;
-            i2d_ECDSA_SIG(sig.get(), &ptr);
-            if (ptr == nullptr)
+            auto sigSize = i2d_ECDSA_SIG(sig.get(), &ptr);
+            if (ptr == nullptr || sigSize <= 0)
                 throw Key::Error("Can't convert signature to DER encoding. " + Utils::OPENSSLError());
 
             auto res = Base64URL::Block::fromRaw(ptr, sigSize);

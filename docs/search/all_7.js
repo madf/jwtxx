@@ -1,4 +1,8 @@
 var searchData=
 [
-  ['key_25',['Key',['../class_j_w_t_x_x_1_1_key.html',1,'JWTXX::Key'],['../class_j_w_t_x_x_1_1_key.html#a42b4cdbcb12b4a24c46807ad574cbca9',1,'JWTXX::Key::Key(Algorithm alg, const std::string &amp;keyData, const PasswordCallback &amp;cb=noPasswordCallback) noexcept'],['../class_j_w_t_x_x_1_1_key.html#af7e47d908fefc20a418df706307f2e2f',1,'JWTXX::Key::Key(Key &amp;&amp;) noexcept']]]
+  ['jwt_0',['JWT',['../class_j_w_t_x_x_1_1_j_w_t.html',1,'JWTXX::JWT'],['../class_j_w_t_x_x_1_1_j_w_t.html#aca34641bee989281a9c5bb2c26778ebe',1,'JWTXX::JWT::JWT(const std::string &amp;token, Key key, Validators &amp;&amp;validators={Validate::exp()})'],['../class_j_w_t_x_x_1_1_j_w_t.html#accb57af447021d92de9c8e799d9910c1',1,'JWTXX::JWT::JWT(Algorithm alg, Value::Object claims, Value::Object header=Value::Object{}) noexcept']]],
+  ['jwt_2eh_1',['jwt.h',['../jwt_8h.html',1,'']]],
+  ['jwtxx_2',['JWTXX',['../namespace_j_w_t_x_x.html',1,'']]],
+  ['jwtxx_20readme_3',['jwtxx README',['../index.html',1,'']]],
+  ['jwtxx_3a_3avalidate_4',['Validate',['../namespace_j_w_t_x_x_1_1_validate.html',1,'JWTXX']]]
 ];

@@ -7,6 +7,8 @@
 
 #include <boost/test/unit_test.hpp>
 
+using JWTXX::Value;
+
 namespace
 {
 
@@ -23,6 +25,7 @@ constexpr auto brokenTokenWithExp2 = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.dWIiO
 constexpr auto notAToken1 = "";
 constexpr auto notAToken2 = "Hello, World!";
 constexpr auto invalidHeaderToken = "eyJhbGciOiJSUzI1NyIsInR5cCI6IkpXIn0.eyJuYW1lIjoiZm9vIn0.siCZKFuTEx4maNq0nhxiG1GGnDEdeN3w-ZZ6IG7gShqxhJpZbrl9yuWZQuxspDyD1gdiVR0FwhUuBptUfuDZka8C9uJWF-bRPBAExp6f3WINM0qKTcvHgSchCbPGDtxoiMbkp0Xl7vbLdkA0ojSglJb-yC90qSOYc3nbr8kVcNDt5r3-N1RupVnjyFEGgad5YP22KCD1Pqj9LkX0I112ZiCEN03Bxmps7NKw983DbvLwbeHcyZH-WJbLh43wnX_aLZ0UZ-TbLsJ4ob5I6odmiEeSPTZM3XOlVsvmai5XATdTjXzA9uR_VGh1hbGclikFMwQ9hKJfmBZIPYelmSbJzg";
+constexpr auto token256Foreign = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ0ZXN0In0.OD6QPIHssa77hpV4JOvfiEIep8OT5W3L0fxWJmcXBjj8Nv3QAbGhku1oTPwirvGw7rVem8mCZwkxjGfY0S9a1T6Ip56nTPwRQsDp-R3b2C5FRMh91JHUQATrcMNpQ-zozG8sXqU_ThoTXftRYb9p5QKMpQqb30tzQRglgh95V5AH_7fimH7GRmizbNs7Czz4eeH176OkMnMjqDVlCVGP2oki1N8qaBsnimZhD-TQvMK34ganEcDA-jRGD5Td8W4OhSFOjzt7lI20VmGhz9LgER3HFtmJ2Us4I7uOfTKTi5kdS2YUa4TaElOnl8f36GFi-fdwXQKB9TZaouRyLutksA";
 constexpr auto publicrsa2048keydata = "-----BEGIN PUBLIC KEY-----\n"
                                       "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwGvWFyzOxi1uckHS7Qva\n"
                                       "VnOaqUEtIgrljEh62Z4dTrCVy7bH1LpR8sKKuWao+6JrpbzsqqYe0JQkEn1B5Pzk\n"
@@ -39,15 +42,15 @@ BOOST_GLOBAL_FIXTURE(InitOpenSSL);
 
 BOOST_AUTO_TEST_CASE(TestCtor256)
 {
-    JWTXX::JWT jwt(JWTXX::Algorithm::RS256, {{"iss", "madf"}});
+    JWTXX::JWT jwt(JWTXX::Algorithm::RS256, {{"iss", Value("madf")}});
 
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::RS256);
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "RS256");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS256");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("rsa-2048-key-pair.pem");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token256Order1 || token == token256Order2);
@@ -55,15 +58,15 @@ BOOST_AUTO_TEST_CASE(TestCtor256)
 
 BOOST_AUTO_TEST_CASE(TestCtor384)
 {
-    JWTXX::JWT jwt(JWTXX::Algorithm::RS384, {{"iss", "madf"}});
+    JWTXX::JWT jwt(JWTXX::Algorithm::RS384, {{"iss", Value("madf")}});
 
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::RS384);
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "RS384");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS384");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("rsa-2048-key-pair.pem");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token384Order1 || token == token384Order2);
@@ -71,15 +74,15 @@ BOOST_AUTO_TEST_CASE(TestCtor384)
 
 BOOST_AUTO_TEST_CASE(TestCtor512)
 {
-    JWTXX::JWT jwt(JWTXX::Algorithm::RS512, {{"iss", "madf"}});
+    JWTXX::JWT jwt(JWTXX::Algorithm::RS512, {{"iss", Value("madf")}});
 
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::RS512);
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "RS512");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS512");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("rsa-2048-key-pair.pem");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token512Order1 || token == token512Order2);
@@ -93,9 +96,9 @@ BOOST_AUTO_TEST_CASE(TestParser256)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "RS256");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS256");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("rsa-2048-key-pair.pem");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token256Order1 || token == token256Order2);
@@ -109,9 +112,9 @@ BOOST_AUTO_TEST_CASE(TestParserDifferentFieldOrder256)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "RS256");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS256");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("rsa-2048-key-pair.pem");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token256Order1 || token == token256Order2);
@@ -125,9 +128,9 @@ BOOST_AUTO_TEST_CASE(TestParser384)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "RS384");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS384");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("rsa-2048-key-pair.pem");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token384Order1 || token == token384Order2);
@@ -141,9 +144,9 @@ BOOST_AUTO_TEST_CASE(TestParserDifferentFieldOrder384)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "RS384");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS384");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("rsa-2048-key-pair.pem");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token384Order1 || token == token384Order2);
@@ -157,9 +160,9 @@ BOOST_AUTO_TEST_CASE(TestParser512)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "RS512");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS512");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("rsa-2048-key-pair.pem");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token512Order1 || token == token512Order2);
@@ -173,9 +176,9 @@ BOOST_AUTO_TEST_CASE(TestParserDifferentFieldOrder512)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "RS512");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS512");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("rsa-2048-key-pair.pem");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token512Order1 || token == token512Order2);
@@ -189,9 +192,9 @@ BOOST_AUTO_TEST_CASE(TestParserWithCert256)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "RS256");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS256");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("rsa-2048-key-pair.pem");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token256Order1 || token == token256Order2);
@@ -205,9 +208,9 @@ BOOST_AUTO_TEST_CASE(TestParserWithCertDifferentFieldOrder256)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "RS256");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS256");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("rsa-2048-key-pair.pem");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token256Order1 || token == token256Order2);
@@ -221,9 +224,9 @@ BOOST_AUTO_TEST_CASE(TestParserWithCert384)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "RS384");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS384");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("rsa-2048-key-pair.pem");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token384Order1 || token == token384Order2);
@@ -237,9 +240,9 @@ BOOST_AUTO_TEST_CASE(TestParserWithCertDifferentFieldOrder384)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "RS384");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS384");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("rsa-2048-key-pair.pem");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token384Order1 || token == token384Order2);
@@ -253,9 +256,9 @@ BOOST_AUTO_TEST_CASE(TestParserWithCert512)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "RS512");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS512");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("rsa-2048-key-pair.pem");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token512Order1 || token == token512Order2);
@@ -269,9 +272,9 @@ BOOST_AUTO_TEST_CASE(TestParserWithCertDifferentFieldOrder512)
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "RS512");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS512");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("rsa-2048-key-pair.pem");
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token512Order1 || token == token512Order2);
@@ -304,33 +307,33 @@ BOOST_AUTO_TEST_CASE(TestParserNoVerify)
 {
     auto jwt = JWTXX::JWT::parse(tokenWithExp);
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::RS256);
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
-    BOOST_CHECK_EQUAL(jwt.claim("sub"), "user");
-    BOOST_CHECK_EQUAL(jwt.claim("exp"), "1475246523");
-    BOOST_CHECK_EQUAL(jwt.claim("iat"), "1475242923");
-    BOOST_CHECK_EQUAL(jwt.claim("nbf"), "1475242923");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
+    BOOST_CHECK_EQUAL(jwt.claim("sub").getString(), "user");
+    BOOST_CHECK_EQUAL(jwt.claim("exp").getInteger(), 1475246523);
+    BOOST_CHECK_EQUAL(jwt.claim("iat").getInteger(), 1475242923);
+    BOOST_CHECK_EQUAL(jwt.claim("nbf").getInteger(), 1475242923);
 }
 
 BOOST_AUTO_TEST_CASE(TestParserNoVerifyCorruptedSignature)
 {
     auto jwt = JWTXX::JWT::parse(tokenCorruptedSign);
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::RS256);
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
-    BOOST_CHECK_EQUAL(jwt.claim("sub"), "user");
-    BOOST_CHECK_EQUAL(jwt.claim("exp"), "1475246523");
-    BOOST_CHECK_EQUAL(jwt.claim("iat"), "1475242923");
-    BOOST_CHECK_EQUAL(jwt.claim("nbf"), "1475242923");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
+    BOOST_CHECK_EQUAL(jwt.claim("sub").getString(), "user");
+    BOOST_CHECK_EQUAL(jwt.claim("exp").getInteger(), 1475246523);
+    BOOST_CHECK_EQUAL(jwt.claim("iat").getInteger(), 1475242923);
+    BOOST_CHECK_EQUAL(jwt.claim("nbf").getInteger(), 1475242923);
 }
 
 BOOST_AUTO_TEST_CASE(TestParserExtraVerification)
 {
     JWTXX::JWT jwt(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"), {JWTXX::Validate::exp(1475246522), JWTXX::Validate::iat(1475246522), JWTXX::Validate::nbf(1475246522)});
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::RS256);
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
-    BOOST_CHECK_EQUAL(jwt.claim("sub"), "user");
-    BOOST_CHECK_EQUAL(jwt.claim("exp"), "1475246523");
-    BOOST_CHECK_EQUAL(jwt.claim("iat"), "1475242923");
-    BOOST_CHECK_EQUAL(jwt.claim("nbf"), "1475242923");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
+    BOOST_CHECK_EQUAL(jwt.claim("sub").getString(), "user");
+    BOOST_CHECK_EQUAL(jwt.claim("exp").getInteger(), 1475246523);
+    BOOST_CHECK_EQUAL(jwt.claim("iat").getInteger(), 1475242923);
+    BOOST_CHECK_EQUAL(jwt.claim("nbf").getInteger(), 1475242923);
     BOOST_CHECK_THROW(JWTXX::JWT(tokenCorruptedSign, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem")), JWTXX::JWT::ValidationError);
     BOOST_CHECK_THROW(JWTXX::JWT(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"), {JWTXX::Validate::exp(1475242922), JWTXX::Validate::iat(1475242922), JWTXX::Validate::nbf(1475242922)}), JWTXX::JWT::ValidationError);
     BOOST_CHECK_THROW(JWTXX::JWT(tokenWithExp, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"), {JWTXX::Validate::exp(1475246524), JWTXX::Validate::iat(1475246524), JWTXX::Validate::nbf(1475246524)}), JWTXX::JWT::ValidationError);
@@ -347,35 +350,35 @@ BOOST_AUTO_TEST_CASE(TestParserErrors)
 BOOST_AUTO_TEST_CASE(TestParserHeaderErrors)
 {
     BOOST_CHECK(!JWTXX::JWT::verify(invalidHeaderToken, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem")));
-    BOOST_CHECK_THROW(JWTXX::JWT(invalidHeaderToken, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem")), JWTXX::JWT::ValidationError);
+    BOOST_CHECK_THROW(JWTXX::JWT(invalidHeaderToken, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem")), JWTXX::JWT::Error);
 }
 
 BOOST_AUTO_TEST_CASE(TestCtor256PwNoCallback)
 {
-    JWTXX::JWT jwt(JWTXX::Algorithm::RS256, {{"iss", "madf"}});
+    JWTXX::JWT jwt(JWTXX::Algorithm::RS256, {{"iss", Value("madf")}});
 
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::RS256);
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "RS256");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS256");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     BOOST_CHECK_THROW(jwt.token("rsa-2048-key-pair-pw.pem"), JWTXX::Key::Error);
     BOOST_CHECK_THROW(jwt.token("rsa-2048-key-pair-pw.pem", [](){ return "abc"; }), JWTXX::Key::Error);
 }
 
 BOOST_AUTO_TEST_CASE(TestCtor256Pw)
 {
-    JWTXX::JWT jwt(JWTXX::Algorithm::RS256, {{"iss", "madf"}});
+    JWTXX::JWT jwt(JWTXX::Algorithm::RS256, {{"iss", Value("madf")}});
 
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::RS256);
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "RS256");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS256");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("rsa-2048-key-pair-pw.pem", [](){ return "123456"; });
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token256Order1 || token == token256Order2);
@@ -383,15 +386,15 @@ BOOST_AUTO_TEST_CASE(TestCtor256Pw)
 
 BOOST_AUTO_TEST_CASE(TestCtor384Pw)
 {
-    JWTXX::JWT jwt(JWTXX::Algorithm::RS384, {{"iss", "madf"}});
+    JWTXX::JWT jwt(JWTXX::Algorithm::RS384, {{"iss", Value("madf")}});
 
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::RS384);
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "RS384");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS384");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("rsa-2048-key-pair-pw.pem", [](){ return "123456"; });
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token384Order1 || token == token384Order2);
@@ -399,16 +402,44 @@ BOOST_AUTO_TEST_CASE(TestCtor384Pw)
 
 BOOST_AUTO_TEST_CASE(TestCtor512Pw)
 {
-    JWTXX::JWT jwt(JWTXX::Algorithm::RS512, {{"iss", "madf"}});
+    JWTXX::JWT jwt(JWTXX::Algorithm::RS512, {{"iss", Value("madf")}});
 
     BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::RS512);
     BOOST_CHECK(!jwt.claims().empty());
     BOOST_CHECK(!jwt.header().empty());
     auto header = jwt.header();
-    BOOST_CHECK_EQUAL(header["alg"], "RS512");
-    BOOST_CHECK_EQUAL(header["typ"], "JWT");
-    BOOST_CHECK_EQUAL(jwt.claim("iss"), "madf");
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS512");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
     auto token = jwt.token("rsa-2048-key-pair-pw.pem", [](){ return "123456"; });
     // Jansson uses hashtables form JSON objects and hash function implementation reads over the boundary of the string, yet word-aligned, so actual order of header fields and claims is undefined.
     BOOST_CHECK(token == token512Order1 || token == token512Order2);
+}
+
+BOOST_AUTO_TEST_CASE(TestForeignToken)
+{
+    JWTXX::JWT jwt(token256Foreign, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"));
+
+    BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::RS256);
+    BOOST_CHECK(!jwt.claims().empty());
+    BOOST_CHECK(!jwt.header().empty());
+    auto header = jwt.header();
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS256");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("aud").getString(), "test");
+}
+
+BOOST_AUTO_TEST_CASE(TestSelfValidation)
+{
+    JWTXX::JWT jwt(JWTXX::Algorithm::RS256, {{"iss", Value("madf")}});
+    const auto token = jwt.token("rsa-2048-key-pair.pem");
+    JWTXX::JWT jwt2(token, JWTXX::Key(JWTXX::Algorithm::RS256, "public-rsa-2048-key.pem"));
+
+    BOOST_CHECK_EQUAL(jwt.alg(), JWTXX::Algorithm::RS256);
+    BOOST_CHECK(!jwt.claims().empty());
+    BOOST_CHECK(!jwt.header().empty());
+    auto header = jwt.header();
+    BOOST_CHECK_EQUAL(header["alg"].getString(), "RS256");
+    BOOST_CHECK_EQUAL(header["typ"].getString(), "JWT");
+    BOOST_CHECK_EQUAL(jwt.claim("iss").getString(), "madf");
 }

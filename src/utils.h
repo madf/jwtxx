@@ -31,8 +31,8 @@ struct EVPMDCTXDeleter
 };
 using EVPMDCTXPtr = std::unique_ptr<EVP_MD_CTX, EVPMDCTXDeleter>;
 
-EVPKeyPtr readPEMPrivateKey(const std::string& fileName, const Key::PasswordCallback& cb);
-EVPKeyPtr readPEMPublicKey(const std::string& fileName);
+EVPKeyPtr readPEMPrivateKey(const std::string& fileName, const Key::PasswordCallback& cb, const char* type);
+EVPKeyPtr readPEMPublicKey(const std::string& fileName, const char* type);
 
 std::string OPENSSLError() noexcept;
 

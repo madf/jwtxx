@@ -18,10 +18,14 @@ target_link_libraries ( rsatest jwtxx Jansson::Jansson OpenSSL::Crypto Boost::un
 add_executable ( ecdsatest ecdsatest.cpp )
 target_link_libraries ( ecdsatest jwtxx Jansson::Jansson OpenSSL::Crypto Boost::unit_test_framework dl Threads::Threads )
 
+add_executable ( keyvalidationtest keyvalidationtest.cpp )
+target_link_libraries ( keyvalidationtest jwtxx Jansson::Jansson OpenSSL::Crypto Boost::unit_test_framework dl Threads::Threads )
+
 add_test ( none nonetest )
 add_test ( hmac hmactest )
 add_test ( rsa rsatest )
 add_test ( ecdsa ecdsatest )
+add_test ( keyvalidation keyvalidationtest )
 
 configure_file ( rsa-2048-key-pair.pem rsa-2048-key-pair.pem COPYONLY )
 configure_file ( rsa-2048-key-pair-pw.pem rsa-2048-key-pair-pw.pem COPYONLY )

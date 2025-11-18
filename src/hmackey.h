@@ -19,7 +19,7 @@ class HMAC : public Key::Impl
         {
         }
 
-        std::string sign(const void* data, size_t size) const override
+        std::string sign(const void* data, size_t size) override
         {
             Utils::EVPMDCTXPtr ctx(EVP_MD_CTX_create());
             if (!ctx)
@@ -44,9 +44,12 @@ class HMAC : public Key::Impl
                 throw Key::Error("Can't sign data. " + Utils::OPENSSLError());
             return Base64URL::encode(block.shrink(res));
         }
-        bool verify(const void* data, size_t size, const std::string& signature) const override
+        bool verify(const void* data, size_t size, const std::string& signature) override
         {
-            return sign(data, size) == signature;
+            const auto ds = sign(data, size);
+            if (ds.length() != signature.length())
+                return false;
+            return CRYPTO_memcmp(ds.c_str(), signature.c_str(), ds.length()) == 0;
         }
     private:
         const EVP_MD* m_digest;

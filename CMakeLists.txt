@@ -2,18 +2,19 @@ cmake_minimum_required ( VERSION 3.5...4.1 )
 
 set ( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules )
 
-project ( jwtxx VERSION 1.1.12 )
+project ( jwtxx VERSION 2.0.0 )
 
 enable_language ( CXX )
 
 set ( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -W -Wall -Wextra -Wshadow -Wold-style-cast -Wnull-dereference -Wstrict-aliasing -pedantic" )
 
-set ( CMAKE_CXX_STANDARD 11 )
+set ( CMAKE_CXX_STANDARD 17 )
 set ( CMAKE_CXX_STANDARD_REQUIRED ON )
 set ( CMAKE_CXX_EXTENSIONS OFF )
 
 option ( BUILD_TOOL "Build jwttool utility." OFF )
 option ( BUILD_TESTS "Build tests." OFF )
+option ( BUILD_EXAMPLES "Build examples." OFF )
 option ( BUILD_ALL "Build the lib, the tool and the tests." OFF )
 option ( ENABLE_COVERAGE "Enable code coverage analysis." OFF )
 option ( TIDY "Build with clang-tidy." OFF )
@@ -22,6 +23,7 @@ option ( IWYU "Build with include-what-you-use." OFF )
 if ( BUILD_ALL )
     set ( BUILD_TOOL ON )
     set ( BUILD_TESTS ON )
+    set ( BUILD_EXAMPLES ON )
 endif ( BUILD_ALL )
 
 if ( ENABLE_COVERAGE )
@@ -123,6 +125,10 @@ if ( BUILD_TESTS )
     add_subdirectory ( tests )
 endif ( BUILD_TESTS )
 
-add_custom_target ( cppcheck COMMAND cppcheck --enable=all --std=c++11 -I ${jwtxx_SOURCE_DIR}/include ${jwtxx_SOURCE_DIR}/src ${jwtxx_SOURCE_DIR}/tools )
+if ( BUILD_EXAMPLES )
+    add_subdirectory ( examples )
+endif ( BUILD_EXAMPLES )
+
+add_custom_target ( cppcheck COMMAND cppcheck --enable=all --disable=missingInclude --std=c++17 -I ${jwtxx_SOURCE_DIR}/include ${jwtxx_SOURCE_DIR}/src ${jwtxx_SOURCE_DIR}/tools )
 
 include (CPack)
