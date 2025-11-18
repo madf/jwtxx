@@ -307,6 +307,8 @@ std::string JWT::token(const std::string& keyData, const Key::PasswordCallback& 
 
 std::string JWT::token(const Key& key) const
 {
+    if (key.alg() != m_alg)
+        throw Error("Token and key algorithm mismatch. Token algorithm is '" + algToString(m_alg) + "', key algorithm is '" + algToString(key.alg()) + "'.");
     auto data = Base64URL::encode(toJSON(m_header)) + "." +
                 Base64URL::encode(toJSON(m_claims));
     auto signature = key.sign(data.c_str(), data.size());
