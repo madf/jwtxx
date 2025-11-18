@@ -6,10 +6,13 @@ This guide helps you upgrade your code from jwtxx 1.x to 2.x.
 
 Version 2.0 introduces **JSON values** for JWT claims, replacing the string-only approach in 1.x. This allows you to use arbitrary JSON types (numbers, booleans, arrays, objects) in your claims, not just strings.
 
+gcc-11 is no longer supported sue to bug in standard library implementation.
+
 ### Breaking Changes
 
 1. **Claims now use `Value` type instead of `std::string`**
 2. **Header fields now use `Value` type instead of `std::string`**
+3. **Requires gcc-12 or later**
 
 ### New Features
 
@@ -22,13 +25,6 @@ Version 2.0 introduces **JSON values** for JWT claims, replacing the string-only
 - Added constant-time comparison for HMAC signatures (security fix)
 - Improved error handling for Base64 encoding/decoding
 - New `token(const Key&)` overload for better performance
-
----
-
-## Quick Migration Checklist
-
-- [ ] Wrap string claim values with `Value()` constructor
-- [ ] Test your code to ensure all claims are accessed correctly
 
 ---
 
