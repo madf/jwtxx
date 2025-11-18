@@ -1,9 +1,10 @@
-2025-11-13 2.0.0
+2025-11-18 2.0.0
     * Allow arbitrary JSON types in claims (#26, #29).
     * Fix producing incorrect ECDSA in some cases.
     * Use time-constant comparison when verifying HMAC signature.
     * Handle base64 encoding/decoding errors.
-    * Make is possible to reuse key for multiple token generation.
+    * Make it possible to reuse key for multiple token generation.
+    * Add key type validation.
 
 2025-11-12 1.1.12
     * New CMake compatibility (#33).
