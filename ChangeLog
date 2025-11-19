@@ -1,3 +1,6 @@
+2025-11-19 1.1.13
+    * Fix compilation for pre-3 OpenSSL.
+
 2025-11-15 1.1.12
     * New CMake compatibility (#33).
     * OpenSSL-3.x compatibility (fix deprecations).
