@@ -6,8 +6,10 @@
 #include <openssl/pem.h>
 #include <openssl/x509.h>
 #include <openssl/err.h>
-#include <openssl/core_names.h> // OSSL_PKEY_PARAM_GROUP_NAME
 #include <openssl/opensslv.h> // OPENSSL_VERSION_NUMBER
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+#include <openssl/core_names.h> // OSSL_PKEY_PARAM_GROUP_NAME
+#endif
 
 #include <array>
 #include <vector>

@@ -1,3 +1,6 @@
+2025-11-19 2.0.1
+    * Backport fixes from 1.1.13.
+
 2025-11-18 2.0.0
     * Allow arbitrary JSON types in claims (#26, #29).
     * Fix producing incorrect ECDSA in some cases.
@@ -6,7 +9,10 @@
     * Make it possible to reuse key for multiple token generation.
     * Add key type validation.
 
-2025-11-12 1.1.12
+2025-11-19 1.1.13
+    * Fix compilation for pre-3 OpenSSL.
+
+2025-11-15 1.1.12
     * New CMake compatibility (#33).
     * OpenSSL-3.x compatibility (fix deprecations).
 

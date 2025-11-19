@@ -2,7 +2,7 @@ cmake_minimum_required ( VERSION 3.5...4.1 )
 
 set ( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules )
 
-project ( jwtxx VERSION 2.0.0 )
+project ( jwtxx VERSION 2.0.1 )
 
 enable_language ( CXX )
 
